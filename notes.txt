@@ -1,0 +1,17 @@
+NES IDEAS:
+    -Will act as the global between
+    -Will have a global counter acting as a clock cycle.
+        things that rely on delays will need temp variables to count the cycles
+    -how to handle memory mapping
+    -might need class for memory
+
+
+CPU IDEAS:
+    -Input a ROM, and get the first line
+    -Create system to read and print to console the current instruction
+    -Create system print a message showing the details of each instruction  
+        example: "add r1 r2 imm" showing what should be done.
+
+PPU IDEAS:
+    -Have 'n' layers of 256 * 240 SFML rectangles 
+        n: refers to the number of sprite layers the NES can handle.
