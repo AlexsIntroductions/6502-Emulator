@@ -1,7 +1,6 @@
 #include "../inc/nes_cpu.h"
-using namespace std;
 
-char HexLookUp1[] = "0123456789abcdef";
+using namespace std;
 
 nes_cpu::nes_cpu()
 {
@@ -11,18 +10,7 @@ nes_cpu::nes_cpu()
     status = 0;
     sp = 0;
     pc = 0;
-    _mem = nullptr;
-}
-
-nes_cpu::nes_cpu(nes_mem *_mem)
-{
-    a = 0;
-    x = 0;
-    y = 0;
-    status = 0;
-    sp = 0;
-    pc = 0;
-    this->_mem = _mem;
+    mem = nullptr;
     cout << "In CPU" << endl;
 }
 
@@ -32,17 +20,96 @@ nes_cpu::~nes_cpu()
 
 void nes_cpu::evaluate(unsigned char opcode)
 {
+    if(debug == 1){
+        cout << endl << "//----------CPU EVALUATE STARTING----------//" << endl;
+        cout << "//-------------Before CPU State------------//" << endl;
+        this->print_CPU_state();
+    }
 
-    //
-    this->print_CPU_state();
+    //Actual Evaluate Code Goes Here
+    switch(opcode){
+    //ADC - Add With Carry
+        case 0x69:
+            //immediate
+            break;
+        case 0x65:
+            //Zero Page
+            break;
+        case 0x75:
+            //Zero Page X
+            break;
+        case 0x6D:
+            //Absolute
+            break;
+        case 0x7D:
+            //Absolute X
+            break;
+        case 0x79:
+            //Abolute Y
+            break;
+        case 0x61:
+            //Indirect X
+            break;
+        case 0x71:
+            //Indirect Y
+            break;
+    //AND - Logical AND
+        case 0x29:
+            //Immidiate
+            break;
+        case 0x25:
+            //Zero Page
+            break;
+        case 0x35:
+            //Zero Page X
+            break;
+        case 0x2D:
+            //Absolute
+            break;
+        case 0x3D:
+            //Absolute X
+            break;
+        case 0x39:
+            //Absolute Y
+            break;
+        case 0x21:
+            //Indirect X
+            break;
+        case 0x31:
+            //Indirect Y
+            break;
+    //ASL - Arithmetic Shift Left
+        case 0x:
+            //
+
+
+
+        default:
+            break;
+    }
+
+    if(debug == 1){
+        cout << "//-------------After CPU State-------------//" << endl;
+        this->print_CPU_state();
+    }
+
+}
+
+void nes_cpu::set_mem(nes_mem* _mem){
+    mem = _mem;
+}
+
+void nes_cpu::set_debug(int val){
+    debug = val;
 }
 
 void nes_cpu::bytes2hex(unsigned char *src, char *out, int len)
 {
+    char HexLookUp[] = "0123456789abcdef";
     while (len--)
     {
-        *out++ = HexLookUp1[*src >> 4];
-        *out++ = HexLookUp1[*src & 0x0F];
+        *out++ = HexLookUp[*src >> 4];
+        *out++ = HexLookUp[*src & 0x0F];
         src++;
     }
     *out = 0;
@@ -50,8 +117,8 @@ void nes_cpu::bytes2hex(unsigned char *src, char *out, int len)
 
 void nes_cpu::print_CPU_state()
 {
-    char buffer[7 * 2 + 1];
-    unsigned char input[7] = {a, x, y, status, sp, (unsigned char)((pc >> 8) & 0xff), pc};
+    char buffer[7 * 2];
+    unsigned char input[7] = {a, x, y, status, sp, (unsigned char)(pc >> 8), (unsigned char)pc};
     bytes2hex(input, buffer, sizeof(input));
     cout << endl
          << endl
@@ -103,7 +170,7 @@ void *nes_cpu::IMP(){
 // Accumulator
     //operate directly upon the accumulator
 void *nes_cpu::ACC(){
-    return *this->a;
+    return &this->a;
 }
 
 // Immediate
@@ -113,33 +180,51 @@ void *nes_cpu::IMM(){
 }
 // Zero Page
 void *nes_cpu::ZPG(){
-    return 
+    return nullptr;
 }
 
 // Zero Page X
-void *nes_cpu::ZPX();
+void *nes_cpu::ZPX(){
+    return nullptr;
+}
 
 // Zero Page Y
-void *nes_cpu::ZPY();
+void *nes_cpu::ZPY(){
+    return nullptr;
+}
 
 // Relative
-void *nes_cpu::REL();
+void *nes_cpu::REL(){
+    return nullptr;
+}
 
 // Absolute
-void *nes_cpu::ABS();
+void *nes_cpu::ABS(){
+    return nullptr;
+}
 
 // Absolute X
-void *nes_cpu::ABX();
+void *nes_cpu::ABX(){
+    return nullptr;
+}
 
 // Absolute Y
-void *nes_cpu::ABY();
+void *nes_cpu::ABY(){
+    return nullptr;
+}
 
 // Indirect
-void *nes_cpu::IND();
+void *nes_cpu::IND(){
+    return nullptr;
+}
 
 // Indexed Indirect
-void *nes_cpu::IID();
+void *nes_cpu::IID(){
+    return nullptr;
+}
 
 // Indirect Indexed
-void *nes_cpu::IDI();
+void *nes_cpu::IDI(){
+    return nullptr;
+}
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <cstdint>
+#include <string>
 #include <SFML/Graphics.hpp>
 #include "../inc/nes_cpu.h"
 #include "../inc/nes_ppu.h"
@@ -13,15 +14,21 @@ class nes{
     nes_apu* apu;
     nes_mem* mem;
 
-    int debug = 1;
+    int debug = 0;
 
     sf::RenderWindow* window;
 public:
     nes();
     nes(sf::RenderWindow* _window);
     ~nes();
-    void load(nes_mem* _mem);
+    void load(std::string filename);
     void eject();
     void start();
     void reset();
+
+    //Debug Functions
+    void set_debug(int val);
+
+private:
+
 };

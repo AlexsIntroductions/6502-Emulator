@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <cstdint>
+#include <string>
 #include "../inc/nes_mem.h"
 /*
 RAM                     :   [0x0000 … 0x2000] 
@@ -37,17 +38,24 @@ class nes_cpu{
     //----------Stack Pointer----------//
     unsigned char sp;
     //----------Address Bus?----------//
-    unsigned short int pc;
+    unsigned short pc;
 
     int cycles = 0;
 
-    unsigned char memory[0xFFFF];
+    nes_mem *mem;
+
+    int debug = 0;
+    
 public:
     nes_cpu();
-    nes_cpu(nes_mem* _mem);
     ~nes_cpu();
     void evaluate(unsigned char opcocde);
+    void set_mem(nes_mem* _mem);
     void print_CPU_state();
+
+    //Debug Functions
+    void set_debug(int val);
+
 private:
 
     //Addressing Mode Functions
@@ -81,6 +89,4 @@ private:
     void* IDI();
 
     void bytes2hex (unsigned char *src, char *out, int len);
-
-
 };
