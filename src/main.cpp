@@ -1,5 +1,5 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 #include "../inc/nes.h"
 
 //**(IMPLEMENT THREADING FOR THE NES TO RUN ON SEPARATE FROM THE SFML)
@@ -11,9 +11,9 @@ using namespace std;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    //sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
 
-    nes* system = new nes(&window);
+    nes* system = new nes();
 
     //Set If Debugging is Necessary
     system->set_debug(1);

@@ -16,10 +16,12 @@ LDFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
 all: $(TARGET)
 
 $(TARGET) : $(OBJ_LIST) | $(BUILD_DIR)
-	$(CC) $^ -o $@ -L$(LIB_DIR) $(LDFLAGS) -Wl,-rpath=$(LIB_DIR)
+	$(CC) $^ -o $@ 
+# put at the end of above commnd: -L$(LIB_DIR) $(LDFLAGS) -Wl,-rpath=$(LIB_DIR)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(INC_DIR) -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+# Put after CFLAGS in above command: -I$(INC_DIR)
 
 $(OBJ_DIR) $(BUILD_DIR):
 	mkdir -p $@

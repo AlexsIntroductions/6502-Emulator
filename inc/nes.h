@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstdint>
 #include <string>
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 #include "../inc/nes_cpu.h"
 #include "../inc/nes_ppu.h"
 #include "../inc/nes_apu.h"
@@ -16,10 +16,10 @@ class nes{
 
     int debug = 0;
 
-    sf::RenderWindow* window;
+    //sf::RenderWindow* window;
 public:
     nes();
-    nes(sf::RenderWindow* _window);
+    //nes(sf::RenderWindow* _window);
     ~nes();
     void load(std::string filename);
     void eject();

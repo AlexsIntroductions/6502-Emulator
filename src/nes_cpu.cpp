@@ -79,7 +79,7 @@ void nes_cpu::evaluate(unsigned char opcode)
             //Indirect Y
             break;
     //ASL - Arithmetic Shift Left
-        case 0x:
+        case 0x41:
             //
 
 

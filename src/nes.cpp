@@ -54,18 +54,18 @@ nes::nes(){
     apu = new nes_apu();
     mem = new nes_mem();
 
-    window = nullptr;
+    //window = nullptr;
 }
 
-nes::nes(sf::RenderWindow* _window){
-    cout << "In NES" << endl;
-    cpu = new nes_cpu();
-    ppu = new nes_ppu();
-    apu = new nes_apu();
-    mem = new nes_mem();
+// nes::nes(sf::RenderWindow* _window){
+//     cout << "In NES" << endl;
+//     cpu = new nes_cpu();
+//     ppu = new nes_ppu();
+//     apu = new nes_apu();
+//     mem = new nes_mem();
 
-    window = _window;
-}
+//     window = _window;
+// }
 
 nes::~nes(){
     
