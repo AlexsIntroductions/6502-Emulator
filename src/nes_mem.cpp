@@ -35,7 +35,7 @@ nes_mem::~nes_mem()
     delete[] mem;
 }
 
-unsigned char nes_mem::read_8(unsigned char addr)
+uint8_t nes_mem::read_8(uint16_t addr)
 {
     if (debug == 1){
         cout << "Memory 8 read: " << mem[addr] << endl;
@@ -44,15 +44,15 @@ unsigned char nes_mem::read_8(unsigned char addr)
 }
 
 // LITTLE ENDIAN
-unsigned short nes_mem::read_16(unsigned char addr)
+uint16_t nes_mem::read_16(uint16_t addr)
 {
     if (debug == 1){
         cout << "Memory 16 read: " << ((mem[addr + 1] << 8) | mem[addr]) << endl;
     }
-    return (unsigned short)((mem[addr + 1] << 8) | mem[addr]);
+    return (uint16_t)((mem[addr + 1] << 8) | mem[addr]);
 }
 
-void nes_mem::write_8(unsigned char addr, unsigned char val)
+void nes_mem::write_8(uint16_t addr, uint8_t val)
 {
     if (debug == 1){
         cout << "Memory 8 write: " << val << " | To: " << addr << endl;
@@ -61,14 +61,14 @@ void nes_mem::write_8(unsigned char addr, unsigned char val)
 }
 
 // LITTLE ENDIAN
-void nes_mem::write_16(unsigned char addr, unsigned short val)
+void nes_mem::write_16(uint16_t addr, uint16_t val)
 {
     if (debug == 1){
         cout << "Memory 16 write: " << (val >> 8) << " | To: " << addr << endl;
-        cout << "               : " << (unsigned char)val << " | To: " << addr + 1 << endl;
+        cout << "               : " << (uint8_t)val << " | To: " << addr + 1 << endl;
     }
-    mem[addr + 1] = (unsigned char)val;
-    mem[addr] = (unsigned char)(val >> 8);
+    mem[addr + 1] = (uint8_t)val;
+    mem[addr] = (uint8_t)(val >> 8);
 }
 
 void nes_mem::load(string filename)

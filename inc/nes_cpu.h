@@ -20,11 +20,11 @@ class nes_cpu{
 
     //----------General Registers----------//
     //Accumulator
-    unsigned char a;
+    uint8_t a;
     //X register
-    unsigned char x;
+    uint8_t x;
     //Y register
-    unsigned char y;
+    uint8_t y;
     //----------Status Register----------//
     // 7 - N: negative result
     // 6 - V: overflow
@@ -34,11 +34,11 @@ class nes_cpu{
     // 2 - I: interrupt disable
     // 1 - Z: zero result
     // 0 - C: carry
-    unsigned char status;
+    uint8_t status;
     //----------Stack Pointer----------//
-    unsigned char sp;
+    uint8_t sp;
     //----------Address Bus?----------//
-    unsigned short pc;
+    uint16_t pc;
 
     int cycles = 0;
 
@@ -62,31 +62,31 @@ private:
       //return the byte of data that is to be acted on
 
     //Implicit
-    void* IMP();
+    void IMP();
     //Accumulator
-    void* ACC();
+    uint8_t ACC();
     //Immediate
-    void* IMM();
+    uint8_t IMM();
     //Zero Page
-    void* ZPG();
+    uint8_t ZPG();
     //Zero Page X
-    void* ZPX();
+    uint8_t ZPX();
     //Zero Page Y
-    void* ZPY();
+    uint8_t ZPY();
     //Relative
-    void* REL();
+    int8_t REL();
     //Absolute
-    void* ABS();
+    uint16_t ABS();
     //Absolute X
-    void* ABX();
+    uint16_t ABX();
     //Absolute Y
-    void* ABY();
+    uint16_t ABY();
     //Indirect
-    void* IND();
+    uint16_t IND();
     //Indexed Indirect
-    void* IID();
+    uint16_t IID();
     //Indirect Indexed
-    void* IDI();
+    uint16_t IDI();
 
     void bytes2hex (unsigned char *src, char *out, int len);
 };

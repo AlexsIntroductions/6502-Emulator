@@ -6,15 +6,15 @@
 
 class nes_mem
 {
-    unsigned char mem[0xFFFF];
+    uint8_t mem[0xFFFF];
     int debug = 0;
 public:
     nes_mem();
     ~nes_mem();
-    unsigned char read_8(unsigned char addr);
-    unsigned short read_16(unsigned char addr);
-    void write_8(unsigned char addr, unsigned char val);
-    void write_16(unsigned char addr, unsigned short val);
+    uint8_t read_8(uint16_t addr);
+    uint16_t read_16(uint16_t addr);
+    void write_8(uint16_t addr, uint8_t val);
+    void write_16(uint16_t addr, uint16_t val);
     void load(std::string filename);
 
     //Debug Functions
