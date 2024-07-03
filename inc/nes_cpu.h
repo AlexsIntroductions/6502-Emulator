@@ -102,7 +102,7 @@ private:
   void bytes2hex(unsigned char *src, char *out, int len);
 
   // Instruction functions
-  void ADC();
+  void ADC(uint8_t val);
 
   void AND();
 

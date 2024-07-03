@@ -761,8 +761,13 @@ uint16_t nes_cpu::IDI()
 }
 
 //----------INSTRUCTION FUNCTIONS----------//
-void nes_cpu::ADC()
+void nes_cpu::ADC(uint8_t val)
 {
+    
+    // If 255 minus Accumulator is greater than the remaining value -> overflow
+    if(255 - this->a > val){
+        this->status |= C_FLAG;
+    }
 
 }
 
