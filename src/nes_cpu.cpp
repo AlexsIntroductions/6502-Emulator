@@ -761,25 +761,92 @@ uint16_t nes_cpu::IDI()
 }
 
 //----------INSTRUCTION FUNCTIONS----------//
+
+// ADC - Add with Carry
 void nes_cpu::ADC(uint8_t val)
 {
-    
-    // If 255 minus Accumulator is greater than the remaining value -> overflow
-    if(255 - this->a > val){
-        this->status |= C_FLAG;
+    // NOTE: Decimal Mode Not Implemented, NES Doesn't use Decimal Mode
+        // Implement in future for accurate 6502 emulator
+
+    // Add the accumulator, mem value, and carry
+    uint16_t temp = a + val + (status & C_FLAG);
+    a = (uint8_t)(temp & 0xFF);
+
+    // Check Carry Flag
+    if(temp >> 8){
+        status |= C_FLAG;
     }
 
+    // Check Overflow/Negative Flag
+    if(temp & 0x80){
+        status |= V_FLAG;
+        status |= N_FLAG;
+    }
+
+    // Check Zero Flag
+    if(a == 0){
+        status |= Z_FLAG;
+    }
 }
 
-void nes_cpu::AND() {}
+// AND - Logical AND
+void nes_cpu::AND(uint8_t val) {
+    // AND accumulator and mem val
+    a &= val;
+    
+    // Check Zero Flag
+    if(a == 0){
+        status |= Z_FLAG;
+    }
 
-void nes_cpu::ASL() {}
+    // Check Negative Flag
+    if(a & 0x80){
+        status |= N_FLAG;
+    }
+}
 
-void nes_cpu::BCC() {}
+// ASL - Arithmetic Shift Left
+void nes_cpu::ASL(uint8_t* val) {
+    // Check Carry Flag
+    if(*val & 0x80){
+        status |= C_FLAG;
+    }
 
-void nes_cpu::BCS() {}
+    // Shift the memory value left one
+    uint8_t temp = (*val << 1);
+    *val = temp;
 
-void nes_cpu::BEQ() {}
+    // Check Zero Flag
+    if(a == 0){
+        status |= Z_FLAG;
+    }
+
+    // Check Negative Flag
+    if(*val & 0x80){
+        status |= N_FLAG;
+    }
+}
+
+// BCC - Branch if Carry Clear
+void nes_cpu::BCC(int8_t offset) {
+    // Check if Carry Bit is Clear
+    if(!(status & C_FLAG)){
+        pc = address;
+    }
+}
+
+// BCS - Branch if Carry Set
+void nes_cpu::BCS(int8_t offset) {
+    // Check if Carry Bit is Set
+    if(status & C_FLAG){
+        pc = address;
+    }
+}
+
+// BEQ - Branch if Equal
+void nes_cpu::BEQ(int8_t offset) {
+    // 
+}
 
 void nes_cpu::BIT() {}
 

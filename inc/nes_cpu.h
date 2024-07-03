@@ -104,15 +104,15 @@ private:
   // Instruction functions
   void ADC(uint8_t val);
 
-  void AND();
+  void AND(uint8_t val);
 
-  void ASL();
+  void ASL(uint8_t* val);
 
-  void BCC();
+  void BCC(int8_t offset);
 
-  void BCS();
+  void BCS(int8_t offset);
 
-  void BEQ();
+  void BEQ(int8_t offset);
 
   void BIT();
 

@@ -13,12 +13,12 @@ int main()
 {
     //sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
 
-    nes* system = new nes();
+    nes system = nes();
 
     //Set If Debugging is Necessary
-    system->set_debug(1);
+    system.set_debug(1);
 
-    system->load("../test.nes");
+    system.load("../test.nes");
 
     /*
     while (window.isOpen())
