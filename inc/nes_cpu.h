@@ -108,25 +108,25 @@ private:
 
   void ASL(uint8_t* val);
 
-  void BCC(int8_t offset);
+  void BCC(uint8_t offset);
 
-  void BCS(int8_t offset);
+  void BCS(uint8_t offset);
 
-  void BEQ(int8_t offset);
+  void BEQ(uint8_t offset);
 
-  void BIT();
+  void BIT(uint8_t val);
 
-  void BMI();
+  void BMI(uint8_t offset);
 
-  void BNE();
+  void BNE(uint8_t offset);
 
-  void BPL();
+  void BPL(uint8_t offset);
 
   void BRK();
 
-  void BVC();
+  void BVC(uint8_t offset);
 
-  void BVS();
+  void BVS(uint8_t offset);
 
   void CLC();
 
@@ -136,11 +136,11 @@ private:
 
   void CLV();
 
-  void CMP();
+  void CMP(uint8_t val);
 
-  void CPX();
+  void CPX(uint8_t val);
 
-  void CPY();
+  void CPY(uint8_t val);
 
   void DEC();
 

@@ -427,7 +427,7 @@ void nes_cpu::evaluate(uint8_t opcode)
         break;
         // ---------------RTI - Return from Interrupt
     case 0x40:
-        // Implied 
+        // Implied
         break;
         // ---------------RTS - Return from Subroutine
     case 0x60:
@@ -500,7 +500,7 @@ void nes_cpu::evaluate(uint8_t opcode)
         // Zero Page Y
         break;
     case 0x8E:
-        // Absolute 
+        // Absolute
         break;
         // ---------------STY - Store Y Register
     case 0x84:
@@ -522,7 +522,7 @@ void nes_cpu::evaluate(uint8_t opcode)
         break;
         // ---------------TSX - Transfer Stack Pointer to X
     case 0xBA:
-        // Implied 
+        // Implied
         break;
         // ---------------TXA - Transfer X to Accumulator
     case 0x8A:
@@ -537,7 +537,9 @@ void nes_cpu::evaluate(uint8_t opcode)
         // Implied
         break;
     default:
-        cout << endl << "ERROR IN EVALUATE: INSTRUCTION NOT CODED FOR" << endl << endl;
+        cout << endl
+             << "ERROR IN EVALUATE: INSTRUCTION NOT CODED FOR" << endl
+             << endl;
         break;
     }
 
@@ -766,49 +768,57 @@ uint16_t nes_cpu::IDI()
 void nes_cpu::ADC(uint8_t val)
 {
     // NOTE: Decimal Mode Not Implemented, NES Doesn't use Decimal Mode
-        // Implement in future for accurate 6502 emulator
+    // Implement in future for accurate 6502 emulator
 
     // Add the accumulator, mem value, and carry
     uint16_t temp = a + val + (status & C_FLAG);
     a = (uint8_t)(temp & 0xFF);
 
     // Check Carry Flag
-    if(temp >> 8){
+    if (temp >> 8)
+    {
         status |= C_FLAG;
     }
 
     // Check Overflow/Negative Flag
-    if(temp & 0x80){
+    if (temp & 0x80)
+    {
         status |= V_FLAG;
         status |= N_FLAG;
     }
 
     // Check Zero Flag
-    if(a == 0){
+    if (a == 0)
+    {
         status |= Z_FLAG;
     }
 }
 
 // AND - Logical AND
-void nes_cpu::AND(uint8_t val) {
+void nes_cpu::AND(uint8_t val)
+{
     // AND accumulator and mem val
     a &= val;
-    
+
     // Check Zero Flag
-    if(a == 0){
+    if (a == 0)
+    {
         status |= Z_FLAG;
     }
 
     // Check Negative Flag
-    if(a & 0x80){
+    if (a & 0x80)
+    {
         status |= N_FLAG;
     }
 }
 
 // ASL - Arithmetic Shift Left
-void nes_cpu::ASL(uint8_t* val) {
+void nes_cpu::ASL(uint8_t *val)
+{
     // Check Carry Flag
-    if(*val & 0x80){
+    if (*val & 0x80)
+    {
         status |= C_FLAG;
     }
 
@@ -817,64 +827,304 @@ void nes_cpu::ASL(uint8_t* val) {
     *val = temp;
 
     // Check Zero Flag
-    if(a == 0){
+    if (a == 0)
+    {
         status |= Z_FLAG;
     }
 
     // Check Negative Flag
-    if(*val & 0x80){
+    if (*val & 0x80)
+    {
         status |= N_FLAG;
     }
 }
 
 // BCC - Branch if Carry Clear
-void nes_cpu::BCC(int8_t offset) {
+void nes_cpu::BCC(uint8_t offset)
+{
     // Check if Carry Bit is Clear
-    if(!(status & C_FLAG)){
-        pc = address;
+    if (!(status & C_FLAG))
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
     }
 }
 
 // BCS - Branch if Carry Set
-void nes_cpu::BCS(int8_t offset) {
+void nes_cpu::BCS(uint8_t offset)
+{
     // Check if Carry Bit is Set
-    if(status & C_FLAG){
-        pc = address;
+    if (status & C_FLAG)
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
     }
 }
 
 // BEQ - Branch if Equal
-void nes_cpu::BEQ(int8_t offset) {
-    // 
+void nes_cpu::BEQ(uint8_t offset)
+{
+    // Check if Zero Flag is Set
+    if (status & Z_FLAG)
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
+    }
 }
 
-void nes_cpu::BIT() {}
+// BIT - Bit Test
+void nes_cpu::BIT(uint8_t val)
+{
 
-void nes_cpu::BMI() {}
+    val &= a;
 
-void nes_cpu::BNE() {}
+    if (val == 0)
+    {
+        status |= Z_FLAG;
+    }
 
-void nes_cpu::BPL() {}
+    // Check Negative Flag
+    if (val & 0x80)
+    {
+        status |= N_FLAG;
+    }
 
-void nes_cpu::BRK() {}
+    // Check Overflow Flag
+    if (val & 0x40)
+    {
+        status |= V_FLAG;
+    }
+}
 
-void nes_cpu::BVC() {}
+// BMI - Branch if Minus
+void nes_cpu::BMI(uint8_t offset)
+{
+    // Check if Negative Flag is Set
+    if (status & N_FLAG)
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
+    }
+}
 
-void nes_cpu::BVS() {}
+// BNE - Branch if Not Equal
+void nes_cpu::BNE(uint8_t offset)
+{
+    // Check if Zero Flag is Clear
+    if (!(status & Z_FLAG))
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
+    }
+}
 
-void nes_cpu::CLC() {}
+// BPL - Branch if Positive
+void nes_cpu::BPL(uint8_t offset)
+{
+    // Check if Negative Flag is Clear
+    if (!(status & N_FLAG))
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
+    }
+}
 
-void nes_cpu::CLD() {}
+// BRK - Force Interrupt
+void nes_cpu::BRK()
+{
 
-void nes_cpu::CLI() {}
+    // Set Break Flag
+    status |= B_FLAG;
+    // push PC and status to stack
 
-void nes_cpu::CLV() {}
+    // Set PC to value in Interrupt Handler
+    pc = mem->read_16(0xFFFE);
+}
 
-void nes_cpu::CMP() {}
+// BVC - Branch if Overflow Clear
+void nes_cpu::BVC(uint8_t offset)
+{
+    // Check if Overflow Flag is Clear
+    if (!(status & V_FLAG))
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
+    }
+}
 
-void nes_cpu::CPX() {}
+// BVS - Branch if Overflow Set
+void nes_cpu::BVS(uint8_t offset)
+{
+    // Check if Overflow Flag is Clear
+    if (status & V_FLAG)
+    {
+        // If its a positive integer add to PC
+        if (offset & 0x80)
+        {
+            pc += offset;
+        }
+        // If its a negative integer subtract to PC
+        else
+        {
+            pc -= (((uint8_t)255 - offset) + 1);
+        }
+    }
+}
 
-void nes_cpu::CPY() {}
+// CLC - Clear Carry Flag
+void nes_cpu::CLC()
+{
+    status &= ~C_FLAG;
+}
+
+// CLD - Clear Decimal Mode
+void nes_cpu::CLD()
+{
+    status &= ~D_FLAG;
+}
+
+// CLI - Clear Interrupt Disable
+void nes_cpu::CLI()
+{
+    status &= ~I_FLAG;
+}
+
+// CLV - Clear Overflow Flag
+void nes_cpu::CLV()
+{
+    status &= ~V_FLAG;
+}
+
+// CMP - Compare
+void nes_cpu::CMP(uint8_t val)
+{
+    // Subtract mem val from accumulator
+    uint8_t temp = a - val;
+
+    // Check the Carry Flag
+    if (temp >= 0)
+    {
+        status |= C_FLAG;
+    }
+
+    // Check the Zero Flag
+    if (temp == 0)
+    {
+        status |= Z_FLAG;
+    }
+
+    // Check Negative Flag
+    if (temp & 0x80)
+    {
+        status |= N_FLAG;
+    }
+}
+
+// CPX - Compare X Register
+void nes_cpu::CPX(uint8_t val)
+{
+    // Subtract mem val from x
+    uint8_t temp = x - val;
+
+    // Check the Carry Flag
+    if (temp >= 0)
+    {
+        status |= C_FLAG;
+    }
+
+    // Check the Zero Flag
+    if (temp == 0)
+    {
+        status |= Z_FLAG;
+    }
+
+    // Check Negative Flag
+    if (temp & 0x80)
+    {
+        status |= N_FLAG;
+    }
+}
+
+// CPY - Compare Y Register
+void nes_cpu::CPY(uint8_t val)
+{
+    // Subtract mem val from y
+    uint8_t temp = y - val;
+
+    // Check the Carry Flag
+    if (temp >= 0)
+    {
+        status |= C_FLAG;
+    }
+
+    // Check the Zero Flag
+    if (temp == 0)
+    {
+        status |= Z_FLAG;
+    }
+
+    // Check Negative Flag
+    if (temp & 0x80)
+    {
+        status |= N_FLAG;
+    }
+}
 
 void nes_cpu::DEC() {}
 
