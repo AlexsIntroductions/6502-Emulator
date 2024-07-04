@@ -1,8 +1,5 @@
 #include "../inc/nes.h"
 
-//unsigned 8 bit integer: unsigned char
-//unsigned 16 bit integer: unsigned short
-
 /**
  * SELF NOTE SCHEME:
  * !!() - Indicates something important

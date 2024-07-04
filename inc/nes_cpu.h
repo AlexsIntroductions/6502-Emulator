@@ -4,15 +4,26 @@
 #include <string>
 #include "../inc/nes_mem.h"
 
-#define BIT_SHIFT(X) (1 << x)
+#define BIT_SHIFT_8(X) (1 << x)
+#define INV_BIT_SHIFT_8(X) (0b11111111 ^ (1 << X))
 
-#define N_FLAG BIT_SHIFT(7)
-#define V_FLAG BIT_SHIFT(6)
-#define B_FLAG BIT_SHIFT(4)
-#define D_FLAG BIT_SHIFT(3)
-#define I_FLAG BIT_SHIFT(2)
-#define Z_FLAG BIT_SHIFT(1)
-#define C_FLAG BIT_SHIFT(0)
+#define N_FLAG BIT_SHIFT_8(7)
+#define V_FLAG BIT_SHIFT_8(6)
+#define B_FLAG BIT_SHIFT_8(4)
+#define D_FLAG BIT_SHIFT_8(3)
+#define I_FLAG BIT_SHIFT_8(2)
+#define Z_FLAG BIT_SHIFT_8(1)
+#define C_FLAG BIT_SHIFT_8(0)
+
+#define N_FLAG_INV INV_BIT_SHIFT_8(7)
+#define V_FLAG_INV INV_BIT_SHIFT_8(6)
+#define B_FLAG_INV INV_BIT_SHIFT_8(4)
+#define D_FLAG_INV INV_BIT_SHIFT_8(3)
+#define I_FLAG_INV INV_BIT_SHIFT_8(2)
+#define Z_FLAG_INV INV_BIT_SHIFT_8(1)
+#define C_FLAG_INV INV_BIT_SHIFT_8(0)
+
+
 
 /*
 RAM                     :   [0x0000 … 0x2000]
@@ -142,35 +153,35 @@ private:
 
   void CPY(uint8_t val);
 
-  void DEC();
+  void DEC(uint8_t* val);
 
   void DEX();
 
   void DEY();
 
-  void EOR();
+  void EOR(uint8_t val);
 
-  void INC();
+  void INC(uint8_t* val);
 
   void INX();
 
   void INY();
 
-  void JMP();
+  void JMP(uint16_t address);
 
-  void JSR();
+  void JSR(uint16_t address);
 
-  void LDA();
+  void LDA(uint8_t val);
 
-  void LDX();
+  void LDX(uint8_t val);
 
-  void LDY();
+  void LDY(uint8_t val);
 
-  void LSR();
+  void LSR(uint8_t* val);
 
   void NOP();
 
-  void ORA();
+  void ORA(uint8_t val);
 
   void PHA();
 
@@ -180,15 +191,15 @@ private:
 
   void PLP();
 
-  void ROL();
+  void ROL(uint8_t* val);
 
-  void ROR();
+  void ROR(uint8_t* val);
 
   void RTI();
 
   void RTS();
 
-  void SBC();
+  void SBC(uint8_t val);
 
   void SEC();
 
