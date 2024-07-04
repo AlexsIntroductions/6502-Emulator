@@ -207,11 +207,11 @@ private:
 
   void SEI();
 
-  void STA();
+  void STA(uint16_t address);
 
-  void STX();
+  void STX(uint16_t address);
 
-  void STY();
+  void STY(uint16_t address);
 
   void TAX();
 

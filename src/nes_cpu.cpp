@@ -1091,25 +1091,25 @@ void nes_cpu::BVS(uint8_t offset)
 // CLC - Clear Carry Flag
 void nes_cpu::CLC()
 {
-    status &= ~C_FLAG;
+    status &= C_FLAG_INV;
 }
 
 // CLD - Clear Decimal Mode
 void nes_cpu::CLD()
 {
-    status &= ~D_FLAG;
+    status &= D_FLAG_INV;
 }
 
 // CLI - Clear Interrupt Disable
 void nes_cpu::CLI()
 {
-    status &= ~I_FLAG;
+    status &= I_FLAG_INV;
 }
 
 // CLV - Clear Overflow Flag
 void nes_cpu::CLV()
 {
-    status &= ~V_FLAG;
+    status &= V_FLAG_INV;
 }
 
 // CMP - Compare
@@ -1741,28 +1741,162 @@ void nes_cpu::SBC(uint8_t val)
 }
 
 // SEC - Set Carry Flag
-void nes_cpu::SEC() {
-    
+void nes_cpu::SEC()
+{
+    status |= C_FLAG;
 }
 
-void nes_cpu::SED() {}
+// SED - Set Decimal Flag
+void nes_cpu::SED()
+{
+    status |= D_FLAG;
+}
 
-void nes_cpu::SEI() {}
+// SEI - Set Interrupt Disable
+void nes_cpu::SEI()
+{
+    status |= I_FLAG;
+}
 
-void nes_cpu::STA() {}
+// STA - Store Accumulator
+void nes_cpu::STA(uint16_t address)
+{
+    mem->write_8(address, a);
+}
 
-void nes_cpu::STX() {}
+// STX - Store X
+void nes_cpu::STX(uint16_t address)
+{
+    mem->write_8(address, x);
+}
 
-void nes_cpu::STY() {}
+// // STY - Store Y
+void nes_cpu::STY(uint16_t address)
+{
+    mem->write_8(address, y);
+}
 
-void nes_cpu::TAX() {}
+// TAX - Transfer Accumulator to X
+void nes_cpu::TAX() {
+    x = a;
+    
+    // Check Zero Flag
+    if (x == 0)
+    {
+        status |= Z_FLAG;
+    }
+    else
+    {
+        status &= Z_FLAG_INV;
+    }
 
-void nes_cpu::TAY() {}
+    // Check Negative Flag
+    if (x & 0x80)
+    {
+        status |= N_FLAG;
+    }
+    else
+    {
+        status &= N_FLAG_INV;
+    }
+}
 
-void nes_cpu::TSX() {}
+void nes_cpu::TAY() {
+    y = a;
+    
+    // Check Zero Flag
+    if (y == 0)
+    {
+        status |= Z_FLAG;
+    }
+    else
+    {
+        status &= Z_FLAG_INV;
+    }
 
-void nes_cpu::TXA() {}
+    // Check Negative Flag
+    if (y & 0x80)
+    {
+        status |= N_FLAG;
+    }
+    else
+    {
+        status &= N_FLAG_INV;
+    }
+}
 
-void nes_cpu::TXS() {}
+void nes_cpu::TSX() {
+    x = sp;
+    
+    // Check Zero Flag
+    if (x == 0)
+    {
+        status |= Z_FLAG;
+    }
+    else
+    {
+        status &= Z_FLAG_INV;
+    }
 
-void nes_cpu::TYA() {}
+    // Check Negative Flag
+    if (x & 0x80)
+    {
+        status |= N_FLAG;
+    }
+    else
+    {
+        status &= N_FLAG_INV;
+    }
+}
+
+void nes_cpu::TXA() {
+    a = x;
+    
+    // Check Zero Flag
+    if (a == 0)
+    {
+        status |= Z_FLAG;
+    }
+    else
+    {
+        status &= Z_FLAG_INV;
+    }
+
+    // Check Negative Flag
+    if (a & 0x80)
+    {
+        status |= N_FLAG;
+    }
+    else
+    {
+        status &= N_FLAG_INV;
+    }
+}
+
+void nes_cpu::TXS() {
+    sp = x;
+}
+
+void nes_cpu::TYA() {
+    a = y;
+    
+    // Check Zero Flag
+    if (a == 0)
+    {
+        status |= Z_FLAG;
+    }
+    else
+    {
+        status &= Z_FLAG_INV;
+    }
+
+    // Check Negative Flag
+    if (a & 0x80)
+    {
+        status |= N_FLAG;
+    }
+    else
+    {
+        status &= N_FLAG_INV;
+    }
+}
