@@ -23,7 +23,7 @@ nes_cpu::~nes_cpu()
 {
 }
 
-void nes_cpu::evaluate(uint8_t opcode)
+void nes_cpu::evaluate()
 {
     if (debug == 1)
     {
@@ -33,7 +33,16 @@ void nes_cpu::evaluate(uint8_t opcode)
         this->print_CPU_state();
     }
 
-    // Actual Evaluate Code Goes Here
+    // The "Fetch-Execute cycle" is what drives a processor
+    // The processor fetches an instruction and then executes it.
+    // The Program Counter is incremented AFTER the Fetch phase and BEFORE the Execute phase.
+
+    // Fetch Code Goes here
+
+    // Get Current Instruction from Memory and Increment PC
+    uint8_t opcode = mem->read_8(pc++);
+
+    // Execute Code Goes Here
     switch (opcode)
     {
         // ---------------ADC - Add With Carry
@@ -864,7 +873,7 @@ void nes_cpu::BIT(uint8_t val)
     uint8_t temp = a & val;
 
     // Check Zero Flag
-    (temp == 0) ? (status |= Z_FLAG): (status &= Z_FLAG_INV);
+    (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
@@ -906,14 +915,19 @@ void nes_cpu::BPL(uint8_t offset)
     }
 }
 
-// INCOMPLETE
 // BRK - Force Interrupt
 void nes_cpu::BRK()
 {
+    // Push PC to Stack
+    // 6502 has error where is pushes PC + 1 instead of current PC, problem has to be fixed through software
+    pc += 1;
+    // Push High Byte
+    mem->push(sp--, (uint8_t)((pc >> 8) & 0xFF));
+    // Push Low Byte
+    mem->push(sp--, (uint8_t)(pc & 0xFF));
 
-    // Set Break Flag
-    status |= B_FLAG;
-    // push PC and status to stack
+    // Push Status with break flag set
+    mem->push(sp--, status | B_FLAG);
 
     // Set PC to value in Interrupt Handler
     pc = mem->read_16(0xFFFE);
@@ -1113,11 +1127,13 @@ void nes_cpu::JMP(uint16_t address)
     pc = address;
 }
 
-// INCOMPLETE
 // JSR - Jump to Subroutine
 void nes_cpu::JSR(uint16_t address)
 {
     // Pushes (address - 1) of return point on to the stack
+    pc -= 1;
+    mem->push(sp--, (uint8_t)((pc >> 8) & 0xFF));
+    mem->push(sp--, (uint8_t)(pc & 0xFF));
 
     // Sets PC to Target Memory Address
     pc = address;
@@ -1195,21 +1211,39 @@ void nes_cpu::ORA(uint8_t val)
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 }
 
-// INCOMPLETE
 // PHA - Push Accumulator
-void nes_cpu::PHA() {}
+void nes_cpu::PHA()
+{
+    mem->push(sp, a);
+    sp -= 1;
+}
 
-// INCOMPLETE
 // PHP - Push Processor Status
-void nes_cpu::PHP() {}
+void nes_cpu::PHP()
+{
+    mem->push(sp, status);
+    sp -= 1;
+}
 
-// INCOMPLETE
 // PLA - Pull Accumulator
-void nes_cpu::PLA() {}
+void nes_cpu::PLA()
+{
+    sp += 1;
+    a = mem->pop(sp);
 
-// INCOMPLETE
+    // Check Zero Flag
+    (a == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+
+    // Check Negative Flag
+    (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+}
+
 // PLP - Pull Processor Status
-void nes_cpu::PLP() {}
+void nes_cpu::PLP()
+{
+    sp += 1;
+    status = mem->pop(sp);
+}
 
 // ROL - Rotate Left
 void nes_cpu::ROL(uint8_t *val)
@@ -1255,15 +1289,36 @@ void nes_cpu::ROR(uint8_t *val)
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 }
 
-// INCOMPLETE
 // RTI - Return from Interrupt
 void nes_cpu::RTI()
 {
+    // Pull Status from Stack
+    sp += 1;
+    status = mem->pop(sp);
+
+    // Pull Low Byte of PC from Stack
+    sp += 1;
+    pc |= mem->pop(sp);
+
+    // Pull High Byte of PC from Stack
+    sp += 1;
+    pc |= (uint16_t)(mem->pop(sp) << 8);
 }
 
-// INCOMPLETE
 // RTS - Return from Subroutine
-void nes_cpu::RTS() {}
+void nes_cpu::RTS()
+{
+    // Pull Low Byte of PC from Stack
+    sp += 1;
+    pc |= mem->pop(sp);
+
+    // Pull High Byte of PC from Stack
+    sp += 1;
+    pc |= (uint16_t)(mem->pop(sp) << 8);
+
+    // Increment PC by 1
+    pc += 1;
+}
 
 // SBC - Subtract with Carry
 void nes_cpu::SBC(uint8_t val)
@@ -1324,9 +1379,10 @@ void nes_cpu::STY(uint16_t address)
 }
 
 // TAX - Transfer Accumulator to X
-void nes_cpu::TAX() {
+void nes_cpu::TAX()
+{
     x = a;
-    
+
     // Check Zero Flag
     (x == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
@@ -1335,9 +1391,10 @@ void nes_cpu::TAX() {
 }
 
 // TAY - Transfer Accumulator to Y
-void nes_cpu::TAY() {
+void nes_cpu::TAY()
+{
     y = a;
-    
+
     // Check Zero Flag
     (y == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
@@ -1346,9 +1403,10 @@ void nes_cpu::TAY() {
 }
 
 // TSX - Transfer Stack Pointer to X
-void nes_cpu::TSX() {
+void nes_cpu::TSX()
+{
     x = sp;
-    
+
     // Check Zero Flag
     (x == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
@@ -1357,9 +1415,10 @@ void nes_cpu::TSX() {
 }
 
 // TXA - Transfer X to Accumulator
-void nes_cpu::TXA() {
+void nes_cpu::TXA()
+{
     a = x;
-    
+
     // Check Zero Flag
     (a == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
@@ -1368,14 +1427,16 @@ void nes_cpu::TXA() {
 }
 
 // TXS - Transfer X to Stack Pointer
-void nes_cpu::TXS() {
+void nes_cpu::TXS()
+{
     sp = x;
 }
 
 // TYA - Transfer Y to Accumulator
-void nes_cpu::TYA() {
+void nes_cpu::TYA()
+{
     a = y;
-    
+
     // Check Zero Flag
     (a == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 

@@ -72,7 +72,7 @@ class nes_cpu
 public:
   nes_cpu();
   ~nes_cpu();
-  void evaluate(unsigned char opcocde);
+  void evaluate();
   void set_mem(nes_mem *_mem);
   void print_CPU_state();
 

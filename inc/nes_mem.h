@@ -22,9 +22,9 @@ public:
     void write_16(uint16_t addr, uint16_t val);
 
     // Stack Access Functions
-    // peek
-    // pop
-    // poke
+    uint8_t peek(uint8_t sp, uint8_t n);
+    uint8_t pop(uint8_t sp);
+    void push(uint8_t sp, uint8_t val);
 
 
     //Debug Functions
