@@ -663,9 +663,8 @@ uint8_t nes_cpu::ZPG()
     // Get zero page address from instruction
     uint8_t temp = mem->read_8(pc++);
 
-    // Make sure address lies between 0x00 and 0xFF
     // return value at this address in the zero page
-    return mem->read_8(temp & 0xFF);
+    return mem->read_8(temp);
 }
 
 // Zero Page X
@@ -720,7 +719,7 @@ uint16_t nes_cpu::ABS()
 uint16_t nes_cpu::ABX()
 {
     // Get the address from the instruction and add value in x register
-    uint16_t toReturn = mem->read_16(pc) + this->x;
+    uint16_t toReturn = (mem->read_16(pc) + this->x) & 0xFFFF;
 
     // Increment pc for each byte read (2)
     pc += 2;
@@ -733,7 +732,7 @@ uint16_t nes_cpu::ABX()
 uint16_t nes_cpu::ABY()
 {
     // Get the address from the instruction and add value in y register
-    uint16_t toReturn = mem->read_16(pc) + this->y;
+    uint16_t toReturn = (mem->read_16(pc) + this->y) & 0xFFFF;
 
     // Increment pc for each byte read (2)
     pc += 2;
@@ -743,37 +742,36 @@ uint16_t nes_cpu::ABY()
 
 // Indirect
 // Contains a 16 bit address - identifies the location of the least significant byte of another
-uint16_t nes_cpu::IND()
+uint8_t nes_cpu::IND()
 {
     // Get the address from the instruction
-    uint16_t toReturn = mem->read_16(mem->read_16(pc));
+    uint16_t toReturn = mem->read_16(mem->read_8(pc++));
 
-    // Increment pc for each byte read (2)
-    pc += 2;
-
-    return toReturn;
+    return mem->read_8(toReturn);
 }
 
 // Indexed Indirect
 // Retreives 16 bit address located on zero page at address located in instruction plus x register value
-uint16_t nes_cpu::IID()
+uint8_t nes_cpu::IID()
 {
     // Get the address for zero page from the instruction and add value in x register
     uint8_t temp = mem->read_8(pc++) + this->x;
+    uint16_t toReturn = mem->read_16(temp & 0xFF);
 
     // return the address located in the zero page
-    return mem->read_16(temp & 0xFF);
+    return mem->read_8(toReturn);
 }
 
 // Indirect Indexed
 // Retreives 16 bit address located on zero page at address located in instruction plus y register value
-uint16_t nes_cpu::IDI()
+uint8_t nes_cpu::IDI()
 {
     // Get the zero page address from the instruction
     uint8_t temp = mem->read_8(pc++);
+    uint16_t toReturn = mem->read_16(temp) + this->y;
 
     // Get the target address from zero page and add value in y register
-    return mem->read_16(temp) + this->y;
+    return mem->read_8(toReturn & 0xFFFF);
 }
 
 //----------INSTRUCTION FUNCTIONS----------//

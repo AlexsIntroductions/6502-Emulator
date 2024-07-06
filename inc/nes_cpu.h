@@ -26,15 +26,15 @@
 
 
 /*
-RAM                     :   [0x0000 … 0x2000]
-  -Zero Page        :   [0x0000 … 0x00FF]
-  -STACK            :   [0x0100 … 0x01FF]
-NES MODULES             :   [0x2000 … 0x4020]
-CARTRIDGE RAM           :   [0x6000 … 0x8000]
-PROGRAM ROM             :   [0x8000 … 0xFFFF]
+Zero Page           :   [0x0000 … 0x00FF]
+STACK               :   [0x0100 … 0x01FF]
+Programmer Use      :   [0x0200 … 0x1FFF]
+NES MODULES         :   [0x2000 … 0x4020]
+CARTRIDGE RAM       :   [0x6000 … 0x7FFF]
+PROGRAM ROM         :   [0x8000 … 0xFFFF]
   -NMI handler      :   [0xFFFA … 0xFFFB]
   -Power On Reset   :   [0xFFFC … 0xFFFD]
-  -BRK/IntReqHandler:   [0xFFFE … 0xFFFF]
+  -BRK/IIRQ         :   [0xFFFE … 0xFFFF]
 
 */
 
@@ -104,11 +104,11 @@ private:
   // Absolute Y
   uint16_t ABY();
   // Indirect
-  uint16_t IND();
+  uint8_t IND();
   // Indexed Indirect
-  uint16_t IID();
+  uint8_t IID();
   // Indirect Indexed
-  uint16_t IDI();
+  uint8_t IDI();
 
   void bytes2hex(unsigned char *src, char *out, int len);
 
