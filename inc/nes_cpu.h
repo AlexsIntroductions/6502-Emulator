@@ -104,11 +104,11 @@ private:
   // Absolute Y
   uint16_t ABY();
   // Indirect
-  uint8_t IND();
+  uint16_t IND();
   // Indexed Indirect
-  uint8_t IID();
+  uint16_t IID();
   // Indirect Indexed
-  uint8_t IDI();
+  uint16_t IDI();
 
   void bytes2hex(unsigned char *src, char *out, int len);
 
@@ -117,7 +117,8 @@ private:
 
   void AND(uint8_t val);
 
-  void ASL(uint8_t* val);
+  void ASL(uint16_t val);
+  void ASL_ACC();
 
   void BCC(uint8_t offset);
 
@@ -153,7 +154,7 @@ private:
 
   void CPY(uint8_t val);
 
-  void DEC(uint8_t* val);
+  void DEC(uint16_t address);
 
   void DEX();
 
@@ -161,7 +162,7 @@ private:
 
   void EOR(uint8_t val);
 
-  void INC(uint8_t* val);
+  void INC(uint16_t address);
 
   void INX();
 
@@ -177,7 +178,8 @@ private:
 
   void LDY(uint8_t val);
 
-  void LSR(uint8_t* val);
+  void LSR(uint16_t address);
+  void LSR_ACC();
 
   void NOP();
 
@@ -191,9 +193,11 @@ private:
 
   void PLP();
 
-  void ROL(uint8_t* val);
+  void ROL(uint16_t address);
+  void ROL_ACC();
 
-  void ROR(uint8_t* val);
+  void ROR(uint16_t address);
+  void ROR_ACC();
 
   void RTI();
 

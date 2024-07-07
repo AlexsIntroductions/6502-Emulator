@@ -48,507 +48,657 @@ void nes_cpu::evaluate()
         // ---------------ADC - Add With Carry
     case 0x69:
         // immediate
+        ADC(IMM());
         break;
     case 0x65:
         // Zero Page
+        ADC(mem->read_8(ZPG()));
         break;
     case 0x75:
         // Zero Page X
+        ADC(mem->read_8(ZPX()));
         break;
     case 0x6D:
         // Absolute
+        ADC(mem->read_8(ABS()));
         break;
     case 0x7D:
         // Absolute X
+        ADC(mem->read_8(ABX()));
         break;
     case 0x79:
         // Abolute Y
+        ADC(mem->read_8(ABY()));
         break;
     case 0x61:
         // Indirect X
+        ADC(mem->read_8(IID()));
         break;
     case 0x71:
         // Indirect Y
+        ADC(mem->read_8(IDI()));
         break;
         // ---------------AND - Logical AND
     case 0x29:
         // Immidiate
+        AND(IMM());
         break;
     case 0x25:
         // Zero Page
+        AND(mem->read_8(ZPG()));
         break;
     case 0x35:
         // Zero Page X
+        AND(mem->read_8(ZPX()));
         break;
     case 0x2D:
         // Absolute
+        AND(mem->read_8(ABS()));
         break;
     case 0x3D:
         // Absolute X
+        AND(mem->read_8(ABX()));
         break;
     case 0x39:
         // Absolute Y
+        AND(mem->read_8(ABY()));
         break;
     case 0x21:
         // Indirect X
+        AND(mem->read_8(IID()));
         break;
     case 0x31:
         // Indirect Y
+        AND(mem->read_8(IDI()));
         break;
         // ---------------ASL - Arithmetic Shift Left
     case 0x0A:
         // Accumulator
+        ASL_ACC();
         break;
     case 0x06:
         // Zero Page
+        ASL(ZPG());
         break;
     case 0x16:
         // Zero Page X
+        ASL(ZPX());
         break;
     case 0x0E:
         // Absolute
+        ASL(ABS());
         break;
     case 0x1E:
         // Absolute X
+        ASL(ABX());
         break;
         // ---------------BCC - Branch if Carry Clear
     case 0x90:
         // Relative
+        BCC(REL());
         break;
         // ---------------BCS - Branch if Carry Set
     case 0xB0:
         // Relative
+        BCS(REL());
         break;
         // ---------------BEQ - Branch if Equal
     case 0xF0:
         // Relative
+        BEQ(REL());
         break;
         // ---------------BIT - Bit Test
     case 0x24:
         // Zero Page
+        BIT(mem->read_8(ZPG()));
         break;
     case 0x2C:
         // Absolute
+        BIT(mem->read_8(ABS()));
         break;
         // ---------------BMI - Branch if Minus
     case 0x30:
         // Relative
+        BMI(REL());
         break;
         // ---------------BNE - Branch if Not Equal
     case 0xD0:
         // Relative
+        BNE(REL());
         break;
         // ---------------BPL - Branch if Positive
     case 0x10:
         // Relative
+        BPL(REL());
         break;
         // ---------------BRK - Force Interrupt
     case 0x00:
         // Implied
+        BRK();
         break;
         // ---------------BVC - Branch if Overflow Set
     case 0x70:
         // Relative
+        BVC(REL());
         break;
         // ---------------CLC - Clear Carry Flag
     case 0x18:
         // Implied
+        CLC();
         break;
         // ---------------CLD - Clear Decimal Mode
     case 0xD8:
         // Implied
+        CLD();
         break;
         // ---------------CLI - Clear Interrupt Disable
     case 0x58:
         // Implied
+        CLI();
         break;
         // ---------------CLV - Clear Overflow Flag
     case 0xB8:
         // Implied
+        CLV();
         break;
         // ---------------CMP - Compare
     case 0xC9:
         // Immediate
+        CMP(IMM());
         break;
     case 0xC5:
         // Zero Page
+        CMP(mem->read_8(ZPG()));
         break;
     case 0xD5:
         // Zero Page X
+        CMP(mem->read_8(ZPX()));
         break;
     case 0xCD:
         // Absolute
+        CMP(mem->read_8(ABS()));
         break;
     case 0xDD:
         // Absolute X
+        CMP(mem->read_8(ABX()));
         break;
     case 0xD9:
         // Absolute Y
+        CMP(mem->read_8(ABY()));
         break;
     case 0xC1:
         // Indirect X
+        CMP(mem->read_8(IID()));
         break;
     case 0xD1:
         // Indirect Y
+        CMP(mem->read_8(IDI()));
         break;
         // ---------------CPX - Compare X Register
     case 0xE0:
         // Immediate
+        CPX(IMM());
         break;
     case 0xE4:
         // Zero Page
+        CPX(mem->read_8(ZPG()));
         break;
     case 0xEC:
         // Absolute
+        CPX(mem->read_8(ABS()));
         break;
         // ---------------CPY - Compare Y Register
     case 0xC0:
         // Immediate
+        CPY(IMM());
         break;
     case 0xC4:
         // Zero Page
+        CPY(mem->read_8(ZPG()));
         break;
     case 0xCC:
         // Absolute
+        CPY(mem->read_8(ABS()));
         break;
         // ---------------DEC - Decrement Memory
     case 0xC6:
         // Zero Page
+        DEC(ZPG());
         break;
     case 0xD6:
         // Zero Page X
+        DEC(ZPX());
         break;
     case 0xCE:
         // Absolute
+        DEC(ABS());
         break;
     case 0xDE:
         // Absolute X
+        DEC(ABX());
         break;
         // ---------------DEX - Decrement X Register
     case 0xCA:
         // Implied
+        DEX();
         break;
         // ---------------DEY - Decrement Y Register
     case 0x88:
         // Implied
+        DEY();
         break;
         // ---------------EOR - Exclusive OR
     case 0x49:
         // Immediate
+        EOR(IMM());
         break;
     case 0x45:
         // Zero Page
+        EOR(mem->read_8(ZPG()));
         break;
     case 0x55:
         // Zero Page X
+        EOR(mem->read_8(ZPX()));
         break;
     case 0x4D:
         // Absolute
+        EOR(mem->read_8(ABS()));
         break;
     case 0x5D:
         // Absolute X
+        EOR(mem->read_8(ABX()));
         break;
     case 0x59:
         // Absolue Y
+        EOR(mem->read_8(ABY()));
         break;
     case 0x41:
         // Indirect X
+        EOR(mem->read_8(IID()));
         break;
     case 0x51:
         // Indirect Y
+        EOR(mem->read_8(IDI()));
         break;
         // ---------------INC - Increment Memory
     case 0xE6:
         // Zero Page
+        INC(ZPG());
         break;
     case 0xF6:
         // Zero Page X
+        INC(ZPX());
         break;
     case 0xEE:
         // Absolute
+        INC(ABS());
         break;
     case 0xFE:
         // Absolute X
+        INC(ABX());
         break;
         // ---------------INX - Increment X Register
     case 0xE8:
         // Implied
+        INX();
         break;
         // ---------------INY - Increment Y Register
     case 0xC8:
         // Implied
+        INY();
         break;
         // ---------------JMP - Jump
     case 0x4C:
         // Absolute
+        JMP(ABS());
         break;
     case 0x6C:
         // Indirect
+        JMP(IND());
         break;
         // ---------------JSR - Jump to Subroutine
     case 0x20:
         // Absolute
+        JSR(ABS());
         break;
         // ---------------LDA - Load Accumulator
     case 0xA9:
         // Immediate
+        LDA(IMM());
         break;
     case 0xA5:
         // Zero Page
+        LDA(mem->read_8(ZPG()));
         break;
     case 0xB5:
         // Zero Page X
+        LDA(mem->read_8(ZPX()));
         break;
     case 0xAD:
         // Absolute
+        LDA(mem->read_8(ABS()));
         break;
     case 0xBD:
         // Absolute X
+        LDA(mem->read_8(ABX()));
         break;
     case 0xB9:
         // Absolute Y
+        LDA(mem->read_8(ABY()));
         break;
     case 0xA1:
         // Indirect X
+        LDA(mem->read_8(IID()));
         break;
     case 0xB1:
         // Indirect Y
+        LDA(mem->read_8(IDI()));
         break;
         // ---------------LDX - Load X Register
     case 0xA2:
         // Immediate
+        LDX(IMM());
         break;
     case 0xA6:
         // Zero Page
+        LDX(mem->read_8(ZPG()));
         break;
     case 0xB6:
         // Zero Page Y
+        LDX(mem->read_8(ZPY()));
         break;
     case 0xAE:
         // Absolute
+        LDX(mem->read_8(ABS()));
         break;
     case 0xBE:
         // Absolute Y
+        LDX(mem->read_8(ABY()));
         break;
         // ---------------LDY - Load Y Register
     case 0xA0:
         // Immediate
+        LDY(IMM());
         break;
     case 0xA4:
         // Zero Page
+        LDY(mem->read_8(ZPG()));
         break;
     case 0xB4:
         // Zero Page X
+        LDY(mem->read_8(ZPX()));
         break;
     case 0xAC:
         // Absolute
+        LDY(mem->read_8(ABS()));
         break;
     case 0xBC:
         // Absolute X
+        LDY(mem->read_8(ABX()));
         break;
         // ---------------LSR - Logical Shift Right
     case 0x4A:
         // Accumulator
+        LSR_ACC();
         break;
     case 0x46:
         // Zero Page
+        LSR(ZPG());
         break;
     case 0x56:
         // Zero Page X
+        LSR(ZPX());
         break;
     case 0x4E:
         // Absolute
+        LSR(ABS());
         break;
     case 0x5E:
         // Absolute X
+        LSR(ABX());
         break;
         // ---------------NOP - No Operation
     case 0xEA:
         // Implied
+        NOP();
         break;
         // ---------------ORA - Logical Inclusive OR
     case 0x09:
         // Immediate
+        ORA(IMM());
         break;
     case 0x05:
         // Zero Page
+        ORA(mem->read_8(ZPG()));
         break;
     case 0x15:
         // Zero Page X
+        ORA(mem->read_8(ZPX()));
         break;
     case 0x0D:
         // Absolute
+        ORA(mem->read_8(ABS()));
         break;
     case 0x1D:
         // Absolute X
+        ORA(mem->read_8(ABX()));
         break;
     case 0x19:
         // Absolute Y
+        ORA(mem->read_8(ABY()));
         break;
     case 0x01:
         // Indirect X
+        ORA(mem->read_8(IID()));
         break;
     case 0x11:
         // Indirect Y
+        ORA(mem->read_8(IDI()));
         break;
         // ---------------PHA - Push Accumulator
     case 0x48:
         // Implied
+        PHA();
         break;
         // ---------------PHP - Push Processor Status
     case 0x08:
         // Implied
+        PHP();
         break;
         // ---------------PLA - Pull Accumulator
     case 0x68:
         // Implied
+        PLA();
         break;
         // ---------------PLP - Pull Processor Status
     case 0x28:
         // Implied
+        PLP();
         break;
         // ---------------ROL - Rotate Left
     case 0x2A:
         // Accumulator
+        ROL_ACC();
         break;
     case 0x26:
         // Zero Page
+        ROL(ZPG());
         break;
     case 0x36:
         // Zero Page X
+        ROL(ZPX());
         break;
     case 0x2E:
         // Absolute
+        ROL(ABS());
         break;
     case 0x3E:
         // Absolute X
+        ROL(ABX());
         break;
         // ---------------ROR - Rotate Right
     case 0x6A:
         // Accumulator
+        ROR_ACC();
         break;
     case 0x66:
         // Zero Page
+        ROR(ZPG());
         break;
     case 0x76:
         // Zero Page X
+        ROR(ZPX());
         break;
     case 0x6E:
         // Absolute
+        ROR(ABS());
         break;
     case 0x7E:
         // Absolute X
+        ROR(ABX());
         break;
         // ---------------RTI - Return from Interrupt
     case 0x40:
         // Implied
+        RTI();
         break;
         // ---------------RTS - Return from Subroutine
     case 0x60:
         // Implied
+        RTS();
         break;
         // ---------------SBC - Subtract with Carry
     case 0xE9:
         // Immediate
+        SBC(IMM());
         break;
     case 0xE5:
         // Zero Page
+        SBC(mem->read_8(ZPG()));
         break;
     case 0xF5:
         // Zero Page X
+        SBC(mem->read_8(ZPX()));
         break;
     case 0xED:
         // Absolute
+        SBC(mem->read_8(ABS()));
         break;
     case 0xFD:
         // Absolute X
+        SBC(mem->read_8(ABX()));
         break;
     case 0xF9:
         // Absolute Y
+        SBC(mem->read_8(ABY()));
         break;
     case 0xE1:
         // Indirect X
+        SBC(mem->read_8(IID()));
         break;
     case 0xF1:
         // Indirect Y
+        SBC(mem->read_8(IDI()));
         break;
         // ---------------SEC - Set Carry Flag
     case 0x38:
         // Implied
+        SEC();
         break;
         // ---------------SED - Set Decimal Flag
     case 0xF8:
         // Implied
+        SED();
         break;
         // ---------------SEI - Set Interrupt Disable
     case 0x78:
         // Implied
+        SEI();
         break;
         // ---------------STA - Store Accumulator
     case 0x85:
         // Zero Page
+        STA(ZPG());
         break;
     case 0x95:
         // Zero Page X
+        STA(ZPX());
         break;
     case 0x8D:
         // Absolute
+        STA(ABS());
         break;
     case 0x9D:
         // Absolute X
+        STA(ABX());
         break;
     case 0x99:
         // Absolute Y
+        STA(ABY());
         break;
     case 0x81:
         // Indirect X
+        STA(IID());
         break;
     case 0x91:
         // Indirect Y
+        STA(IDI());
         break;
         // ---------------STX - Store X Register
     case 0x86:
         // Zero Page
+        STX(ZPG());
         break;
     case 0x96:
         // Zero Page Y
+        STX(ZPY());
         break;
     case 0x8E:
         // Absolute
+        STX(ABS());
         break;
         // ---------------STY - Store Y Register
     case 0x84:
         // Zero Page
+        STY(ZPG());
         break;
     case 0x94:
         // Zero Page X
+        STY(ZPX());
         break;
     case 0x8C:
         // Absolute
+        STY(ABS());
         break;
         // ---------------TAX - Transfer Accumulator to X
     case 0xAA:
         // Implied
+        TAX();
         break;
         // ---------------TAY - Transfer Accumulator to Y
     case 0xA8:
         // Implied
+        TAY();
         break;
         // ---------------TSX - Transfer Stack Pointer to X
     case 0xBA:
         // Implied
+        TSX();
         break;
         // ---------------TXA - Transfer X to Accumulator
     case 0x8A:
         // Implied
+        TXA();
         break;
         // ---------------TXS - Transfer X to Stack Pointer
     case 0x9A:
         // Implied
+        TXS();
         break;
         // ---------------TYA - Transfer Y to Accumulator
     case 0x98:
         // Implied
+        TYA();
         break;
     default:
         cout << endl
@@ -628,7 +778,7 @@ void nes_cpu::print_CPU_state()
     cout << "-----------------------------------" << endl;
 }
 
-//----------ADDRESSING MODE FUNCTIONS----------//
+//--------------------ADDRESSING MODE FUNCTIONS--------------------//
 
 /*-----------------------------------------------
 Each function will be called before the instruction
@@ -664,7 +814,7 @@ uint8_t nes_cpu::ZPG()
     uint8_t temp = mem->read_8(pc++);
 
     // return value at this address in the zero page
-    return mem->read_8(temp);
+    return temp;
 }
 
 // Zero Page X
@@ -677,7 +827,7 @@ uint8_t nes_cpu::ZPX()
 
     // Make sure address lies between 0x00 and 0xFF
     // return value at this address in the zero page
-    return mem->read_8(temp & 0xFF);
+    return temp & 0xFF;
 }
 
 // Zero Page Y
@@ -690,7 +840,7 @@ uint8_t nes_cpu::ZPY()
 
     // Make sure address lies between 0x00 and 0xFF
     // return value at this address in the zero page
-    return mem->read_8(temp & 0xFF);
+    return temp & 0xFF;
 }
 
 // Relative
@@ -702,7 +852,7 @@ int8_t nes_cpu::REL()
 }
 
 // Absolute
-// Contains a full 16 bit address of target location
+// Reads a full 16 bit address of target location
 uint16_t nes_cpu::ABS()
 {
     // Get the address from the instruction
@@ -719,62 +869,64 @@ uint16_t nes_cpu::ABS()
 uint16_t nes_cpu::ABX()
 {
     // Get the address from the instruction and add value in x register
-    uint16_t toReturn = (mem->read_16(pc) + this->x) & 0xFFFF;
+    uint16_t toReturn = (mem->read_16(pc) + this->x);
 
     // Increment pc for each byte read (2)
     pc += 2;
 
-    return toReturn;
+    return toReturn & 0xFFFF;
 }
 
 // Absolute Y
-// Contains a 16 bit address with added offset from y register
+// Reads a 16 bit address with added offset from y register
 uint16_t nes_cpu::ABY()
 {
     // Get the address from the instruction and add value in y register
-    uint16_t toReturn = (mem->read_16(pc) + this->y) & 0xFFFF;
+    uint16_t toReturn = (mem->read_16(pc) + this->y);
 
     // Increment pc for each byte read (2)
+    pc += 2;
+
+    return toReturn & 0xFFFF;
+}
+
+// Indirect
+// Retreives a 16 bit address - identifies the location of the least significant byte of another
+uint16_t nes_cpu::IND()
+{
+    // Get the address from the instruction
+    uint16_t toReturn = mem->read_16(mem->read_16(pc));
+
     pc += 2;
 
     return toReturn;
 }
 
-// Indirect
-// Contains a 16 bit address - identifies the location of the least significant byte of another
-uint8_t nes_cpu::IND()
-{
-    // Get the address from the instruction
-    uint16_t toReturn = mem->read_16(mem->read_8(pc++));
-
-    return mem->read_8(toReturn);
-}
-
-// Indexed Indirect
+// Indexed Indirect (Indirect X)
 // Retreives 16 bit address located on zero page at address located in instruction plus x register value
-uint8_t nes_cpu::IID()
+uint16_t nes_cpu::IID()
 {
     // Get the address for zero page from the instruction and add value in x register
     uint8_t temp = mem->read_8(pc++) + this->x;
     uint16_t toReturn = mem->read_16(temp & 0xFF);
 
     // return the address located in the zero page
-    return mem->read_8(toReturn);
+    return toReturn;
 }
 
-// Indirect Indexed
+// Indirect Indexed (Indirect Y)
 // Retreives 16 bit address located on zero page at address located in instruction plus y register value
-uint8_t nes_cpu::IDI()
+uint16_t nes_cpu::IDI()
 {
     // Get the zero page address from the instruction
     uint8_t temp = mem->read_8(pc++);
     uint16_t toReturn = mem->read_16(temp) + this->y;
 
     // Get the target address from zero page and add value in y register
-    return mem->read_8(toReturn & 0xFFFF);
+    return toReturn & 0xFFFF;
 }
 
-//----------INSTRUCTION FUNCTIONS----------//
+//--------------------INSTRUCTION FUNCTIONS--------------------//
 
 // ADC - Add with Carry
 void nes_cpu::ADC(uint8_t val)
@@ -815,20 +967,44 @@ void nes_cpu::AND(uint8_t val)
 }
 
 // ASL - Arithmetic Shift Left
-void nes_cpu::ASL(uint8_t *val)
+void nes_cpu::ASL(uint16_t address)
 {
+    uint8_t val = mem->read_8(address);
+
     // Check Carry Flag
-    (*val & 0x80) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+    (val & 0x80) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
 
     // Shift the memory value left one
-    uint8_t temp = (*val << 1);
-    *val = temp & 0xFE;
+    uint8_t temp = (val << 1);
+    val = temp & 0xFE;
 
     // Check Zero Flag
     (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+
+    mem->write_8(address, val);
+}
+
+void nes_cpu::ASL_ACC()
+{
+    uint8_t val = a;
+
+    // Check Carry Flag
+    (val & 0x80) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+
+    // Shift the memory value left one
+    uint8_t temp = (val << 1);
+    val = temp & 0xFE;
+
+    // Check Zero Flag
+    (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+
+    // Check Negative Flag
+    (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+
+    a = val;
 }
 
 // BCC - Branch if Carry Clear
@@ -1026,17 +1202,20 @@ void nes_cpu::CPY(uint8_t val)
 }
 
 // DEC - Decrement Memory
-void nes_cpu::DEC(uint8_t *val)
+void nes_cpu::DEC(uint16_t address)
 {
     // Decrement the Memory Value by One
-    *val -= 1;
-    *val &= 0xFF;
+    uint8_t val = mem->read_8(address);
+    val -= 1;
+    val &= 0xFF;
 
     // Check Zero Flag
-    (*val == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+    (val == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
     // Check Negative Flag
-    (*val & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+    (val & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+
+    mem->write_8(address, val);
 }
 
 // DEX - Decrement X Register
@@ -1079,17 +1258,21 @@ void nes_cpu::EOR(uint8_t val)
 }
 
 // INC - Increment Memory
-void nes_cpu::INC(uint8_t *val)
+void nes_cpu::INC(uint16_t address)
 {
+    uint8_t val = mem->read_8(address);
+
     // Increment the Memory Value by One
-    *val += 1;
-    *val &= 0xFF;
+    val += 1;
+    val &= 0xFF;
 
     // Check Zero Flag
-    (*val == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+    (val == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
     // Check Negative Flag
-    (*val & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+    (val & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+
+    mem->write_8(address, val);
 }
 
 // INX - Increment X Register
@@ -1177,20 +1360,43 @@ void nes_cpu::LDY(uint8_t val)
 }
 
 // LSR - Logical Shift Right
-void nes_cpu::LSR(uint8_t *val)
+void nes_cpu::LSR(uint16_t address)
 {
+    uint8_t val = mem->read_8(address);
+
     // Check Carry Flag
-    (*val & 0x01) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+    (val & 0x01) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
 
     // Shift the memory value left one
-    uint8_t temp = (*val >> 1);
-    *val = temp;
+    uint8_t temp = (val >> 1);
+    val = temp;
 
     // Check Zero Flag
     (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
     // Clear Negative Flag (leftmost bit always 0)
     status &= N_FLAG_INV;
+
+    mem->write_8(address, val);
+}
+void nes_cpu::LSR_ACC()
+{
+    uint8_t val = a;
+
+    // Check Carry Flag
+    (val & 0x01) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+
+    // Shift the memory value left one
+    uint8_t temp = (val >> 1);
+    val = temp;
+
+    // Check Zero Flag
+    (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+
+    // Clear Negative Flag (leftmost bit always 0)
+    status &= N_FLAG_INV;
+
+    a = val;
 }
 
 // NOP - No Operation
@@ -1244,19 +1450,41 @@ void nes_cpu::PLP()
 }
 
 // ROL - Rotate Left
-void nes_cpu::ROL(uint8_t *val)
+void nes_cpu::ROL(uint16_t address)
 {
+    uint8_t val = mem->read_8(address);
+
     // Move Memory Value one to Left
-    uint8_t temp = (*val << 1);
+    uint8_t temp = (val << 1);
 
     // Bit 0 - filled with current Carry Flag Value
     temp |= (status & C_FLAG);
 
     // Bit 7 becomes new Carry Flag Value
-    (*val & 0x80) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+    (val & 0x80) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
 
     // Set Memory to new Value
-    *val = temp;
+    mem->write_8(address, temp);
+
+    // Check Zero Flag
+    (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+
+    // Check Negative Flag
+    (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+}
+void nes_cpu::ROL_ACC()
+{
+    // Move Accumulator Value one to Left
+    uint8_t temp = (a << 1);
+
+    // Bit 0 - filled with current Carry Flag Value
+    temp |= (status & C_FLAG);
+
+    // Bit 7 becomes new Carry Flag Value
+    (a & 0x80) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+
+    // Set Memory to new Value
+    a = temp;
 
     // Check Zero Flag
     (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
@@ -1266,19 +1494,41 @@ void nes_cpu::ROL(uint8_t *val)
 }
 
 // ROR - Rotate Right
-void nes_cpu::ROR(uint8_t *val)
+void nes_cpu::ROR(uint16_t address)
 {
+    uint8_t val = mem->read_8(address);
+
     // Move Memory Value one to Right
-    uint8_t temp = (*val >> 1);
+    uint8_t temp = (val >> 1);
 
     // Bit 7 - filled with current Carry Flag Value
     temp |= ((status & C_FLAG) << 7);
 
     // Bit 0 becomes new Carry Flag Value
-    (*val & 0x01) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+    (val & 0x01) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
 
     // Set Memory to new Value
-    *val = temp;
+    mem->write_8(address, temp);
+
+    // Check Zero Flag
+    (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+
+    // Check Negative Flag
+    (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+}
+void nes_cpu::ROR_ACC()
+{
+    // Move Memory Value one to Right
+    uint8_t temp = (a >> 1);
+
+    // Bit 7 - filled with current Carry Flag Value
+    temp |= ((status & C_FLAG) << 7);
+
+    // Bit 0 becomes new Carry Flag Value
+    (a & 0x01) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+
+    // Set Memory to new Value
+    a = temp;
 
     // Check Zero Flag
     (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
