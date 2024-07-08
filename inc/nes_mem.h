@@ -7,13 +7,15 @@
 class nes_mem
 {
     uint8_t mem[0xFFFF];
-    int debug = 0;
+    int debug = 1;
 public:
     nes_mem();
     ~nes_mem();
 
     // Component Functions
     void load(std::string filename);
+    void load2address(std::string filename, uint16_t address);
+    void loadNesTest();
 
     // General Memory Access Functions
     uint8_t read_8(uint16_t addr);

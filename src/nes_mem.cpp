@@ -112,6 +112,151 @@ void nes_mem::load(string filename)
     }
 }
 
+void nes_mem::load2address(string filename, uint16_t address){
+
+    // ROM reading code taken from: https://forums.nesdev.org/viewtopic.php?t=15104
+
+    ifstream rom;
+    int romSize;
+    rom.open(filename, ios_base::in | ios::binary);
+    if (!rom.is_open())
+    {
+        cout << "Error Loading ROM: " << filename << endl;
+        return;
+    }
+
+    if (debug == 1)
+    {
+        cout << "READING ROM" << endl;
+    }
+
+    rom.seekg(0, rom.end);
+    romSize = rom.tellg();
+    rom.seekg(0, rom.beg);
+
+    if (debug == 1)
+    {
+        cout << "ROM SIZE: " << romSize << endl;
+    }
+
+    char *buffer = new char[romSize];
+    rom.read(reinterpret_cast<char *>(buffer), romSize);
+
+    if (debug == 1)
+    {
+        cout << "ROM BUFFER LOADED" << endl;
+    }
+
+    // Erase Current Memory ??(Find cleaner way to do this)
+    for (unsigned int i = 0; i < 0xFFFF; i++)
+    {
+        mem[i] = 0;
+    }
+
+    if (debug == 1)
+    {
+        cout << "DONE WRITING MEMORY" << endl;
+    }
+
+    // Load ROM from 0x4020 to 0xFFFF
+    for (unsigned int i = address; i < 0xFFFF; i++)
+    {
+        mem[i] = (unsigned char)buffer[i];
+    }
+
+    if (debug == 1)
+    {
+        cout << "ROM Loaded, Current Memory State: " << endl;
+        char output[0xFFFF * 2];
+        bytes2hex(this->mem, output, romSize);
+        for (int i = 0; i < sizeof(output); i += 2)
+        {
+            if (i % 120 == 0)
+            {
+                cout << endl;
+            }
+            else if (i % 8 == 0)
+            {
+                cout << " ";
+            }
+            cout << output[i] << output[i + 1] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void nes_mem::loadNesTest(){
+// ROM reading code taken from: https://forums.nesdev.org/viewtopic.php?t=15104
+
+    ifstream rom;
+    int romSize;
+    rom.open("nestest.nes", ios_base::in | ios::binary);
+    if (!rom.is_open())
+    {
+        cout << "Error Loading NESTEST" << endl;
+        return;
+    }
+
+    if (debug == 1)
+    {
+        cout << "READING ROM" << endl;
+    }
+
+    rom.seekg(0, rom.end);
+    romSize = rom.tellg();
+    rom.seekg(0, rom.beg);
+
+    if (debug == 1)
+    {
+        cout << "ROM SIZE: " << romSize << endl;
+    }
+
+    char *buffer = new char[romSize];
+    rom.read(reinterpret_cast<char *>(buffer), romSize);
+
+    if (debug == 1)
+    {
+        cout << "ROM BUFFER LOADED" << endl;
+    }
+
+    // Erase Current Memory ??(Find cleaner way to do this)
+    for (unsigned int i = 0; i < 0xFFFF; i++)
+    {
+        mem[i] = 0;
+    }
+
+    if (debug == 1)
+    {
+        cout << "DONE WRITING MEMORY" << endl;
+    }
+
+    // Load ROM from 0x4020 to 0xFFFF
+    for (unsigned int i = 0x4020; i < 0xFFFF; i++)
+    {
+        mem[i] = (unsigned char)buffer[i];
+    }
+
+    if (debug == 1)
+    {
+        cout << "ROM Loaded, Current Memory State: " << endl;
+        char output[0xFFFF * 2];
+        bytes2hex(this->mem, output, romSize);
+        for (int i = 0; i < sizeof(output); i += 2)
+        {
+            if (i % 120 == 0)
+            {
+                cout << endl;
+            }
+            else if (i % 8 == 0)
+            {
+                cout << " ";
+            }
+            cout << output[i] << output[i + 1] << " ";
+        }
+        cout << endl;
+    }
+}
+
 //--------------------General Memory Access Functions--------------------//
 
 uint8_t nes_mem::read_8(uint16_t addr)
