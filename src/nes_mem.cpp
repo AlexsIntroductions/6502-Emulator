@@ -204,29 +204,11 @@ void nes_mem::loadNesTest()
         // cout << endl;
     }
 
-    for (uint16_t i = 0; i < 0x4; i+=1)
+    for (uint16_t i = 0; i < 0x4000; i+=1)
     {
-        //uint8_t temp = (uint8_t)buffer[i + 0x10];
-        mem[0x0] = 0xA0;
-        mem[0x1] = 0xA0;
-        mem[0x2] = 0xA0;
-        mem[0x3] = 0xA0;
-        mem[0x4] = 0xA0;
-        mem[0x5] = 0xA0;
-        mem[0x6] = 0xA0;
-        mem[0x7] = 0xA0;
-        mem[0x8] = 0xA0;
-        mem[0x9] = 0xA0;
-        mem[0xA] = 0xA0;
-        mem[0x70] = 0xA0;
-        mem[0xe0] = 0xA0;
-        mem[256] = 0xA0;
-        mem[0xFF0] = 0xA0;
-        mem[0xFFFD] = 0xA0;
-        mem[0xFFFE] = 0xA0;
-        mem[0xFFFF] = 0xA0;
-        //mem[(uint16_t)(0xC0 + i)] = temp;
-        //mem[i + 0xC000] = temp;
+        uint8_t temp = (uint8_t)buffer[i + 0x10];
+        mem[(uint16_t)(0x8000 + i)] = temp;
+        mem[(uint16_t)(0xC000 + i)] = temp;
     }
 
     if (debug == 1)
@@ -348,4 +330,5 @@ void nes_mem::print_mem()
         }
         cout << tempBuffer[i] << tempBuffer[i + 1] << " ";
     }
+    cout << endl;
 }
