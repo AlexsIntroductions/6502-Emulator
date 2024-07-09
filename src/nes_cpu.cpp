@@ -42,9 +42,12 @@ void nes_cpu::evaluate()
     // Get Current Instruction from Memory and Increment PC
     uint8_t opcode = mem->read_8(pc++);
 
+
+
     if (debug == 1){
-        cout << "CURRENT OPCODE: " << std::hex << opcode << endl;
+        cout << "CURRENT OPCODE: " << std::hex << opcode << endl << endl;
     }
+    
     // Execute Code Goes Here
     switch (opcode)
     {
@@ -723,6 +726,10 @@ void nes_cpu::evaluate()
 void nes_cpu::set_mem(nes_mem *_mem)
 {
     mem = _mem;
+}
+
+void nes_cpu::set_pc(uint16_t address){
+    pc = address;
 }
 
 void nes_cpu::set_debug(int val)

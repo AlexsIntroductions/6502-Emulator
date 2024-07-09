@@ -82,9 +82,16 @@ void nes::loadNesTest()
 {
     mem->loadNesTest();
     cpu->set_mem(mem);
-    /**
-     * WILL NEED TO RESET THE CPU AND PPU TO INITIAL STATES HERE vv
-     */
+    cpu->set_pc(0xC000);
+
+    // evaluate each instruction one at a time untile program end reached
+    string temp = "c";
+    while(temp == "c"){
+        cpu->evaluate();
+        cin >> temp;
+    }
+
+
 }
 
 void nes::eject()
@@ -115,6 +122,6 @@ void nes::set_debug(int val)
 {
     debug = val;
     cpu->set_debug(val);
-    mem->set_debug(val);
-    ppu->set_debug(val);
+    //mem->set_debug(val);
+    //ppu->set_debug(val);
 }

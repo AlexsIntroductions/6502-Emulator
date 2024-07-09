@@ -74,6 +74,7 @@ public:
   ~nes_cpu();
   void evaluate();
   void set_mem(nes_mem *_mem);
+  void set_pc(uint16_t address);
   void print_CPU_state();
 
   // Debug Functions
