@@ -42,6 +42,9 @@ void nes_cpu::evaluate()
     // Get Current Instruction from Memory and Increment PC
     uint8_t opcode = mem->read_8(pc++);
 
+    if (debug == 1){
+        cout << "CURRENT OPCODE: " << std::hex << opcode << endl;
+    }
     // Execute Code Goes Here
     switch (opcode)
     {
@@ -796,6 +799,10 @@ void nes_cpu::IMP()
 // Operate directly on the accumulator
 uint8_t nes_cpu::ACC()
 {
+    
+    if (debug == 1){
+        cout << "ADDRESSING MODE: ACCUMULATOR | VALUE: " << std:: hex << a << endl;
+    }
     return this->a;
 }
 
@@ -803,6 +810,9 @@ uint8_t nes_cpu::ACC()
 // Directly specify an 8 bit constant within the instruction
 uint8_t nes_cpu::IMM()
 {
+    if (debug == 1){
+        cout << "ADDRESSING MODE: IMMEDIATE | VALUE: " << std:: hex << mem->read_8(pc) << endl;
+    }
     return mem->read_8(pc++);
 }
 
@@ -812,7 +822,10 @@ uint8_t nes_cpu::ZPG()
 {
     // Get zero page address from instruction
     uint8_t temp = mem->read_8(pc++);
-
+    
+    if (debug == 1){
+        cout << "ADDRESSING MODE: ZERO PAGE | ADDRESS " << std:: hex << temp << " | VALUE: " << std:: hex << mem->read_8(temp) << endl;
+    }
     // return value at this address in the zero page
     return temp;
 }
@@ -824,6 +837,10 @@ uint8_t nes_cpu::ZPX()
     // Get zero page address from instruction
     // Add value in x register
     uint8_t temp = mem->read_8(pc++) + this->x;
+
+    if (debug == 1){
+        cout << "ADDRESSING MODE: ZERO PAGE X | ADDRESS " << std:: hex << temp << " | VALUE: " << std:: hex << mem->read_8(temp) << endl;
+    }
 
     // Make sure address lies between 0x00 and 0xFF
     // return value at this address in the zero page
@@ -838,6 +855,10 @@ uint8_t nes_cpu::ZPY()
     // Add value in y register
     uint8_t temp = mem->read_8(pc++) + this->y;
 
+    if (debug == 1){
+        cout << "ADDRESSING MODE: ZERO PAGE Y | ADDRESS " << std:: hex << temp << " | VALUE: " << std:: hex << mem->read_8(temp) << endl;
+    }
+
     // Make sure address lies between 0x00 and 0xFF
     // return value at this address in the zero page
     return temp & 0xFF;
@@ -848,6 +869,10 @@ uint8_t nes_cpu::ZPY()
 int8_t nes_cpu::REL()
 {
     // return the offset from memory
+    if (debug == 1){
+        cout << "ADDRESSING MODE: RELATIVE | SIGNED OFFSET " << std:: hex << mem->read_8(pc) << endl;
+    }
+
     return (int8_t)mem->read_8(pc++);
 }
 
@@ -857,6 +882,10 @@ uint16_t nes_cpu::ABS()
 {
     // Get the address from the instruction
     uint8_t toReturn = mem->read_16(pc);
+
+    if (debug == 1){
+        cout << "ADDRESSING MODE: ABSOLUTE | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+    }
 
     // Increment pc for each byte read (2)
     pc += 2;
@@ -871,6 +900,10 @@ uint16_t nes_cpu::ABX()
     // Get the address from the instruction and add value in x register
     uint16_t toReturn = (mem->read_16(pc) + this->x);
 
+    if (debug == 1){
+        cout << "ADDRESSING MODE: ABSOLUTE X | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+    }
+
     // Increment pc for each byte read (2)
     pc += 2;
 
@@ -883,6 +916,11 @@ uint16_t nes_cpu::ABY()
 {
     // Get the address from the instruction and add value in y register
     uint16_t toReturn = (mem->read_16(pc) + this->y);
+
+    if (debug == 1){
+        cout << "ADDRESSING MODE: ABSOLUTE Y | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+    }
+
 
     // Increment pc for each byte read (2)
     pc += 2;
@@ -897,6 +935,11 @@ uint16_t nes_cpu::IND()
     // Get the address from the instruction
     uint16_t toReturn = mem->read_16(mem->read_16(pc));
 
+    if (debug == 1){
+        cout << "ADDRESSING MODE: INDIRECT | ADDRESS " << std:: hex << toReturn << endl;
+    }
+
+
     pc += 2;
 
     return toReturn;
@@ -910,6 +953,10 @@ uint16_t nes_cpu::IID()
     uint8_t temp = mem->read_8(pc++) + this->x;
     uint16_t toReturn = mem->read_16(temp & 0xFF);
 
+    if (debug == 1){
+        cout << "ADDRESSING MODE: INDIRECT X | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+    }
+
     // return the address located in the zero page
     return toReturn;
 }
@@ -921,6 +968,10 @@ uint16_t nes_cpu::IDI()
     // Get the zero page address from the instruction
     uint8_t temp = mem->read_8(pc++);
     uint16_t toReturn = mem->read_16(temp) + this->y;
+
+    if (debug == 1){
+        cout << "ADDRESSING MODE: INDIRECT Y | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+    }
 
     // Get the target address from zero page and add value in y register
     return toReturn & 0xFFFF;
