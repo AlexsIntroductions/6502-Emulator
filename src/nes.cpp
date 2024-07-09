@@ -78,6 +78,15 @@ void nes::load(string filename)
      */
 }
 
+void nes::loadNesTest()
+{
+    mem->loadNesTest();
+    cpu->set_mem(mem);
+    /**
+     * WILL NEED TO RESET THE CPU AND PPU TO INITIAL STATES HERE vv
+     */
+}
+
 void nes::eject()
 {
 }

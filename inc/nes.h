@@ -22,6 +22,7 @@ public:
     //nes(sf::RenderWindow* _window);
     ~nes();
     void load(std::string filename);
+    void loadNesTest();
     void eject();
     void start();
     void reset();

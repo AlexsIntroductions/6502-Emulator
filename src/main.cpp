@@ -18,7 +18,9 @@ int main()
     // Set If Debugging is Necessary
     system.set_debug(1);
 
-    system.load("../test.nes");
+    system.loadNesTest();
+
+
 
     /*
     while (window.isOpen())

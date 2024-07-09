@@ -8,27 +8,17 @@ nes_mem::nes_mem()
     {
         cout << "New NES_MEM Created" << endl;
     }
-    // TEST PROGRAM
-    // LDA #$01
-    // STA $0200
-    // LDA #$05
-    // STA $0201
-    // LDA #$08
-    // STA $0202
-    mem[0] = 0x01;
-    mem[1] = 0x8d;
-    mem[2] = 0x00;
-    mem[3] = 0x02;
-    mem[4] = 0xa9;
-    mem[5] = 0x05;
-    mem[6] = 0x8d;
-    mem[7] = 0x01;
-    mem[8] = 0x02;
-    mem[9] = 0xa9;
-    mem[10] = 0x08;
-    mem[11] = 0x8d;
-    mem[12] = 0x02;
-    mem[13] = 0x02;
+
+    // Erase Current Memory ??(Find cleaner way to do this)
+    for (unsigned int i = 0; i < 0xFFFF; i++)
+    {
+        mem[i] = 0;
+    }
+
+    if (debug == 1)
+    {
+        cout << "DONE CLEARING MEMORY" << endl;
+    }
 }
 
 nes_mem::~nes_mem()
@@ -96,23 +86,12 @@ void nes_mem::load(string filename)
         cout << "ROM Loaded, Current Memory State: " << endl;
         char output[0xFFFF * 2];
         bytes2hex(this->mem, output, romSize);
-        for (int i = 0; i < sizeof(output); i += 2)
-        {
-            if (i % 120 == 0)
-            {
-                cout << endl;
-            }
-            else if (i % 8 == 0)
-            {
-                cout << " ";
-            }
-            cout << output[i] << output[i + 1] << " ";
-        }
-        cout << endl;
+        print_mem();
     }
 }
 
-void nes_mem::load2address(string filename, uint16_t address){
+void nes_mem::load2address(string filename, uint16_t address)
+{
 
     // ROM reading code taken from: https://forums.nesdev.org/viewtopic.php?t=15104
 
@@ -169,24 +148,13 @@ void nes_mem::load2address(string filename, uint16_t address){
         cout << "ROM Loaded, Current Memory State: " << endl;
         char output[0xFFFF * 2];
         bytes2hex(this->mem, output, romSize);
-        for (int i = 0; i < sizeof(output); i += 2)
-        {
-            if (i % 120 == 0)
-            {
-                cout << endl;
-            }
-            else if (i % 8 == 0)
-            {
-                cout << " ";
-            }
-            cout << output[i] << output[i + 1] << " ";
-        }
-        cout << endl;
+        print_mem();
     }
 }
 
-void nes_mem::loadNesTest(){
-// ROM reading code taken from: https://forums.nesdev.org/viewtopic.php?t=15104
+void nes_mem::loadNesTest()
+{
+    // ROM reading code taken from: https://forums.nesdev.org/viewtopic.php?t=15104
 
     ifstream rom;
     int romSize;
@@ -208,7 +176,7 @@ void nes_mem::loadNesTest(){
 
     if (debug == 1)
     {
-        cout << "ROM SIZE: " << romSize << endl;
+        cout << "ROM SIZE: " << std::hex << romSize << endl;
     }
 
     char *buffer = new char[romSize];
@@ -216,44 +184,51 @@ void nes_mem::loadNesTest(){
 
     if (debug == 1)
     {
-        cout << "ROM BUFFER LOADED" << endl;
+        cout << "ROM BUFFER CREATED" << endl;
+        // char buffer2[0xFFFF * 2 + 1];
+        // bytes2hex(buffer, buffer2, romSize);
+        // for (int i = 0; i < romSize; i += 2)
+        // {
+        //     // Every 0x100 bytes print a line
+        //     if (i % 0xC0 == 0)
+        //     {
+        //         cout << endl;
+        //         cout << std::hex << i << " : ";
+        //     }
+        //     else if (i % 8 == 0)
+        //     {
+        //         cout << " ";
+        //     }
+        //     cout << buffer2[i] << buffer2[i + 1] << " ";
+        // }
+        // cout << endl;
     }
 
-    // Erase Current Memory ??(Find cleaner way to do this)
-    for (unsigned int i = 0; i < 0xFFFF; i++)
+    for (uint16_t i = 0; i < 0x4; i+=1)
     {
-        mem[i] = 0;
+        uint8_t temp = (uint8_t)buffer[i + 0x10];
+        mem[0x0] = 0xA0;
+        mem[0x1] = 0xA0;
+        mem[0x2] = 0xA0;
+        mem[0x3] = 0xA0;
+        mem[0x4] = 0xA0;
+        mem[0x5] = 0xA0;
+        mem[0x6] = 0xA0;
+        mem[0x7] = 0xA0;
+        mem[0x8] = 0xA0;
+        mem[0x9] = 0xA0;
+        mem[256] = 0xA0;
+        //mem[(uint16_t)(0xC0 + i)] = temp;
+        //mem[i + 0xC000] = temp;
     }
 
     if (debug == 1)
     {
-        cout << "DONE WRITING MEMORY" << endl;
-    }
-
-    // Load ROM from 0x4020 to 0xFFFF
-    for (unsigned int i = 0x4020; i < 0xFFFF; i++)
-    {
-        mem[i] = (unsigned char)buffer[i];
-    }
-
-    if (debug == 1)
-    {
-        cout << "ROM Loaded, Current Memory State: " << endl;
+        cout << endl;
+        cout << "ROM Loaded, Current Memory State: " << endl << endl;
         char output[0xFFFF * 2];
         bytes2hex(this->mem, output, romSize);
-        for (int i = 0; i < sizeof(output); i += 2)
-        {
-            if (i % 120 == 0)
-            {
-                cout << endl;
-            }
-            else if (i % 8 == 0)
-            {
-                cout << " ";
-            }
-            cout << output[i] << output[i + 1] << " ";
-        }
-        cout << endl;
+        print_mem();
     }
 }
 
@@ -335,15 +310,29 @@ void nes_mem::bytes2hex(unsigned char *src, char *out, int len)
     *out = 0;
 }
 
+void nes_mem::bytes2hex(char *src, char *out, int len)
+{
+    char HexLookUp[] = "0123456789abcdef";
+    while (len--)
+    {
+        *out++ = HexLookUp[(unsigned char)*src >> 4];
+        *out++ = HexLookUp[(unsigned char)*src & 0x0F];
+        src++;
+    }
+    *out = 0;
+}
+
 void nes_mem::print_mem()
 {
     char buffer[0xFFFF * 2 + 1];
     bytes2hex(mem, buffer, sizeof(mem));
-    for (int i = 0; i < sizeof(buffer) / sizeof(int); i += 2)
+    for (int i = 0; i < 0xFFFF; i += 2)
     {
-        if (i % 16 == 0)
+        // Every 0x100 bytes print a line
+        if (i % 0x100 == 0)
         {
             cout << endl;
+            cout << std::hex << i << " : ";
         }
         else if (i % 8 == 0)
         {

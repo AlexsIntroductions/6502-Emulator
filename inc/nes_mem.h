@@ -37,4 +37,5 @@ public:
 
 private:
     void bytes2hex(unsigned char *src, char *out, int len);
+    void bytes2hex(char *src, char *out, int len);
 };
