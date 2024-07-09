@@ -185,23 +185,6 @@ void nes_mem::loadNesTest()
     if (debug == 1)
     {
         cout << "ROM BUFFER CREATED" << endl;
-        // char buffer2[0xFFFF * 2 + 1];
-        // bytes2hex(buffer, buffer2, romSize);
-        // for (int i = 0; i < romSize; i += 2)
-        // {
-        //     // Every 0x100 bytes print a line
-        //     if (i % 0xC0 == 0)
-        //     {
-        //         cout << endl;
-        //         cout << std::hex << i << " : ";
-        //     }
-        //     else if (i % 8 == 0)
-        //     {
-        //         cout << " ";
-        //     }
-        //     cout << buffer2[i] << buffer2[i + 1] << " ";
-        // }
-        // cout << endl;
     }
 
     for (uint16_t i = 0; i < 0x4000; i+=1)
