@@ -45,7 +45,9 @@ void nes_cpu::evaluate()
 
 
     if (debug == 1){
-        cout << "CURRENT OPCODE: " << std::hex << opcode << endl << endl;
+        char buf[2];
+        bytes2hex((unsigned char*)&opcode, buf, 1);
+        cout << "CURRENT OPCODE: " << buf[0] << buf[1] << endl << endl;
     }
     
     // Execute Code Goes Here
@@ -808,19 +810,24 @@ uint8_t nes_cpu::ACC()
 {
     
     if (debug == 1){
-        cout << "ADDRESSING MODE: ACCUMULATOR | VALUE: " << std:: hex << a << endl;
+        char buf[2];
+        bytes2hex((unsigned char*)&a, buf, 1);
+        cout << "ADDRESSING MODE: ACCUMULATOR | VALUE: " << buf[0] << buf[1] << endl;
     }
-    return this->a;
+    return a;
 }
 
 // Immediate
 // Directly specify an 8 bit constant within the instruction
 uint8_t nes_cpu::IMM()
 {
+    uint8_t temp = mem->read_8(pc++);
     if (debug == 1){
-        cout << "ADDRESSING MODE: IMMEDIATE | VALUE: " << std:: hex << mem->read_8(pc) << endl;
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        cout << "ADDRESSING MODE: IMMEDIATE | VALUE: " << buf[0] << buf[1] << endl;
     }
-    return mem->read_8(pc++);
+    return temp;
 }
 
 // Zero Page
@@ -831,7 +838,12 @@ uint8_t nes_cpu::ZPG()
     uint8_t temp = mem->read_8(pc++);
     
     if (debug == 1){
-        cout << "ADDRESSING MODE: ZERO PAGE | ADDRESS " << std:: hex << temp << " | VALUE: " << std:: hex << mem->read_8(temp) << endl;
+        uint8_t tempVal = mem->read_8(temp);
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ZERO PAGE | ADDRESS " << buf[0] << buf[1] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
     // return value at this address in the zero page
     return temp;
@@ -846,7 +858,12 @@ uint8_t nes_cpu::ZPX()
     uint8_t temp = mem->read_8(pc++) + this->x;
 
     if (debug == 1){
-        cout << "ADDRESSING MODE: ZERO PAGE X | ADDRESS " << std:: hex << temp << " | VALUE: " << std:: hex << mem->read_8(temp) << endl;
+        int8_t tempVal = mem->read_8(temp);
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ZERO PAGE X | ADDRESS " << buf[0] << buf[1] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
 
     // Make sure address lies between 0x00 and 0xFF
@@ -863,7 +880,12 @@ uint8_t nes_cpu::ZPY()
     uint8_t temp = mem->read_8(pc++) + this->y;
 
     if (debug == 1){
-        cout << "ADDRESSING MODE: ZERO PAGE Y | ADDRESS " << std:: hex << temp << " | VALUE: " << std:: hex << mem->read_8(temp) << endl;
+        uint8_t tempVal = mem->read_8(temp);
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ZERO PAGE Y | ADDRESS " << buf[0] << buf[1] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
 
     // Make sure address lies between 0x00 and 0xFF
@@ -877,7 +899,10 @@ int8_t nes_cpu::REL()
 {
     // return the offset from memory
     if (debug == 1){
-        cout << "ADDRESSING MODE: RELATIVE | SIGNED OFFSET " << std:: hex << mem->read_8(pc) << endl;
+        uint8_t temp = mem->read_8(pc);
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        cout << "ADDRESSING MODE: RELATIVE | SIGNED OFFSET " << buf[0] << buf[1] << endl;
     }
 
     return (int8_t)mem->read_8(pc++);
@@ -888,9 +913,10 @@ int8_t nes_cpu::REL()
 uint16_t nes_cpu::ABS()
 {
     // Get the address from the instruction
-    uint8_t toReturn = mem->read_16(pc);
+    uint16_t toReturn = mem->read_16(pc);
 
     if (debug == 1){
+        uint8_t tempVal = mem->read_8(toReturn);
         cout << "ADDRESSING MODE: ABSOLUTE | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
     }
 

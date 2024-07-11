@@ -210,7 +210,10 @@ uint8_t nes_mem::read_8(uint16_t addr)
 {
     if (debug == 1)
     {
-        cout << "Memory 8 read: " << mem[addr] << endl;
+        char buf[2];
+        uint8_t temp = mem[addr];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        cout << "Memory 8 read: " << buf[0] << buf[1] << endl;
     }
     return mem[addr];
 }
@@ -220,7 +223,10 @@ uint16_t nes_mem::read_16(uint16_t addr)
 {
     if (debug == 1)
     {
-        cout << "Memory 16 read: " << ((mem[addr + 1] << 8) | mem[addr]) << endl;
+        char buf[4];
+        uint16_t temp = (uint16_t)((mem[addr + 1] << 8) | mem[addr]);
+        bytes2hex((unsigned char*)&temp, buf, 2);
+        cout << "Memory 16 read: " << buf[0] << buf[1] << buf[2] << buf[3] << endl;
     }
     return (uint16_t)((mem[addr + 1] << 8) | mem[addr]);
 }
@@ -229,7 +235,11 @@ void nes_mem::write_8(uint16_t addr, uint8_t val)
 {
     if (debug == 1)
     {
-        cout << "Memory 8 write: " << val << " | To: " << addr << endl;
+        char addrBuf[4];
+        bytes2hex((unsigned char*)&addr, addrBuf, 2);
+        char valBuf[2];
+        bytes2hex((unsigned char*)&val, valBuf, 1);
+        cout << "Memory 8 write: " << valBuf[0] << valBuf[1] << " | To: " << addrBuf[0] << addrBuf[1] << addrBuf[2] << addrBuf[3] << endl;
     }
     mem[addr] = val;
 }
@@ -239,8 +249,15 @@ void nes_mem::write_16(uint16_t addr, uint16_t val)
 {
     if (debug == 1)
     {
-        cout << "Memory 16 write: " << (val >> 8) << " | To: " << addr << endl;
-        cout << "               : " << (uint8_t)val << " | To: " << addr + 1 << endl;
+        char addr1Buf[4];
+        bytes2hex((unsigned char*)&addr, addr1Buf, 2);
+        char addr2Buf[4];
+        uint16_t tempAddr = addr + 1;
+        bytes2hex((unsigned char*)&tempAddr, addr2Buf, 2);
+        char valBuf[4];
+        bytes2hex((unsigned char*)&val, valBuf, 2);
+        cout << "Memory 16 write: " << valBuf[0] << valBuf[1] << " | To: " << addr2Buf[0] << addr2Buf[1] << addr2Buf[2] << addr2Buf[3] << endl;
+        cout << "               : " << valBuf[2] << valBuf[3] << " | To: " << addr1Buf[0] << addr1Buf[1] << addr1Buf[2] << addr1Buf[3] << endl;
     }
     mem[addr + 1] = (uint8_t)val;
     mem[addr] = (uint8_t)(val >> 8);

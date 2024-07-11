@@ -67,7 +67,7 @@ class nes_cpu
 
   nes_mem *mem;
 
-  int debug = 0;
+  int debug = 1;
 
 public:
   nes_cpu();
