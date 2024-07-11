@@ -97,7 +97,7 @@ private:
   // Zero Page Y
   uint8_t ZPY();
   // Relative
-  int8_t REL();
+  uint8_t REL();
   // Absolute
   uint16_t ABS();
   // Absolute X

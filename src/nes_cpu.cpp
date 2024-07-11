@@ -29,7 +29,7 @@ void nes_cpu::evaluate()
     {
         cout << endl
              << "//--------------------CPU EVALUATE STARTING--------------------//" << endl << endl;
-        cout << "//-------------Before CPU State------------//" << endl;
+        cout << "//-------------Before CPU State------------//";
         this->print_CPU_state();
     }
 
@@ -42,28 +42,28 @@ void nes_cpu::evaluate()
     // Get Current Instruction from Memory and Increment PC
     uint8_t opcode = mem->read_8(pc++);
 
-    char buffer[40];
-    unsigned char input[20];
-    for(int i = 0; i < 20; i++){
-        input[i] = mem->read_8(pc - 10 + i);
-    }
-    bytes2hex(input, buffer, 20);
-
-    cout << "LOCAL MEMORY" << endl;
-    for(int i = 0; i < 40; i+=2){
-        if(i == 18){
-            cout << " | " << buffer[i] << buffer[i+1] << " | ";
-        }
-        else{
-            cout << buffer[i] << buffer[i+1] << " ";
-        }
-    }
-    cout << endl;
-
     if (debug == 1){
         char buf[2];
         bytes2hex((unsigned char*)&opcode, buf, 1);
         cout << "CURRENT OPCODE: " << buf[0] << buf[1] << endl << endl;
+
+        char buffer[40];
+        unsigned char input[20];
+        for(int i = 0; i < 20; i++){
+            input[i] = mem->read_8(pc - 10 + i);
+        }
+        bytes2hex(input, buffer, 20);
+
+        cout << "LOCAL MEMORY:" << endl << endl;
+        for(int i = 0; i < 40; i+=2){
+            if(i == 18){
+                cout << " | " << buffer[i] << buffer[i+1] << " | ";
+            }
+            else{
+                cout << buffer[i] << buffer[i+1] << " ";
+            }
+        }
+        cout << endl << endl;
     }
     
     // Execute Code Goes Here
@@ -758,7 +758,7 @@ void nes_cpu::evaluate()
 
     if (debug == 1)
     {
-        cout << "//-------------After CPU State-------------//" << endl;
+        cout << endl << "//-------------After CPU State-------------//";
         this->print_CPU_state();
         cout << endl;
     }
@@ -795,9 +795,7 @@ void nes_cpu::print_CPU_state()
     char buffer[7 * 2];
     unsigned char input[7] = {a, x, y, status, sp, (unsigned char)(pc >> 8), (unsigned char)pc};
     bytes2hex(input, buffer, sizeof(input));
-    cout << endl
-         << endl
-         << "CPU STATE:" << endl;
+    cout << endl;
     cout << "-----------------------------------" << endl;
     for (int i = 0; i < sizeof(buffer) / sizeof(unsigned char); i += 2)
     {
@@ -937,17 +935,17 @@ uint8_t nes_cpu::ZPY()
 
 // Relative
 // Contains signed 8 bit offset relative to current address in program counter
-int8_t nes_cpu::REL()
+uint8_t nes_cpu::REL()
 {
+    uint8_t temp = mem->read_8(pc++);
     // return the offset from memory
     if (debug == 1){
-        uint8_t temp = mem->read_8(pc);
         char buf[2];
         bytes2hex((unsigned char*)&temp, buf, 1);
         cout << "ADDRESSING MODE: RELATIVE | SIGNED OFFSET " << buf[0] << buf[1] << endl;
     }
 
-    return (int8_t)mem->read_8(pc++);
+    return temp;
 }
 
 // Absolute
@@ -1166,7 +1164,7 @@ void nes_cpu::BCC(uint8_t offset)
     if (!(status & C_FLAG))
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
@@ -1177,7 +1175,7 @@ void nes_cpu::BCS(uint8_t offset)
     if (status & C_FLAG)
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
@@ -1188,7 +1186,7 @@ void nes_cpu::BEQ(uint8_t offset)
     if (status & Z_FLAG)
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
@@ -1215,7 +1213,7 @@ void nes_cpu::BMI(uint8_t offset)
     if (status & N_FLAG)
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
@@ -1226,7 +1224,7 @@ void nes_cpu::BNE(uint8_t offset)
     if (!(status & Z_FLAG))
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
@@ -1237,7 +1235,7 @@ void nes_cpu::BPL(uint8_t offset)
     if (!(status & N_FLAG))
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
@@ -1266,7 +1264,7 @@ void nes_cpu::BVC(uint8_t offset)
     if (!(status & V_FLAG))
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
@@ -1277,7 +1275,7 @@ void nes_cpu::BVS(uint8_t offset)
     if (status & V_FLAG)
     {
         // If its a positive integer add to PC, If its a negative integer subtract to PC
-        (offset & 0x80) ? (pc += offset) : (pc -= (((uint8_t)255 - offset) + 1));
+        (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
     }
 }
 
