@@ -202,7 +202,7 @@ void nes_cpu::evaluate()
         BRK();
         break;
         // ---------------BVC - Branch if Overflow Set
-    case 0x70:
+    case 0x50:
         // Relative
         BVC(REL());
         break;
