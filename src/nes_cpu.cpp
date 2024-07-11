@@ -28,7 +28,7 @@ void nes_cpu::evaluate()
     if (debug == 1)
     {
         cout << endl
-             << "//----------CPU EVALUATE STARTING----------//" << endl;
+             << "//--------------------CPU EVALUATE STARTING--------------------//" << endl << endl;
         cout << "//-------------Before CPU State------------//" << endl;
         this->print_CPU_state();
     }
@@ -42,7 +42,23 @@ void nes_cpu::evaluate()
     // Get Current Instruction from Memory and Increment PC
     uint8_t opcode = mem->read_8(pc++);
 
+    char buffer[40];
+    unsigned char input[20];
+    for(int i = 0; i < 20; i++){
+        input[i] = mem->read_8(pc - 10 + i);
+    }
+    bytes2hex(input, buffer, 20);
 
+    cout << "LOCAL MEMORY" << endl;
+    for(int i = 0; i < 40; i+=2){
+        if(i == 18){
+            cout << " | " << buffer[i] << buffer[i+1] << " | ";
+        }
+        else{
+            cout << buffer[i] << buffer[i+1] << " ";
+        }
+    }
+    cout << endl;
 
     if (debug == 1){
         char buf[2];
@@ -182,6 +198,7 @@ void nes_cpu::evaluate()
         // ---------------BRK - Force Interrupt
     case 0x00:
         // Implied
+        IMP();
         BRK();
         break;
         // ---------------BVC - Branch if Overflow Set
@@ -192,21 +209,25 @@ void nes_cpu::evaluate()
         // ---------------CLC - Clear Carry Flag
     case 0x18:
         // Implied
+        IMP();
         CLC();
         break;
         // ---------------CLD - Clear Decimal Mode
     case 0xD8:
         // Implied
+        IMP();
         CLD();
         break;
         // ---------------CLI - Clear Interrupt Disable
     case 0x58:
         // Implied
+        IMP();
         CLI();
         break;
         // ---------------CLV - Clear Overflow Flag
     case 0xB8:
         // Implied
+        IMP();
         CLV();
         break;
         // ---------------CMP - Compare
@@ -288,11 +309,13 @@ void nes_cpu::evaluate()
         // ---------------DEX - Decrement X Register
     case 0xCA:
         // Implied
+        IMP();
         DEX();
         break;
         // ---------------DEY - Decrement Y Register
     case 0x88:
         // Implied
+        IMP();
         DEY();
         break;
         // ---------------EOR - Exclusive OR
@@ -348,11 +371,13 @@ void nes_cpu::evaluate()
         // ---------------INX - Increment X Register
     case 0xE8:
         // Implied
+        IMP();
         INX();
         break;
         // ---------------INY - Increment Y Register
     case 0xC8:
         // Implied
+        IMP();
         INY();
         break;
         // ---------------JMP - Jump
@@ -468,6 +493,7 @@ void nes_cpu::evaluate()
         // ---------------NOP - No Operation
     case 0xEA:
         // Implied
+        IMP();
         NOP();
         break;
         // ---------------ORA - Logical Inclusive OR
@@ -506,21 +532,25 @@ void nes_cpu::evaluate()
         // ---------------PHA - Push Accumulator
     case 0x48:
         // Implied
+        IMP();
         PHA();
         break;
         // ---------------PHP - Push Processor Status
     case 0x08:
         // Implied
+        IMP();
         PHP();
         break;
         // ---------------PLA - Pull Accumulator
     case 0x68:
         // Implied
+        IMP();
         PLA();
         break;
         // ---------------PLP - Pull Processor Status
     case 0x28:
         // Implied
+        IMP();
         PLP();
         break;
         // ---------------ROL - Rotate Left
@@ -568,11 +598,13 @@ void nes_cpu::evaluate()
         // ---------------RTI - Return from Interrupt
     case 0x40:
         // Implied
+        IMP();
         RTI();
         break;
         // ---------------RTS - Return from Subroutine
     case 0x60:
         // Implied
+        IMP();
         RTS();
         break;
         // ---------------SBC - Subtract with Carry
@@ -611,16 +643,19 @@ void nes_cpu::evaluate()
         // ---------------SEC - Set Carry Flag
     case 0x38:
         // Implied
+        IMP();
         SEC();
         break;
         // ---------------SED - Set Decimal Flag
     case 0xF8:
         // Implied
+        IMP();
         SED();
         break;
         // ---------------SEI - Set Interrupt Disable
     case 0x78:
         // Implied
+        IMP();
         SEI();
         break;
         // ---------------STA - Store Accumulator
@@ -681,31 +716,37 @@ void nes_cpu::evaluate()
         // ---------------TAX - Transfer Accumulator to X
     case 0xAA:
         // Implied
+        IMP();
         TAX();
         break;
         // ---------------TAY - Transfer Accumulator to Y
     case 0xA8:
         // Implied
+        IMP();
         TAY();
         break;
         // ---------------TSX - Transfer Stack Pointer to X
     case 0xBA:
         // Implied
+        IMP();
         TSX();
         break;
         // ---------------TXA - Transfer X to Accumulator
     case 0x8A:
         // Implied
+        IMP();
         TXA();
         break;
         // ---------------TXS - Transfer X to Stack Pointer
     case 0x9A:
         // Implied
+        IMP();
         TXS();
         break;
         // ---------------TYA - Transfer Y to Accumulator
     case 0x98:
         // Implied
+        IMP();
         TYA();
         break;
     default:
@@ -719,9 +760,7 @@ void nes_cpu::evaluate()
     {
         cout << "//-------------After CPU State-------------//" << endl;
         this->print_CPU_state();
-        cout << endl
-             << "END" << endl
-             << endl;
+        cout << endl;
     }
 }
 
@@ -798,17 +837,20 @@ functions so that the proper memory/value is being
 operated on.
 -----------------------------------------------*/
 
-// Implicit
+// Implied
 // Source and destination are implied thus do not need any further operand
 void nes_cpu::IMP()
 {
+    if (debug == 1){
+        cout << "ADDRESSING MODE: IMPLIED" << endl;
+    }
     return;
 }
+
 // Accumulator
 // Operate directly on the accumulator
 uint8_t nes_cpu::ACC()
 {
-    
     if (debug == 1){
         char buf[2];
         bytes2hex((unsigned char*)&a, buf, 1);

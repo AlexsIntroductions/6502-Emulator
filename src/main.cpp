@@ -16,7 +16,7 @@ int main()
     nes system = nes();
 
     // Set If Debugging is Necessary
-    system.set_debug(1);
+    // system.set_debug(1);
 
     system.loadNesTest();
 

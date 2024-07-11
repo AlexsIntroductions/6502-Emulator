@@ -14,7 +14,7 @@ class nes{
     nes_apu* apu;
     nes_mem* mem;
 
-    int debug = 0;
+    int debug = 1;
 
     //sf::RenderWindow* window;
 public:

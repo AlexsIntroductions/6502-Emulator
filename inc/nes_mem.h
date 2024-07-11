@@ -7,7 +7,7 @@
 class nes_mem
 {
     uint8_t mem[0xFFFF];
-    int debug = 1;
+    int debug = 0;
 public:
     nes_mem();
     ~nes_mem();

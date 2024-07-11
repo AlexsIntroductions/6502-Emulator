@@ -208,7 +208,7 @@ void nes_mem::loadNesTest()
 
 uint8_t nes_mem::read_8(uint16_t addr)
 {
-    if (debug == 1)
+    if (this->debug == 1)
     {
         char buf[2];
         uint8_t temp = mem[addr];
@@ -221,7 +221,7 @@ uint8_t nes_mem::read_8(uint16_t addr)
 // LITTLE ENDIAN
 uint16_t nes_mem::read_16(uint16_t addr)
 {
-    if (debug == 1)
+    if (this->debug == 1)
     {
         char buf[4];
         uint16_t temp = (uint16_t)((mem[addr + 1] << 8) | mem[addr]);
@@ -233,7 +233,7 @@ uint16_t nes_mem::read_16(uint16_t addr)
 
 void nes_mem::write_8(uint16_t addr, uint8_t val)
 {
-    if (debug == 1)
+    if (this->debug == 1)
     {
         char addrBuf[4];
         bytes2hex((unsigned char*)&addr, addrBuf, 2);
@@ -247,7 +247,7 @@ void nes_mem::write_8(uint16_t addr, uint8_t val)
 // LITTLE ENDIAN
 void nes_mem::write_16(uint16_t addr, uint16_t val)
 {
-    if (debug == 1)
+    if (this->debug == 1)
     {
         char addr1Buf[4];
         bytes2hex((unsigned char*)&addr, addr1Buf, 2);
