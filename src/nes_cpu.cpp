@@ -916,8 +916,12 @@ uint16_t nes_cpu::ABS()
     uint16_t toReturn = mem->read_16(pc);
 
     if (debug == 1){
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
         uint8_t tempVal = mem->read_8(toReturn);
-        cout << "ADDRESSING MODE: ABSOLUTE | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ABSOLUTE | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
 
     // Increment pc for each byte read (2)
@@ -934,7 +938,12 @@ uint16_t nes_cpu::ABX()
     uint16_t toReturn = (mem->read_16(pc) + this->x);
 
     if (debug == 1){
-        cout << "ADDRESSING MODE: ABSOLUTE X | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ABSOLUTE X | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
 
     // Increment pc for each byte read (2)
@@ -951,7 +960,12 @@ uint16_t nes_cpu::ABY()
     uint16_t toReturn = (mem->read_16(pc) + this->y);
 
     if (debug == 1){
-        cout << "ADDRESSING MODE: ABSOLUTE Y | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ABSOLUTE Y | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
 
 
@@ -969,7 +983,9 @@ uint16_t nes_cpu::IND()
     uint16_t toReturn = mem->read_16(mem->read_16(pc));
 
     if (debug == 1){
-        cout << "ADDRESSING MODE: INDIRECT | ADDRESS " << std:: hex << toReturn << endl;
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        cout << "ADDRESSING MODE: INDIRECT | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3]<< endl;
     }
 
 
@@ -987,7 +1003,12 @@ uint16_t nes_cpu::IID()
     uint16_t toReturn = mem->read_16(temp & 0xFF);
 
     if (debug == 1){
-        cout << "ADDRESSING MODE: INDIRECT X | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: INDIRECT X | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
 
     // return the address located in the zero page
@@ -1003,7 +1024,12 @@ uint16_t nes_cpu::IDI()
     uint16_t toReturn = mem->read_16(temp) + this->y;
 
     if (debug == 1){
-        cout << "ADDRESSING MODE: INDIRECT Y | ADDRESS " << std:: hex << toReturn << " | VALUE: " << std:: hex << mem->read_8(toReturn) << endl;
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: INDIRECT Y | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
     }
 
     // Get the target address from zero page and add value in y register
