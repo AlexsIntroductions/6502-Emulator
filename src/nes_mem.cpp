@@ -332,3 +332,23 @@ void nes_mem::print_mem()
     }
     cout << endl;
 }
+
+void nes_mem::print_zpg(){
+    cout << "ZERO PAGE : " << endl;
+    char tempBuffer[0x200];
+    bytes2hex(mem, tempBuffer, 0x100 + 1);
+    for (int i = 0; i <= sizeof(tempBuffer) / sizeof(char); i += 2)
+    {
+        if ((i / 2) % 0x3C == 0)
+        {
+            cout << endl;
+            cout << std::hex << (i / 2) << " : ";
+        }
+        else if (i % 8 == 0)
+        {
+            cout << " ";
+        }
+        cout << tempBuffer[i] << tempBuffer[i + 1] << " ";
+    }
+    cout << endl;
+}

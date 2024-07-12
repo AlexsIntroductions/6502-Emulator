@@ -766,6 +766,7 @@ void nes_cpu::evaluate()
         cout << endl << "//-------------After CPU State-------------//";
         this->print_CPU_state();
         cout << endl;
+        mem->print_zpg();
     }
 }
 
@@ -826,7 +827,7 @@ void nes_cpu::print_CPU_state()
         }
         if (i == 10)
         {
-            cout << "Program Count: " << buffer[i] << buffer[++i] << buffer[++i] << buffer[++i] << endl;
+            cout << "Program Count: " << buffer[i++] << buffer[i++] << buffer[i++] << buffer[i] << endl;
         }
     }
     cout << "-----------------------------------" << endl;

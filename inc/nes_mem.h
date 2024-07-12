@@ -32,6 +32,7 @@ public:
     //Debug Functions
     void set_debug(int val);
     void print_mem();
+    void print_zpg();
 
     //Temp Functions
 
