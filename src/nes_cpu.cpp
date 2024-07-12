@@ -1090,6 +1090,10 @@ void nes_cpu::ADC(uint8_t val)
     // NOTE: Decimal Mode Not Implemented, NES Doesn't use Decimal Mode
     // Implement in future for accurate 6502 emulator
 
+    if(this->debug == 1){
+        cout << "ADC:" << endl;
+    }
+
     // Add the accumulator, mem value, and carry into temp
     uint16_t temp = a + val + (status & C_FLAG);
 
@@ -1112,6 +1116,9 @@ void nes_cpu::ADC(uint8_t val)
 // AND - Logical AND
 void nes_cpu::AND(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "AND:" << endl;
+    }
     // AND accumulator and mem val
     a &= val;
 
@@ -1125,6 +1132,10 @@ void nes_cpu::AND(uint8_t val)
 // ASL - Arithmetic Shift Left
 void nes_cpu::ASL(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "ASL:" << endl;
+    }
+
     uint8_t val = mem->read_8(address);
 
     // Check Carry Flag
@@ -1145,6 +1156,10 @@ void nes_cpu::ASL(uint16_t address)
 
 void nes_cpu::ASL_ACC()
 {
+    if(this->debug == 1){
+        cout << "ASL:" << endl;
+    }
+
     uint8_t val = a;
 
     // Check Carry Flag
@@ -1166,6 +1181,10 @@ void nes_cpu::ASL_ACC()
 // BCC - Branch if Carry Clear
 void nes_cpu::BCC(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BCC:" << endl;
+    }
+
     // Check if Carry Bit is Clear
     if (!(status & C_FLAG))
     {
@@ -1177,6 +1196,10 @@ void nes_cpu::BCC(uint8_t offset)
 // BCS - Branch if Carry Set
 void nes_cpu::BCS(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BCS:" << endl;
+    }
+
     // Check if Carry Bit is Set
     if (status & C_FLAG)
     {
@@ -1188,6 +1211,9 @@ void nes_cpu::BCS(uint8_t offset)
 // BEQ - Branch if Equal
 void nes_cpu::BEQ(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BEQ:" << endl;
+    }
     // Check if Zero Flag is Set
     if (status & Z_FLAG)
     {
@@ -1199,6 +1225,10 @@ void nes_cpu::BEQ(uint8_t offset)
 // BIT - Bit Test
 void nes_cpu::BIT(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "BIT:" << endl;
+    }
+
     // Instruction doesnt affect any register value
     uint8_t temp = a & val;
 
@@ -1215,6 +1245,10 @@ void nes_cpu::BIT(uint8_t val)
 // BMI - Branch if Minus
 void nes_cpu::BMI(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BMI:" << endl;
+    }
+
     // Check if Negative Flag is Set
     if (status & N_FLAG)
     {
@@ -1226,6 +1260,10 @@ void nes_cpu::BMI(uint8_t offset)
 // BNE - Branch if Not Equal
 void nes_cpu::BNE(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BNE:" << endl;
+    }
+
     // Check if Zero Flag is Clear
     if (!(status & Z_FLAG))
     {
@@ -1237,6 +1275,10 @@ void nes_cpu::BNE(uint8_t offset)
 // BPL - Branch if Positive
 void nes_cpu::BPL(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BPL:" << endl;
+    }
+
     // Check if Negative Flag is Clear
     if (!(status & N_FLAG))
     {
@@ -1248,6 +1290,9 @@ void nes_cpu::BPL(uint8_t offset)
 // BRK - Force Interrupt
 void nes_cpu::BRK()
 {
+    if(this->debug == 1){
+        cout << "BRK:" << endl;
+    }
     // Push PC to Stack
     // 6502 has error where is pushes PC + 1 instead of current PC, problem has to be fixed through software
     pc += 1;
@@ -1266,6 +1311,10 @@ void nes_cpu::BRK()
 // BVC - Branch if Overflow Clear
 void nes_cpu::BVC(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BVC:" << endl;
+    }
+
     // Check if Overflow Flag is Clear
     if (!(status & V_FLAG))
     {
@@ -1277,6 +1326,10 @@ void nes_cpu::BVC(uint8_t offset)
 // BVS - Branch if Overflow Set
 void nes_cpu::BVS(uint8_t offset)
 {
+    if(this->debug == 1){
+        cout << "BVS:" << endl;
+    }
+
     // Check if Overflow Flag is Clear
     if (status & V_FLAG)
     {
@@ -1288,30 +1341,50 @@ void nes_cpu::BVS(uint8_t offset)
 // CLC - Clear Carry Flag
 void nes_cpu::CLC()
 {
+    if(this->debug == 1){
+        cout << "CLC:" << endl;
+    }
+
     status &= C_FLAG_INV;
 }
 
 // CLD - Clear Decimal Mode
 void nes_cpu::CLD()
 {
+    if(this->debug == 1){
+        cout << "CLD:" << endl;
+    }
+    
     status &= D_FLAG_INV;
 }
 
 // CLI - Clear Interrupt Disable
 void nes_cpu::CLI()
 {
+    if(this->debug == 1){
+        cout << "CLI:" << endl;
+    }
+    
     status &= I_FLAG_INV;
 }
 
 // CLV - Clear Overflow Flag
 void nes_cpu::CLV()
 {
+    if(this->debug == 1){
+        cout << "CLV:" << endl;
+    }
+    
     status &= V_FLAG_INV;
 }
 
 // CMP - Compare
 void nes_cpu::CMP(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "CMP:" << endl;
+    }
+    
     // Subtract mem val from accumulator
     uint8_t temp = a - val;
 
@@ -1328,6 +1401,10 @@ void nes_cpu::CMP(uint8_t val)
 // CPX - Compare X Register
 void nes_cpu::CPX(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "CPX:" << endl;
+    }
+    
     // Subtract mem val from x
     uint8_t temp = x - val;
 
@@ -1344,6 +1421,10 @@ void nes_cpu::CPX(uint8_t val)
 // CPY - Compare Y Register
 void nes_cpu::CPY(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "CPY:" << endl;
+    }
+    
     // Subtract mem val from y
     uint8_t temp = y - val;
 
@@ -1360,6 +1441,10 @@ void nes_cpu::CPY(uint8_t val)
 // DEC - Decrement Memory
 void nes_cpu::DEC(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "DEC:" << endl;
+    }
+    
     // Decrement the Memory Value by One
     uint8_t val = mem->read_8(address);
     val -= 1;
@@ -1377,6 +1462,10 @@ void nes_cpu::DEC(uint16_t address)
 // DEX - Decrement X Register
 void nes_cpu::DEX()
 {
+    if(this->debug == 1){
+        cout << "DEX:" << endl;
+    }
+    
     // Decrement X by One
     x -= 1;
 
@@ -1390,6 +1479,10 @@ void nes_cpu::DEX()
 // DEY - Decrement Y Register
 void nes_cpu::DEY()
 {
+    if(this->debug == 1){
+        cout << "DEY:" << endl;
+    }
+    
     // Decrement X by One
     y -= 1;
 
@@ -1403,6 +1496,10 @@ void nes_cpu::DEY()
 // EOR - Exclusive OR
 void nes_cpu::EOR(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "EOR:" << endl;
+    }
+    
     // Perform XOR on Accumulator
     a ^= val;
 
@@ -1416,6 +1513,10 @@ void nes_cpu::EOR(uint8_t val)
 // INC - Increment Memory
 void nes_cpu::INC(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "INC:" << endl;
+    }
+    
     uint8_t val = mem->read_8(address);
 
     // Increment the Memory Value by One
@@ -1434,6 +1535,10 @@ void nes_cpu::INC(uint16_t address)
 // INX - Increment X Register
 void nes_cpu::INX()
 {
+    if(this->debug == 1){
+        cout << "INX:" << endl;
+    }
+    
     // Increment X by One
     x += 1;
 
@@ -1447,6 +1552,10 @@ void nes_cpu::INX()
 // INY - Increment Y Register
 void nes_cpu::INY()
 {
+    if(this->debug == 1){
+        cout << "INY:" << endl;
+    }
+    
     // Increment Y by One
     y += 1;
 
@@ -1460,6 +1569,10 @@ void nes_cpu::INY()
 // JMP - Jump
 void nes_cpu::JMP(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "JMP:" << endl;
+    }
+    
     // Set PC to address
     pc = address;
 }
@@ -1467,6 +1580,10 @@ void nes_cpu::JMP(uint16_t address)
 // JSR - Jump to Subroutine
 void nes_cpu::JSR(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "JSR:" << endl;
+    }
+    
     // Pushes (address - 1) of return point on to the stack
     pc -= 1;
     mem->push(sp--, (uint8_t)((pc >> 8) & 0xFF));
@@ -1479,6 +1596,10 @@ void nes_cpu::JSR(uint16_t address)
 // LDA - Load Accumulator
 void nes_cpu::LDA(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "LDA:" << endl;
+    }
+    
     // Set Accumulator to Memory Value
     a = val;
 
@@ -1492,6 +1613,10 @@ void nes_cpu::LDA(uint8_t val)
 // LDX - Load X Register
 void nes_cpu::LDX(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "LDX:" << endl;
+    }
+    
     // Set X to Memory Value
     x = val;
 
@@ -1505,6 +1630,10 @@ void nes_cpu::LDX(uint8_t val)
 // LDY - Load Y Register
 void nes_cpu::LDY(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "LDY:" << endl;
+    }
+    
     // Set Y to Memory Value
     y = val;
 
@@ -1518,6 +1647,10 @@ void nes_cpu::LDY(uint8_t val)
 // LSR - Logical Shift Right
 void nes_cpu::LSR(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "LSR:" << endl;
+    }
+    
     uint8_t val = mem->read_8(address);
 
     // Check Carry Flag
@@ -1537,6 +1670,10 @@ void nes_cpu::LSR(uint16_t address)
 }
 void nes_cpu::LSR_ACC()
 {
+    if(this->debug == 1){
+        cout << "LSR:" << endl;
+    }
+    
     uint8_t val = a;
 
     // Check Carry Flag
@@ -1556,11 +1693,19 @@ void nes_cpu::LSR_ACC()
 }
 
 // NOP - No Operation
-void nes_cpu::NOP() {}
+void nes_cpu::NOP() {
+    if(this->debug == 1){
+        cout << "NOP:" << endl;
+    }
+}
 
 // ORA - Logical Inclusive OR
 void nes_cpu::ORA(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "ORA:" << endl;
+    }
+    
     // Inclusive OR Performed on Accumulator and Memory Value
     a |= val;
 
@@ -1574,6 +1719,10 @@ void nes_cpu::ORA(uint8_t val)
 // PHA - Push Accumulator
 void nes_cpu::PHA()
 {
+    if(this->debug == 1){
+        cout << "PHA:" << endl;
+    }
+    
     mem->push(sp, a);
     sp -= 1;
 }
@@ -1581,6 +1730,10 @@ void nes_cpu::PHA()
 // PHP - Push Processor Status
 void nes_cpu::PHP()
 {
+    if(this->debug == 1){
+        cout << "PHP:" << endl;
+    }
+    
     mem->push(sp, status);
     sp -= 1;
 }
@@ -1588,6 +1741,10 @@ void nes_cpu::PHP()
 // PLA - Pull Accumulator
 void nes_cpu::PLA()
 {
+    if(this->debug == 1){
+        cout << "PLA:" << endl;
+    }
+    
     sp += 1;
     a = mem->pop(sp);
 
@@ -1601,6 +1758,10 @@ void nes_cpu::PLA()
 // PLP - Pull Processor Status
 void nes_cpu::PLP()
 {
+    if(this->debug == 1){
+        cout << "PLP:" << endl;
+    }
+    
     sp += 1;
     status = mem->pop(sp);
 }
@@ -1608,6 +1769,10 @@ void nes_cpu::PLP()
 // ROL - Rotate Left
 void nes_cpu::ROL(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "ROL:" << endl;
+    }
+    
     uint8_t val = mem->read_8(address);
 
     // Move Memory Value one to Left
@@ -1630,6 +1795,10 @@ void nes_cpu::ROL(uint16_t address)
 }
 void nes_cpu::ROL_ACC()
 {
+    if(this->debug == 1){
+        cout << "ROL:" << endl;
+    }
+    
     // Move Accumulator Value one to Left
     uint8_t temp = (a << 1);
 
@@ -1652,6 +1821,10 @@ void nes_cpu::ROL_ACC()
 // ROR - Rotate Right
 void nes_cpu::ROR(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "ROR:" << endl;
+    }
+    
     uint8_t val = mem->read_8(address);
 
     // Move Memory Value one to Right
@@ -1674,6 +1847,10 @@ void nes_cpu::ROR(uint16_t address)
 }
 void nes_cpu::ROR_ACC()
 {
+    if(this->debug == 1){
+        cout << "ROR:" << endl;
+    }
+    
     // Move Memory Value one to Right
     uint8_t temp = (a >> 1);
 
@@ -1696,6 +1873,10 @@ void nes_cpu::ROR_ACC()
 // RTI - Return from Interrupt
 void nes_cpu::RTI()
 {
+    if(this->debug == 1){
+        cout << "RTI:" << endl;
+    }
+    
     // Pull Status from Stack
     sp += 1;
     status = mem->pop(sp);
@@ -1712,6 +1893,10 @@ void nes_cpu::RTI()
 // RTS - Return from Subroutine
 void nes_cpu::RTS()
 {
+    if(this->debug == 1){
+        cout << "RTS:" << endl;
+    }
+    
     // Pull Low Byte of PC from Stack
     sp += 1;
     pc |= mem->pop(sp);
@@ -1727,6 +1912,10 @@ void nes_cpu::RTS()
 // SBC - Subtract with Carry
 void nes_cpu::SBC(uint8_t val)
 {
+    if(this->debug == 1){
+        cout << "SBC:" << endl;
+    }
+    
     // Subtract val and Not of Carry from Accumulator
     uint16_t temp = a - val - ((uint8_t)1 - (status & C_FLAG));
 
@@ -1749,42 +1938,70 @@ void nes_cpu::SBC(uint8_t val)
 // SEC - Set Carry Flag
 void nes_cpu::SEC()
 {
+    if(this->debug == 1){
+        cout << "SEC:" << endl;
+    }
+    
     status |= C_FLAG;
 }
 
 // SED - Set Decimal Flag
 void nes_cpu::SED()
 {
+    if(this->debug == 1){
+        cout << "SED:" << endl;
+    }
+    
     status |= D_FLAG;
 }
 
 // SEI - Set Interrupt Disable
 void nes_cpu::SEI()
 {
+    if(this->debug == 1){
+        cout << "SEI:" << endl;
+    }
+    
     status |= I_FLAG;
 }
 
 // STA - Store Accumulator
 void nes_cpu::STA(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "STA:" << endl;
+    }
+    
     mem->write_8(address, a);
 }
 
 // STX - Store X
 void nes_cpu::STX(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "STX:" << endl;
+    }
+    
     mem->write_8(address, x);
 }
 
 // // STY - Store Y
 void nes_cpu::STY(uint16_t address)
 {
+    if(this->debug == 1){
+        cout << "STY:" << endl;
+    }
+    
     mem->write_8(address, y);
 }
 
 // TAX - Transfer Accumulator to X
 void nes_cpu::TAX()
 {
+    if(this->debug == 1){
+        cout << "TAX:" << endl;
+    }
+    
     x = a;
 
     // Check Zero Flag
@@ -1797,6 +2014,10 @@ void nes_cpu::TAX()
 // TAY - Transfer Accumulator to Y
 void nes_cpu::TAY()
 {
+    if(this->debug == 1){
+        cout << "TAY:" << endl;
+    }
+    
     y = a;
 
     // Check Zero Flag
@@ -1809,6 +2030,10 @@ void nes_cpu::TAY()
 // TSX - Transfer Stack Pointer to X
 void nes_cpu::TSX()
 {
+    if(this->debug == 1){
+        cout << "TSX:" << endl;
+    }
+    
     x = sp;
 
     // Check Zero Flag
@@ -1821,6 +2046,10 @@ void nes_cpu::TSX()
 // TXA - Transfer X to Accumulator
 void nes_cpu::TXA()
 {
+    if(this->debug == 1){
+        cout << "TXA:" << endl;
+    }
+    
     a = x;
 
     // Check Zero Flag
@@ -1833,12 +2062,20 @@ void nes_cpu::TXA()
 // TXS - Transfer X to Stack Pointer
 void nes_cpu::TXS()
 {
+    if(this->debug == 1){
+        cout << "TXS:" << endl;
+    }
+    
     sp = x;
 }
 
 // TYA - Transfer Y to Accumulator
 void nes_cpu::TYA()
 {
+    if(this->debug == 1){
+        cout << "TYA:" << endl;
+    }
+    
     a = y;
 
     // Check Zero Flag
