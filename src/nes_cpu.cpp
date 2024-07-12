@@ -206,6 +206,11 @@ void nes_cpu::evaluate()
         // Relative
         BVC(REL());
         break;
+        // ---------------BVC - Branch if Overflow Set
+    case 0x70:
+        // Relative
+        BVS(REL());
+        break;
         // ---------------CLC - Clear Carry Flag
     case 0x18:
         // Implied
