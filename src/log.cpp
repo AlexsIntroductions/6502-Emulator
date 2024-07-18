@@ -16,21 +16,21 @@ Logger::Logger(){
 
 
     // Format Log String
-    log[43] = 'A';
-    log[44] = ':';
-
-    log[48] = 'X';
+    log[48] = 'A';
     log[49] = ':';
 
-    log[55] = 'Y';
-    log[56] = ':';
+    log[53] = 'X';
+    log[54] = ':';
 
-    log[61] = 'P';
-    log[62] = ':';
+    log[58] = 'Y';
+    log[59] = ':';
 
-    log[66] = 'S';
-    log[67] = 'P';
-    log[68] = ':';
+    log[63] = 'P';
+    log[64] = ':';
+
+    log[68] = 'S';
+    log[69] = 'P';
+    log[70] = ':';
 
     log[99] = '\n';
 }
@@ -41,10 +41,17 @@ void Logger::Log(){
     if(!ofstream("./logs/log.txt", ios::app | ios::binary | ios::out).write(log, 100)){
         cout << "Failed to Write to Log File" << endl;
     }
+    
+    // Clear Old Data
+    
     log[9] = ' ';
     log[10] = ' ';
     log[12] = ' ';
     log[13] = ' ';
+    
+    for(int i = 0; i < 8; i++){
+        log[20 + i] = ' ';
+    }
 }
 
 void Logger::SetPC(uint16_t data){
@@ -74,8 +81,8 @@ void Logger::SetAcc(uint8_t data){
     byte2hex(data, temp);
 
     // Copy Array to log array
-    log[45] = temp[0];
-    log[46] = temp[1];
+    log[50] = temp[0];
+    log[51] = temp[1];
 }
 
 void Logger::SetX(uint8_t data){
@@ -84,8 +91,8 @@ void Logger::SetX(uint8_t data){
     byte2hex(data, temp);
 
     // Copy Array to log array
-    log[51] = temp[0];
-    log[52] = temp[1];
+    log[55] = temp[0];
+    log[56] = temp[1];
 }
 
 void Logger::SetY(uint8_t data){
@@ -94,8 +101,8 @@ void Logger::SetY(uint8_t data){
     byte2hex(data, temp);
 
     // Copy Array to log array
-    log[57] = temp[0];
-    log[58] = temp[1];
+    log[60] = temp[0];
+    log[61] = temp[1];
 }
 
 void Logger::SetStatus(uint8_t data){
@@ -104,8 +111,8 @@ void Logger::SetStatus(uint8_t data){
     byte2hex(data, temp);
 
     // Copy Array to log array
-    log[63] = temp[0];
-    log[64] = temp[1];
+    log[65] = temp[0];
+    log[66] = temp[1];
 }
 
 void Logger::SetStackPointer(uint8_t data){
@@ -114,21 +121,54 @@ void Logger::SetStackPointer(uint8_t data){
     byte2hex(data, temp);
 
     // Copy Array to log array
-    log[69] = temp[0];
-    log[70] = temp[1];
+    log[71] = temp[0];
+    log[72] = temp[1];
 }
 
-void Logger::SetAddressingMode_8(uint8_t data){
+void Logger::SetAddressingMode_8(uint8_t data, uint8_t mem, uint8_t mode){
+
+    if(mode == 3){
+        return;
+    }
+
     // Put Char Representation of PC into an array
-    char temp[2];
-    byte2hex(data, temp);
+    char dataTemp[2];
+    byte2hex(data, dataTemp);
+
+    char memTemp[2];
+    byte2hex(mem, memTemp);
 
     // Copy Array to log array
-    log[9] = temp[0];
-    log[10] = temp[1];
+    log[9] = dataTemp[0];
+    log[10] = dataTemp[1];
+
+    switch(mode){
+        // Imm
+        // REL
+        case 0:
+            log[20] = '#';
+            log[21] = '$';
+            log[22] = dataTemp[0];
+            log[23] = dataTemp[1];
+            break;
+        // ZPG
+        // ZPX
+        // ZPY
+        case 1:
+            log[20] = '$';
+            log[21] = dataTemp[0];
+            log[22] = dataTemp[1];
+            log[24] = '=';
+            log[26] = memTemp[0];
+            log[27] = memTemp[1];
+            break;
+        default:
+            break;
+    }
 }
 
-void Logger::SetAddressingMode_16(uint16_t data){    // Put Char Representation of PC into an array
+void Logger::SetAddressingMode_16(uint16_t data){    
+    // Put Char Representation of PC into an array
     char temp[4];
     word2hex(data, temp);
 
@@ -137,6 +177,19 @@ void Logger::SetAddressingMode_16(uint16_t data){    // Put Char Representation 
     log[10] = temp[3];
     log[12] = temp[0];
     log[13] = temp[1];
+
+    log[20] = '$';
+    log[21] = temp[0];
+    log[22] = temp[1];
+    log[23] = temp[2];
+    log[24] = temp[3];
+}
+
+// Takes in a 3 character string with instructions name
+void Logger::SetInstructionName(string name){
+    log[16] = name[0];
+    log[17] = name[1];
+    log[18] = name[2];
 }
 
 char* Logger::GetLog(){

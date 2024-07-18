@@ -1,41 +1,100 @@
-c000  4c f5 c5                             A:00 X: 00  Y:00  P:24 SP:ff                            
-c5f5  a2 00                                A:00 X: 00  Y:00  P:24 SP:ff                            
-c5f7  86 00                                A:00 X: 00  Y:00  P:25 SP:ff                            
-c5f9  86 10                                A:00 X: 00  Y:00  P:25 SP:ff                            
-c5fb  86 11                                A:00 X: 00  Y:00  P:25 SP:ff                            
-c5fd  20 2d c7                             A:00 X: 00  Y:00  P:25 SP:ff                            
-c72d  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
-c72e  38                                   A:00 X: 00  Y:00  P:25 SP:fd                            
-c72f  b0 04                                A:00 X: 00  Y:00  P:25 SP:fd                            
-c735  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
-c736  18                                   A:00 X: 00  Y:00  P:25 SP:fd                            
-c737  b0 03                                A:00 X: 00  Y:00  P:24 SP:fd                            
-c739  4c 40 c7                             A:00 X: 00  Y:00  P:24 SP:fd                            
-c740  ea                                   A:00 X: 00  Y:00  P:24 SP:fd                            
-c741  38                                   A:00 X: 00  Y:00  P:24 SP:fd                            
-c742  90 03                                A:00 X: 00  Y:00  P:25 SP:fd                            
-c744  4c 4b c7                             A:00 X: 00  Y:00  P:25 SP:fd                            
-c74b  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
-c74c  18                                   A:00 X: 00  Y:00  P:25 SP:fd                            
-c74d  90 04                                A:00 X: 00  Y:00  P:24 SP:fd                            
-c753  ea                                   A:00 X: 00  Y:00  P:24 SP:fd                            
-c754  a9 00                                A:00 X: 00  Y:00  P:24 SP:fd                            
-c756  f0 04                                A:00 X: 00  Y:00  P:25 SP:fd                            
-c75c  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
-c75d  a9 40                                A:00 X: 00  Y:00  P:25 SP:fd                            
-c75f  f0 03                                A:40 X: 00  Y:00  P:25 SP:fd                            
-c764  a2 06                                A:40 X: 00  Y:00  P:25 SP:fd                            
-c766  86 00                                A:40 X: 06  Y:00  P:25 SP:fd                            
-c768  ea                                   A:40 X: 06  Y:00  P:25 SP:fd                            
-c769  a9 40                                A:40 X: 06  Y:00  P:25 SP:fd                            
-c76b  d0 04                                A:40 X: 06  Y:00  P:25 SP:fd                            
-c771  ea                                   A:40 X: 06  Y:00  P:25 SP:fd                            
-c772  a9 00                                A:40 X: 06  Y:00  P:25 SP:fd                            
-c774  d0 03                                A:00 X: 06  Y:00  P:65 SP:fd                            
-c776  4c 7d c7                             A:00 X: 06  Y:00  P:65 SP:fd                            
-c77d  ea                                   A:00 X: 06  Y:00  P:65 SP:fd                            
-c77e  a9 ff                                A:00 X: 06  Y:00  P:65 SP:fd                            
-c780  85 01                                A:ff X: 06  Y:00  P:65 SP:fd                            
-c782  24 01                                A:ff X: 06  Y:00  P:65 SP:fd                            
-c784  70 04                                A:ff X: 06  Y:00  P:65 SP:fd                            
-c78a  ea                                   A:ff X: 06  Y:00  P:65 SP:fd                            
+c000  4c f5 c5  JMP $c5f5                       A:00 X:00 Y:00 P:24 SP:ff                          
+c5f5  a2 00     LDX #$00                        A:00 X:00 Y:00 P:24 SP:ff                          
+c5f7  86 00     STX $00 = 00                    A:00 X:00 Y:00 P:24 SP:ff                          
+c5f9  86 10     STX $10 = 00                    A:00 X:00 Y:00 P:24 SP:ff                          
+c5fb  86 11     STX $11 = 00                    A:00 X:00 Y:00 P:24 SP:ff                          
+c5fd  20 2d c7  JSR $c72d                       A:00 X:00 Y:00 P:24 SP:ff                          
+c72d  ea        NOP                             A:00 X:00 Y:00 P:24 SP:fd                          
+c72e  38        SEC                             A:00 X:00 Y:00 P:24 SP:fd                          
+c72f  b0 04     BCS #$04                        A:00 X:00 Y:00 P:25 SP:fd                          
+c735  ea        NOP                             A:00 X:00 Y:00 P:25 SP:fd                          
+c736  18        CLC                             A:00 X:00 Y:00 P:25 SP:fd                          
+c737  b0 03     BCS #$03                        A:00 X:00 Y:00 P:24 SP:fd                          
+c739  4c 40 c7  JMP $c740                       A:00 X:00 Y:00 P:24 SP:fd                          
+c740  ea        NOP                             A:00 X:00 Y:00 P:24 SP:fd                          
+c741  38        SEC                             A:00 X:00 Y:00 P:24 SP:fd                          
+c742  90 03     BCC #$03                        A:00 X:00 Y:00 P:25 SP:fd                          
+c744  4c 4b c7  JMP $c74b                       A:00 X:00 Y:00 P:25 SP:fd                          
+c74b  ea        NOP                             A:00 X:00 Y:00 P:25 SP:fd                          
+c74c  18        CLC                             A:00 X:00 Y:00 P:25 SP:fd                          
+c74d  90 04     BCC #$04                        A:00 X:00 Y:00 P:24 SP:fd                          
+c753  ea        NOP                             A:00 X:00 Y:00 P:24 SP:fd                          
+c754  a9 00     LDA #$00                        A:00 X:00 Y:00 P:24 SP:fd                          
+c756  f0 04     BEQ #$04                        A:00 X:00 Y:00 P:24 SP:fd                          
+c758  a2 05     LDX #$05                        A:00 X:00 Y:00 P:24 SP:fd                          
+c75a  86 00     STX $00 = ff                    A:00 X:05 Y:00 P:04 SP:fd                          
+c75c  ea        NOP                             A:00 X:05 Y:00 P:04 SP:fd                          
+c75d  a9 40     LDA #$40                        A:00 X:05 Y:00 P:04 SP:fd                          
+c75f  f0 03     BEQ #$03                        A:40 X:05 Y:00 P:04 SP:fd                          
+c761  4c 68 c7  JMP $c768                       A:40 X:05 Y:00 P:04 SP:fd                          
+c768  ea        NOP                             A:40 X:05 Y:00 P:04 SP:fd                          
+c769  a9 40     LDA #$40                        A:40 X:05 Y:00 P:04 SP:fd                          
+c76b  d0 04     BNE #$04                        A:40 X:05 Y:00 P:04 SP:fd                          
+c771  ea        NOP                             A:40 X:05 Y:00 P:04 SP:fd                          
+c772  a9 00     LDA #$00                        A:40 X:05 Y:00 P:04 SP:fd                          
+c774  d0 03     BNE #$03                        A:00 X:05 Y:00 P:04 SP:fd                          
+c779  a2 08     LDX #$08                        A:00 X:05 Y:00 P:04 SP:fd                          
+c77b  86 00     STX $00 = 05                    A:00 X:08 Y:00 P:04 SP:fd                          
+c77d  ea        NOP                             A:00 X:08 Y:00 P:04 SP:fd                          
+c77e  a9 ff     LDA #$ff                        A:00 X:08 Y:00 P:04 SP:fd                          
+c780  85 01     STA $01 = 00                    A:ff X:08 Y:00 P:04 SP:fd                          
+c782  24 01     BIT $01 = ff                    A:ff X:08 Y:00 P:04 SP:fd                          
+c784  70 04     BVS #$04                        A:ff X:08 Y:00 P:04 SP:fd                          
+c786  a2 09     LDX #$09                        A:ff X:08 Y:00 P:04 SP:fd                          
+c788  86 00     STX $00 = 08                    A:ff X:09 Y:00 P:04 SP:fd                          
+c78a  ea        NOP                             A:ff X:09 Y:00 P:04 SP:fd                          
+c78b  24 01     BIT $01 = ff                    A:ff X:09 Y:00 P:04 SP:fd                          
+c78d  50 03     BVC #$03                        A:ff X:09 Y:00 P:04 SP:fd                          
+c792  a2 0a     LDX #$0a                        A:ff X:09 Y:00 P:04 SP:fd                          
+c794  86 00     STX $00 = 09                    A:ff X:0a Y:00 P:04 SP:fd                          
+c796  ea        NOP                             A:ff X:0a Y:00 P:04 SP:fd                          
+c797  a9 00     LDA #$00                        A:ff X:0a Y:00 P:04 SP:fd                          
+c799  85 01     STA $01 = ff                    A:00 X:0a Y:00 P:04 SP:fd                          
+c79b  24 01     BIT $01 = 00                    A:00 X:0a Y:00 P:04 SP:fd                          
+c79d  50 04     BVC #$04                        A:00 X:0a Y:00 P:04 SP:fd                          
+c7a3  ea        NOP                             A:00 X:0a Y:00 P:04 SP:fd                          
+c7a4  24 01     BIT $01 = 00                    A:00 X:0a Y:00 P:04 SP:fd                          
+c7a6  70 03     BVS #$03                        A:00 X:0a Y:00 P:04 SP:fd                          
+c7a8  4c af c7  JMP $c7af                       A:00 X:0a Y:00 P:04 SP:fd                          
+c7af  ea        NOP                             A:00 X:0a Y:00 P:04 SP:fd                          
+c7b0  a9 00     LDA #$00                        A:00 X:0a Y:00 P:04 SP:fd                          
+c7b2  10 04     BPL #$04                        A:00 X:0a Y:00 P:04 SP:fd                          
+c7b8  ea        NOP                             A:00 X:0a Y:00 P:04 SP:fd                          
+c7b9  a9 80     LDA #$80                        A:00 X:0a Y:00 P:04 SP:fd                          
+c7bb  10 03     BPL #$03                        A:80 X:0a Y:00 P:04 SP:fd                          
+c7c0  a2 0e     LDX #$0e                        A:80 X:0a Y:00 P:04 SP:fd                          
+c7c2  86 00     STX $00 = 0a                    A:80 X:0e Y:00 P:04 SP:fd                          
+c7c4  ea        NOP                             A:80 X:0e Y:00 P:04 SP:fd                          
+c7c5  a9 80     LDA #$80                        A:80 X:0e Y:00 P:04 SP:fd                          
+c7c7  30 04     BMI #$04                        A:80 X:0e Y:00 P:04 SP:fd                          
+c7c9  a2 0f     LDX #$0f                        A:80 X:0e Y:00 P:04 SP:fd                          
+c7cb  86 00     STX $00 = 0e                    A:80 X:0f Y:00 P:04 SP:fd                          
+c7cd  ea        NOP                             A:80 X:0f Y:00 P:04 SP:fd                          
+c7ce  a9 00     LDA #$00                        A:80 X:0f Y:00 P:04 SP:fd                          
+c7d0  30 03     BMI #$03                        A:00 X:0f Y:00 P:04 SP:fd                          
+c7d2  4c d9 c7  JMP $c7d9                       A:00 X:0f Y:00 P:04 SP:fd                          
+c7d9  ea        NOP                             A:00 X:0f Y:00 P:04 SP:fd                          
+c7da  60        RTS                             A:00 X:0f Y:00 P:04 SP:fd                          
+cfe0  1f        ???                             A:00 X:0f Y:00 P:04 SP:ff                          
+cfe1  e8        INX                             A:00 X:0f Y:00 P:04 SP:ff                          
+cfe2  e8        INX                             A:00 X:10 Y:00 P:04 SP:ff                          
+cfe3  a1 00 00  LDA $0000                       A:00 X:11 Y:00 P:04 SP:ff                          
+cfe5  c9 5b     CMP #$5b                        A:0f X:11 Y:00 P:04 SP:ff                          
+cfe7  d0 17     BNE #$17                        A:0f X:11 Y:00 P:04 SP:ff                          
+d000  a9 58     LDA #$58                        A:0f X:11 Y:00 P:04 SP:ff                          
+d002  8d ff 07  STA $07ff                       A:58 X:11 Y:00 P:04 SP:ff                          
+d005  a9 aa     LDA #$aa                        A:58 X:11 Y:00 P:04 SP:ff                          
+d007  a2 00     LDX #$00                        A:aa X:11 Y:00 P:04 SP:ff                          
+d009  81 00 00  STA $0000                       A:aa X:00 Y:00 P:04 SP:ff                          
+d00b  e8        INX                             A:aa X:00 Y:00 P:04 SP:ff                          
+d00c  e8        INX                             A:aa X:01 Y:00 P:04 SP:ff                          
+d00d  a9 ab     LDA #$ab                        A:aa X:02 Y:00 P:00 SP:ff                          
+d00f  81 00 00  STA $0000                       A:ab X:02 Y:00 P:04 SP:ff                          
+d011  e8        INX                             A:ab X:02 Y:00 P:04 SP:ff                          
+d012  a9 ac     LDA #$ac                        A:ab X:03 Y:00 P:04 SP:ff                          
+d014  81 00 00  STA $0000                       A:ac X:03 Y:00 P:0c SP:ff                          
+d016  a2 00     LDX #$00                        A:ac X:03 Y:00 P:0c SP:ff                          
+d018  a9 ad     LDA #$ad                        A:ac X:00 Y:00 P:0c SP:ff                          
+d01a  81 00 00  STA $0000                       A:ad X:00 Y:00 P:0d SP:ff                          
+d01c  ad 00 02  LDA $0200                       A:ad X:00 Y:00 P:0d SP:ff                          
+d01f  c9 aa     CMP #$aa                        A:00 X:00 Y:00 P:0c SP:ff                          

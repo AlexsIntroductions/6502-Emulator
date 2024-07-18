@@ -33,8 +33,10 @@ public:
     void SetY(uint8_t data);
     void SetStatus(uint8_t data);
     void SetStackPointer(uint8_t data);
-    void SetAddressingMode_8(uint8_t data);
+    void SetAddressingMode_8(uint8_t data, uint8_t mem, uint8_t mode);
     void SetAddressingMode_16(uint16_t data);  
+
+    void SetInstructionName(string name);
 
     char* GetLog();
 };

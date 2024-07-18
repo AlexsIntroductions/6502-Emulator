@@ -85,12 +85,15 @@ void nes::loadNesTest()
     cpu->set_pc(0xC000);
 
     // evaluate each instruction one at a time untile program end reached
-    string temp = "c";
-    while(temp == "c"){
-        cpu->evaluate();
-        cin >> temp;
-    }
+    // string temp = "c";
+    // while(temp == "c"){
+    //     cpu->evaluate();
+    //     cin >> temp;
+    // }
 
+    for(int i = 0; i < 100; i++){
+        cpu->evaluate();
+    }
 
 }
 

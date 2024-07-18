@@ -772,6 +772,11 @@ void nes_cpu::evaluate()
         cout << endl
              << "ERROR IN EVALUATE: INSTRUCTION NOT CODED FOR" << endl
              << endl;
+
+        #ifdef CPU_LOG
+            cpuLogger.SetInstructionName("???");
+        #endif
+        
         break;
     }
 
@@ -861,6 +866,10 @@ void nes_cpu::IMP()
         cout << "ADDRESSING MODE: IMPLIED" << endl;
     #endif
 
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_8(0, 0, 3);
+    #endif
+
     return;
 }
 
@@ -872,6 +881,10 @@ uint8_t nes_cpu::ACC()
         char buf[2];
         bytes2hex((unsigned char*)&a, buf, 1);
         cout << "ADDRESSING MODE: ACCUMULATOR | VALUE: " << buf[0] << buf[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_8(0, 0, 3);
     #endif
 
     return a;
@@ -890,7 +903,7 @@ uint8_t nes_cpu::IMM()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp);
+        cpuLogger.SetAddressingMode_8(temp, 0, 0);
     #endif
 
     return temp;
@@ -913,7 +926,7 @@ uint8_t nes_cpu::ZPG()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp);
+        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 1);
     #endif
 
     // return value at this address in the zero page
@@ -938,7 +951,7 @@ uint8_t nes_cpu::ZPX()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp);
+        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 1);
     #endif
 
     // Make sure address lies between 0x00 and 0xFF
@@ -964,7 +977,7 @@ uint8_t nes_cpu::ZPY()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp);
+        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 1);
     #endif
 
     // Make sure address lies between 0x00 and 0xFF
@@ -985,7 +998,7 @@ uint8_t nes_cpu::REL()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp);
+        cpuLogger.SetAddressingMode_8(temp, 0, 0);
     #endif
 
     return temp;
@@ -1152,6 +1165,10 @@ void nes_cpu::ADC(uint8_t val)
     #ifdef CPU_DEBUG
         cout << "ADC:" << endl;
     #endif
+    
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ADC");
+    #endif
 
     // Add the accumulator, mem value, and carry into temp
     uint16_t temp = a + val + (status & C_FLAG);
@@ -1178,6 +1195,11 @@ void nes_cpu::AND(uint8_t val)
     #ifdef CPU_DEBUG
         cout << "AND:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("AND");
+    #endif
+    
     // AND accumulator and mem val
     a &= val;
 
@@ -1193,6 +1215,10 @@ void nes_cpu::ASL(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "ASL:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ASL");
     #endif
 
     uint8_t val = mem->read_8(address);
@@ -1217,6 +1243,10 @@ void nes_cpu::ASL_ACC()
 {
     #ifdef CPU_DEBUG
         cout << "ASL:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ASL");
     #endif
 
     uint8_t val = a;
@@ -1244,6 +1274,10 @@ void nes_cpu::BCC(uint8_t offset)
         cout << "BCC:" << endl;
     #endif
 
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BCC");
+    #endif
+
     // Check if Carry Bit is Clear
     if (!(status & C_FLAG))
     {
@@ -1257,6 +1291,10 @@ void nes_cpu::BCS(uint8_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BCS:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BCS");
     #endif
 
     // Check if Carry Bit is Set
@@ -1273,6 +1311,11 @@ void nes_cpu::BEQ(uint8_t offset)
     #ifdef CPU_DEBUG
         cout << "BEQ:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BEQ");
+    #endif
+
     // Check if Zero Flag is Set
     if (status & Z_FLAG)
     {
@@ -1286,6 +1329,10 @@ void nes_cpu::BIT(uint8_t val)
 {
     #ifdef CPU_DEBUG
         cout << "BIT:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BIT");
     #endif
 
     // Instruction doesnt affect any register value
@@ -1308,6 +1355,10 @@ void nes_cpu::BMI(uint8_t offset)
         cout << "BMI:" << endl;
     #endif
 
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BMI");
+    #endif
+
     // Check if Negative Flag is Set
     if (status & N_FLAG)
     {
@@ -1321,6 +1372,10 @@ void nes_cpu::BNE(uint8_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BNE:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BNE");
     #endif
 
     // Check if Zero Flag is Clear
@@ -1338,6 +1393,10 @@ void nes_cpu::BPL(uint8_t offset)
         cout << "BPL:" << endl;
     #endif
 
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BPL");
+    #endif
+
     // Check if Negative Flag is Clear
     if (!(status & N_FLAG))
     {
@@ -1351,6 +1410,10 @@ void nes_cpu::BRK()
 {
     #ifdef CPU_DEBUG
         cout << "BRK:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BRK");
     #endif
     // Push PC to Stack
     // 6502 has error where is pushes PC + 1 instead of current PC, problem has to be fixed through software
@@ -1374,6 +1437,10 @@ void nes_cpu::BVC(uint8_t offset)
         cout << "BVC:" << endl;
     #endif
 
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BVC");
+    #endif
+
     // Check if Overflow Flag is Clear
     if (!(status & V_FLAG))
     {
@@ -1387,6 +1454,10 @@ void nes_cpu::BVS(uint8_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BVS:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("BVS");
     #endif
 
     // Check if Overflow Flag is Clear
@@ -1404,6 +1475,10 @@ void nes_cpu::CLC()
         cout << "CLC:" << endl;
     #endif
 
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("CLC");
+    #endif
+
     status &= C_FLAG_INV;
 }
 
@@ -1412,6 +1487,10 @@ void nes_cpu::CLD()
 {
     #ifdef CPU_DEBUG
         cout << "CLD:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("CLD");
     #endif
     
     status &= D_FLAG_INV;
@@ -1422,6 +1501,10 @@ void nes_cpu::CLI()
 {
     #ifdef CPU_DEBUG
         cout << "CLI:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("CLI");
     #endif
     
     status &= I_FLAG_INV;
@@ -1434,6 +1517,10 @@ void nes_cpu::CLV()
         cout << "CLV:" << endl;
     #endif
     
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("CLV");
+    #endif
     status &= V_FLAG_INV;
 }
 
@@ -1442,6 +1529,10 @@ void nes_cpu::CMP(uint8_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CMP:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("CMP");
     #endif
     
     // Subtract mem val from accumulator
@@ -1463,6 +1554,10 @@ void nes_cpu::CPX(uint8_t val)
     #ifdef CPU_DEBUG
         cout << "CPX:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("CPX");
+    #endif
     
     // Subtract mem val from x
     uint8_t temp = x - val;
@@ -1483,6 +1578,10 @@ void nes_cpu::CPY(uint8_t val)
     #ifdef CPU_DEBUG
         cout << "CPY:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("CPY");
+    #endif
     
     // Subtract mem val from y
     uint8_t temp = y - val;
@@ -1502,6 +1601,10 @@ void nes_cpu::DEC(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "DEC:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("DEC");
     #endif
     
     // Decrement the Memory Value by One
@@ -1524,6 +1627,10 @@ void nes_cpu::DEX()
     #ifdef CPU_DEBUG
         cout << "DEX:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("DEX");
+    #endif
     
     // Decrement X by One
     x -= 1;
@@ -1540,6 +1647,10 @@ void nes_cpu::DEY()
 {
     #ifdef CPU_DEBUG
         cout << "DEY:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("DEY");
     #endif
     
     // Decrement X by One
@@ -1558,6 +1669,10 @@ void nes_cpu::EOR(uint8_t val)
     #ifdef CPU_DEBUG
         cout << "EOR:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("EOR");
+    #endif
     
     // Perform XOR on Accumulator
     a ^= val;
@@ -1574,6 +1689,10 @@ void nes_cpu::INC(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "INC:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("INC");
     #endif
     
     uint8_t val = mem->read_8(address);
@@ -1597,6 +1716,10 @@ void nes_cpu::INX()
     #ifdef CPU_DEBUG
         cout << "INX:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("INX");
+    #endif
     
     // Increment X by One
     x += 1;
@@ -1613,6 +1736,10 @@ void nes_cpu::INY()
 {
     #ifdef CPU_DEBUG
         cout << "INY:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("INY");
     #endif
     
     // Increment Y by One
@@ -1631,6 +1758,10 @@ void nes_cpu::JMP(uint16_t address)
     #ifdef CPU_DEBUG
         cout << "JMP:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("JMP");
+    #endif
     
     // Set PC to address
     pc = address;
@@ -1641,6 +1772,10 @@ void nes_cpu::JSR(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "JSR:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("JSR");
     #endif
     
     // Pushes (address - 1) of return point on to the stack
@@ -1657,6 +1792,10 @@ void nes_cpu::LDA(uint8_t val)
 {
     #ifdef CPU_DEBUG
         cout << "LDA:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("LDA");
     #endif
     
     // Set Accumulator to Memory Value
@@ -1675,6 +1814,10 @@ void nes_cpu::LDX(uint8_t val)
     #ifdef CPU_DEBUG
         cout << "LDX:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("LDX");
+    #endif
     
     // Set X to Memory Value
     x = val;
@@ -1692,6 +1835,10 @@ void nes_cpu::LDY(uint8_t val)
     #ifdef CPU_DEBUG
         cout << "LDY:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("LDY");
+    #endif
     
     // Set Y to Memory Value
     y = val;
@@ -1708,6 +1855,10 @@ void nes_cpu::LSR(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "LSR:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("LSR");
     #endif
     
     uint8_t val = mem->read_8(address);
@@ -1731,6 +1882,10 @@ void nes_cpu::LSR_ACC()
 {
     #ifdef CPU_DEBUG
         cout << "LSR:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("LSR");
     #endif
     
     uint8_t val = a;
@@ -1756,6 +1911,10 @@ void nes_cpu::NOP() {
     #ifdef CPU_DEBUG
         cout << "NOP:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("NOP");
+    #endif
 }
 
 // ORA - Logical Inclusive OR
@@ -1763,6 +1922,10 @@ void nes_cpu::ORA(uint8_t val)
 {
     #ifdef CPU_DEBUG
         cout << "ORA:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ORA");
     #endif
     
     // Inclusive OR Performed on Accumulator and Memory Value
@@ -1781,6 +1944,10 @@ void nes_cpu::PHA()
     #ifdef CPU_DEBUG
         cout << "PHA:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("PHA");
+    #endif
     
     mem->push(sp, a);
     sp -= 1;
@@ -1792,6 +1959,10 @@ void nes_cpu::PHP()
     #ifdef CPU_DEBUG
         cout << "PHP:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("PHP");
+    #endif
     
     mem->push(sp, status);
     sp -= 1;
@@ -1802,6 +1973,10 @@ void nes_cpu::PLA()
 {
     #ifdef CPU_DEBUG
         cout << "PLA:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("PLA");
     #endif
     
     sp += 1;
@@ -1820,6 +1995,10 @@ void nes_cpu::PLP()
     #ifdef CPU_DEBUG
         cout << "PLP:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("PLP");
+    #endif
     
     sp += 1;
     status = mem->pop(sp);
@@ -1830,6 +2009,10 @@ void nes_cpu::ROL(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "ROL:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ROL");
     #endif
     
     uint8_t val = mem->read_8(address);
@@ -1857,6 +2040,10 @@ void nes_cpu::ROL_ACC()
     #ifdef CPU_DEBUG
         cout << "ROL:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ROL");
+    #endif
     
     // Move Accumulator Value one to Left
     uint8_t temp = (a << 1);
@@ -1883,7 +2070,11 @@ void nes_cpu::ROR(uint16_t address)
     #ifdef CPU_DEBUG
         cout << "ROR:" << endl;
     #endif
-    
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ROR");
+    #endif
+
     uint8_t val = mem->read_8(address);
 
     // Move Memory Value one to Right
@@ -1908,6 +2099,10 @@ void nes_cpu::ROR_ACC()
 {
     #ifdef CPU_DEBUG
         cout << "ROR:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("ROR");
     #endif
     
     // Move Memory Value one to Right
@@ -1935,6 +2130,10 @@ void nes_cpu::RTI()
     #ifdef CPU_DEBUG
         cout << "RTI:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("RTI");
+    #endif
     
     // Pull Status from Stack
     sp += 1;
@@ -1955,6 +2154,10 @@ void nes_cpu::RTS()
     #ifdef CPU_DEBUG
         cout << "RTS:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("RTS");
+    #endif
     
     // Pull Low Byte of PC from Stack
     sp += 1;
@@ -1973,6 +2176,10 @@ void nes_cpu::SBC(uint8_t val)
 {
     #ifdef CPU_DEBUG
         cout << "SBC:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("SBC");
     #endif
     
     // Subtract val and Not of Carry from Accumulator
@@ -2000,6 +2207,10 @@ void nes_cpu::SEC()
     #ifdef CPU_DEBUG
         cout << "SEC:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("SEC");
+    #endif
     
     status |= C_FLAG;
 }
@@ -2009,6 +2220,10 @@ void nes_cpu::SED()
 {
     #ifdef CPU_DEBUG
         cout << "SED:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("SED");
     #endif
     
     status |= D_FLAG;
@@ -2020,6 +2235,10 @@ void nes_cpu::SEI()
     #ifdef CPU_DEBUG
         cout << "SEI:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("SEI");
+    #endif
     
     status |= I_FLAG;
 }
@@ -2029,6 +2248,10 @@ void nes_cpu::STA(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "STA:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("STA");
     #endif
     
     mem->write_8(address, a);
@@ -2040,6 +2263,10 @@ void nes_cpu::STX(uint16_t address)
     #ifdef CPU_DEBUG
         cout << "STX:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("STX");
+    #endif
     
     mem->write_8(address, x);
 }
@@ -2050,6 +2277,10 @@ void nes_cpu::STY(uint16_t address)
     #ifdef CPU_DEBUG
         cout << "STY:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("STY");
+    #endif
     
     mem->write_8(address, y);
 }
@@ -2059,6 +2290,10 @@ void nes_cpu::TAX()
 {
     #ifdef CPU_DEBUG
         cout << "TAX:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("TAX");
     #endif
     
     x = a;
@@ -2076,6 +2311,10 @@ void nes_cpu::TAY()
     #ifdef CPU_DEBUG
         cout << "TAY:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("TAY");
+    #endif
     
     y = a;
 
@@ -2091,6 +2330,10 @@ void nes_cpu::TSX()
 {
     #ifdef CPU_DEBUG
         cout << "TSX:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("TSX");
     #endif
     
     x = sp;
@@ -2108,6 +2351,10 @@ void nes_cpu::TXA()
     #ifdef CPU_DEBUG
         cout << "TXA:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("TXA");
+    #endif
     
     a = x;
 
@@ -2124,6 +2371,10 @@ void nes_cpu::TXS()
     #ifdef CPU_DEBUG
         cout << "TXS:" << endl;
     #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("TXS");
+    #endif
     
     sp = x;
 }
@@ -2133,6 +2384,10 @@ void nes_cpu::TYA()
 {
     #ifdef CPU_DEBUG
         cout << "TYA:" << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetInstructionName("TYA");
     #endif
     
     a = y;
