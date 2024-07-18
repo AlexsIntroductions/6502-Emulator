@@ -4,10 +4,9 @@ using namespace std;
 
 nes_mem::nes_mem()
 {
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "New NES_MEM Created" << endl;
-    }
+    #endif
 
     // Erase Current Memory ??(Find cleaner way to do this)
     for (unsigned int i = 0; i < 0xFFFF; i++)
@@ -15,10 +14,9 @@ nes_mem::nes_mem()
         mem[i] = 0;
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "DONE CLEARING MEMORY" << endl;
-    }
+    #endif
 }
 
 nes_mem::~nes_mem()
@@ -42,27 +40,24 @@ void nes_mem::load(string filename)
         return;
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "READING ROM" << endl;
-    }
+    #endif
 
     rom.seekg(0, rom.end);
     romSize = rom.tellg();
     rom.seekg(0, rom.beg);
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM SIZE: " << romSize << endl;
-    }
+    #endif
 
     char *buffer = new char[romSize];
     rom.read(reinterpret_cast<char *>(buffer), romSize);
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM BUFFER LOADED" << endl;
-    }
+    #endif
 
     // Erase Current Memory ??(Find cleaner way to do this)
     for (unsigned int i = 0; i < 0xFFFF; i++)
@@ -70,10 +65,9 @@ void nes_mem::load(string filename)
         mem[i] = 0;
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "DONE WRITING MEMORY" << endl;
-    }
+    #endif
 
     // Load ROM from 0x4020 to 0xFFFF
     for (unsigned int i = 0x4020; i < 0xFFFF; i++)
@@ -81,13 +75,12 @@ void nes_mem::load(string filename)
         mem[i] = (unsigned char)buffer[i];
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM Loaded, Current Memory State: " << endl;
         char output[0xFFFF * 2];
         bytes2hex(this->mem, output, romSize);
         print_mem();
-    }
+    #endif
 }
 
 void nes_mem::load2address(string filename, uint16_t address)
@@ -104,27 +97,24 @@ void nes_mem::load2address(string filename, uint16_t address)
         return;
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "READING ROM" << endl;
-    }
+    #endif
 
     rom.seekg(0, rom.end);
     romSize = rom.tellg();
     rom.seekg(0, rom.beg);
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM SIZE: " << romSize << endl;
-    }
+    #endif
 
     char *buffer = new char[romSize];
     rom.read(reinterpret_cast<char *>(buffer), romSize);
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM BUFFER LOADED" << endl;
-    }
+    #endif
 
     // Erase Current Memory ??(Find cleaner way to do this)
     for (unsigned int i = 0; i < 0xFFFF; i++)
@@ -132,10 +122,9 @@ void nes_mem::load2address(string filename, uint16_t address)
         mem[i] = 0;
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "DONE WRITING MEMORY" << endl;
-    }
+    #endif
 
     // Load ROM from 0x4020 to 0xFFFF
     for (unsigned int i = address; i < 0xFFFF; i++)
@@ -143,13 +132,12 @@ void nes_mem::load2address(string filename, uint16_t address)
         mem[i] = (unsigned char)buffer[i];
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM Loaded, Current Memory State: " << endl;
         char output[0xFFFF * 2];
         bytes2hex(this->mem, output, romSize);
         print_mem();
-    }
+    #endif
 }
 
 void nes_mem::loadNesTest()
@@ -165,27 +153,24 @@ void nes_mem::loadNesTest()
         return;
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "READING ROM" << endl;
-    }
+    #endif
 
     rom.seekg(0, rom.end);
     romSize = rom.tellg();
     rom.seekg(0, rom.beg);
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM SIZE: " << std::hex << romSize << endl;
-    }
+    #endif
 
     char *buffer = new char[romSize];
     rom.read(reinterpret_cast<char *>(buffer), romSize);
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << "ROM BUFFER CREATED" << endl;
-    }
+    #endif
 
     for (uint16_t i = 0; i < 0x4000; i+=1)
     {
@@ -194,61 +179,56 @@ void nes_mem::loadNesTest()
         mem[(uint16_t)(0xC000 + i)] = temp;
     }
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         cout << endl;
         cout << "ROM Loaded, Current Memory State: " << endl << endl;
         char output[0xFFFF * 2];
         bytes2hex(this->mem, output, romSize);
         print_mem();
-    }
+    #endif
 }
 
 //--------------------General Memory Access Functions--------------------//
 
 uint8_t nes_mem::read_8(uint16_t addr)
 {
-    if (this->debug == 1)
-    {
+    #ifdef MEM_DEBUG
         char buf[2];
         uint8_t temp = mem[addr];
         bytes2hex((unsigned char*)&temp, buf, 1);
         cout << "Memory 8 read: " << buf[0] << buf[1] << endl;
-    }
+    #endif
     return mem[addr];
 }
 
 // LITTLE ENDIAN
 uint16_t nes_mem::read_16(uint16_t addr)
 {
-    if (this->debug == 1)
-    {
+    #ifdef MEM_DEBUG
         char buf[4];
         uint16_t temp = (uint16_t)((mem[addr + 1] << 8) | mem[addr]);
         bytes2hex((unsigned char*)&temp, buf, 2);
         cout << "Memory 16 read: " << buf[0] << buf[1] << buf[2] << buf[3] << endl;
-    }
+    #endif
     return (uint16_t)((mem[addr + 1] << 8) | mem[addr]);
 }
 
 void nes_mem::write_8(uint16_t addr, uint8_t val)
 {
-    if (this->debug == 1)
-    {
+    #ifdef MEM_DEBUG
         char addrBuf[4];
         bytes2hex((unsigned char*)&addr, addrBuf, 2);
         char valBuf[2];
         bytes2hex((unsigned char*)&val, valBuf, 1);
         cout << "Memory 8 write: " << valBuf[0] << valBuf[1] << " | To: " << addrBuf[0] << addrBuf[1] << addrBuf[2] << addrBuf[3] << endl;
-    }
+    #endif
     mem[addr] = val;
 }
 
 // LITTLE ENDIAN
 void nes_mem::write_16(uint16_t addr, uint16_t val)
 {
-    if (this->debug == 1)
-    {
+    #ifdef MEM_DEBUG
         char addr1Buf[4];
         bytes2hex((unsigned char*)&addr, addr1Buf, 2);
         char addr2Buf[4];
@@ -258,7 +238,7 @@ void nes_mem::write_16(uint16_t addr, uint16_t val)
         bytes2hex((unsigned char*)&val, valBuf, 2);
         cout << "Memory 16 write: " << valBuf[0] << valBuf[1] << " | To: " << addr2Buf[0] << addr2Buf[1] << addr2Buf[2] << addr2Buf[3] << endl;
         cout << "               : " << valBuf[2] << valBuf[3] << " | To: " << addr1Buf[0] << addr1Buf[1] << addr1Buf[2] << addr1Buf[3] << endl;
-    }
+    #endif
     mem[addr + 1] = (uint8_t)val;
     mem[addr] = (uint8_t)(val >> 8);
 }
@@ -281,11 +261,6 @@ void nes_mem::push(uint8_t sp, uint8_t val)
 }
 
 //--------------------Debug Functions--------------------//
-
-void nes_mem::set_debug(int val)
-{
-    debug = val;
-}
 
 void nes_mem::bytes2hex(unsigned char *src, char *out, int len)
 {

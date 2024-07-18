@@ -1,0 +1,41 @@
+c000  4c f5 c5                             A:00 X: 00  Y:00  P:24 SP:ff                            
+c5f5  a2 00                                A:00 X: 00  Y:00  P:24 SP:ff                            
+c5f7  86 00                                A:00 X: 00  Y:00  P:25 SP:ff                            
+c5f9  86 10                                A:00 X: 00  Y:00  P:25 SP:ff                            
+c5fb  86 11                                A:00 X: 00  Y:00  P:25 SP:ff                            
+c5fd  20 2d c7                             A:00 X: 00  Y:00  P:25 SP:ff                            
+c72d  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
+c72e  38                                   A:00 X: 00  Y:00  P:25 SP:fd                            
+c72f  b0 04                                A:00 X: 00  Y:00  P:25 SP:fd                            
+c735  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
+c736  18                                   A:00 X: 00  Y:00  P:25 SP:fd                            
+c737  b0 03                                A:00 X: 00  Y:00  P:24 SP:fd                            
+c739  4c 40 c7                             A:00 X: 00  Y:00  P:24 SP:fd                            
+c740  ea                                   A:00 X: 00  Y:00  P:24 SP:fd                            
+c741  38                                   A:00 X: 00  Y:00  P:24 SP:fd                            
+c742  90 03                                A:00 X: 00  Y:00  P:25 SP:fd                            
+c744  4c 4b c7                             A:00 X: 00  Y:00  P:25 SP:fd                            
+c74b  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
+c74c  18                                   A:00 X: 00  Y:00  P:25 SP:fd                            
+c74d  90 04                                A:00 X: 00  Y:00  P:24 SP:fd                            
+c753  ea                                   A:00 X: 00  Y:00  P:24 SP:fd                            
+c754  a9 00                                A:00 X: 00  Y:00  P:24 SP:fd                            
+c756  f0 04                                A:00 X: 00  Y:00  P:25 SP:fd                            
+c75c  ea                                   A:00 X: 00  Y:00  P:25 SP:fd                            
+c75d  a9 40                                A:00 X: 00  Y:00  P:25 SP:fd                            
+c75f  f0 03                                A:40 X: 00  Y:00  P:25 SP:fd                            
+c764  a2 06                                A:40 X: 00  Y:00  P:25 SP:fd                            
+c766  86 00                                A:40 X: 06  Y:00  P:25 SP:fd                            
+c768  ea                                   A:40 X: 06  Y:00  P:25 SP:fd                            
+c769  a9 40                                A:40 X: 06  Y:00  P:25 SP:fd                            
+c76b  d0 04                                A:40 X: 06  Y:00  P:25 SP:fd                            
+c771  ea                                   A:40 X: 06  Y:00  P:25 SP:fd                            
+c772  a9 00                                A:40 X: 06  Y:00  P:25 SP:fd                            
+c774  d0 03                                A:00 X: 06  Y:00  P:65 SP:fd                            
+c776  4c 7d c7                             A:00 X: 06  Y:00  P:65 SP:fd                            
+c77d  ea                                   A:00 X: 06  Y:00  P:65 SP:fd                            
+c77e  a9 ff                                A:00 X: 06  Y:00  P:65 SP:fd                            
+c780  85 01                                A:ff X: 06  Y:00  P:65 SP:fd                            
+c782  24 01                                A:ff X: 06  Y:00  P:65 SP:fd                            
+c784  70 04                                A:ff X: 06  Y:00  P:65 SP:fd                            
+c78a  ea                                   A:ff X: 06  Y:00  P:65 SP:fd                            

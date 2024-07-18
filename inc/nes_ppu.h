@@ -5,7 +5,6 @@
 
 class nes_ppu{
     nes_mem *mem;
-    int debug = 0;
 public:
     nes_ppu();
     ~nes_ppu();

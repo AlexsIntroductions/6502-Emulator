@@ -108,20 +108,11 @@ void nes::start()
     }
     cout << "Started" << endl;
 
-    if (debug == 1)
-    {
+    #ifdef MEM_DEBUG
         mem->print_mem();
-    }
+    #endif
 }
 
 void nes::reset()
 {
-}
-
-void nes::set_debug(int val)
-{
-    debug = val;
-    cpu->set_debug(val);
-    //mem->set_debug(val);
-    //ppu->set_debug(val);
 }

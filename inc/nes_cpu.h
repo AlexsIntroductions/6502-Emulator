@@ -3,9 +3,10 @@
 #include <cstdint>
 #include <string>
 #include "../inc/nes_mem.h"
+#include "../inc/log.h"
 
 #define BIT_SHIFT_8(X) (1 << x)
-#define INV_BIT_SHIFT_8(X) (0b11111111 ^ (1 << X))
+#define INV_BIT_SHIFT_8(X) ~BIT_SHIFT_8(X)
 
 #define N_FLAG BIT_SHIFT_8(7)
 #define V_FLAG BIT_SHIFT_8(6)
@@ -23,7 +24,8 @@
 #define Z_FLAG_INV INV_BIT_SHIFT_8(1)
 #define C_FLAG_INV INV_BIT_SHIFT_8(0)
 
-
+// #define CPU_DEBUG
+#define CPU_LOG
 
 /*
 Zero Page           :   [0x0000 … 0x00FF]
@@ -66,19 +68,21 @@ class nes_cpu
   int cycles = 0;
 
   nes_mem *mem;
-
-  int debug = 1;
+  
+  Logger cpuLogger;
 
 public:
+  // Init Functions
   nes_cpu();
   ~nes_cpu();
+
+  // Component Functions
   void evaluate();
   void set_mem(nes_mem *_mem);
   void set_pc(uint16_t address);
-  void print_CPU_state();
 
-  // Debug Functions
-  void set_debug(int val);
+  // Helper Functions
+  void print_CPU_state();
 
 private:
   // Addressing Mode Functions

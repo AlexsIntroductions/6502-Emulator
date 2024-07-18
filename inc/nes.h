@@ -14,8 +14,6 @@ class nes{
     nes_apu* apu;
     nes_mem* mem;
 
-    int debug = 1;
-
     //sf::RenderWindow* window;
 public:
     nes();
@@ -26,9 +24,6 @@ public:
     void eject();
     void start();
     void reset();
-
-    //Debug Functions
-    void set_debug(int val);
 
 private:
 

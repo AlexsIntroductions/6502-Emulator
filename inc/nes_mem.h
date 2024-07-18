@@ -7,7 +7,6 @@
 class nes_mem
 {
     uint8_t mem[0xFFFF];
-    int debug = 0;
 public:
     nes_mem();
     ~nes_mem();
@@ -30,12 +29,9 @@ public:
 
 
     //Debug Functions
-    void set_debug(int val);
     void print_mem();
     void print_zpg();
-
-    //Temp Functions
-
+    
 private:
     void bytes2hex(unsigned char *src, char *out, int len);
     void bytes2hex(char *src, char *out, int len);
