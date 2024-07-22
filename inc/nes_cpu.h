@@ -5,24 +5,21 @@
 #include "../inc/nes_mem.h"
 #include "../inc/log.h"
 
-#define BIT_SHIFT_8(X) (1 << x)
-#define INV_BIT_SHIFT_8(X) ~BIT_SHIFT_8(X)
+#define N_FLAG 0b10000000
+#define V_FLAG 0b01000000
+#define B_FLAG 0b00010000
+#define D_FLAG 0b00001000
+#define I_FLAG 0b00000100
+#define Z_FLAG 0b00000010
+#define C_FLAG 0b00000001
 
-#define N_FLAG BIT_SHIFT_8(7)
-#define V_FLAG BIT_SHIFT_8(6)
-#define B_FLAG BIT_SHIFT_8(4)
-#define D_FLAG BIT_SHIFT_8(3)
-#define I_FLAG BIT_SHIFT_8(2)
-#define Z_FLAG BIT_SHIFT_8(1)
-#define C_FLAG BIT_SHIFT_8(0)
-
-#define N_FLAG_INV INV_BIT_SHIFT_8(7)
-#define V_FLAG_INV INV_BIT_SHIFT_8(6)
-#define B_FLAG_INV INV_BIT_SHIFT_8(4)
-#define D_FLAG_INV INV_BIT_SHIFT_8(3)
-#define I_FLAG_INV INV_BIT_SHIFT_8(2)
-#define Z_FLAG_INV INV_BIT_SHIFT_8(1)
-#define C_FLAG_INV INV_BIT_SHIFT_8(0)
+#define N_FLAG_INV ~N_FLAG
+#define V_FLAG_INV ~V_FLAG
+#define B_FLAG_INV ~B_FLAG
+#define D_FLAG_INV ~D_FLAG
+#define I_FLAG_INV ~I_FLAG
+#define Z_FLAG_INV ~Z_FLAG
+#define C_FLAG_INV ~C_FLAG
 
 // #define CPU_DEBUG
 #define CPU_LOG

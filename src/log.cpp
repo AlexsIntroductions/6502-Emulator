@@ -7,7 +7,7 @@ void word2hex(uint16_t input, char *output);
 
 Logger::Logger(){
     // Remove Old Log File
-    remove("./logs/log.txt");
+    remove("./logs/log.log");
 
     // Set the Log String to White Space
     for(int i = 0; i < 100; i++){
@@ -38,16 +38,9 @@ Logger::Logger(){
 Logger::~Logger(){}
 
 void Logger::Log(){
-    if(!ofstream("./logs/log.txt", ios::app | ios::binary | ios::out).write(log, 100)){
+    if(!ofstream("./logs/log.log", ios::app | ios::binary | ios::out).write(log, 100)){
         cout << "Failed to Write to Log File" << endl;
     }
-    
-    // Clear Old Data
-    
-    log[9] = ' ';
-    log[10] = ' ';
-    log[12] = ' ';
-    log[13] = ' ';
     
     for(int i = 0; i < 8; i++){
         log[20 + i] = ' ';
@@ -73,6 +66,11 @@ void Logger::SetOpcode(uint8_t data){
     // Copy Array to log array
     log[6] = temp[0];
     log[7] = temp[1];
+
+    log[9] = ' ';
+    log[10] = ' ';
+    log[12] = ' ';
+    log[13] = ' ';
 }
 
 void Logger::SetAcc(uint8_t data){
@@ -125,26 +123,19 @@ void Logger::SetStackPointer(uint8_t data){
     log[72] = temp[1];
 }
 
-void Logger::SetAddressingMode_8(uint8_t data, uint8_t mem, uint8_t mode){
-
-    if(mode == 3){
-        return;
-    }
+void Logger::SetAddressingMode_8(uint8_t data, uint16_t mem, uint8_t mode){
 
     // Put Char Representation of PC into an array
     char dataTemp[2];
     byte2hex(data, dataTemp);
 
-    char memTemp[2];
-    byte2hex(mem, memTemp);
-
+    char memTemp[4];
     // Copy Array to log array
     log[9] = dataTemp[0];
     log[10] = dataTemp[1];
 
     switch(mode){
         // Imm
-        // REL
         case 0:
             log[20] = '#';
             log[21] = '$';
@@ -155,12 +146,23 @@ void Logger::SetAddressingMode_8(uint8_t data, uint8_t mem, uint8_t mode){
         // ZPX
         // ZPY
         case 1:
+            byte2hex(mem, memTemp);
             log[20] = '$';
             log[21] = dataTemp[0];
             log[22] = dataTemp[1];
             log[24] = '=';
             log[26] = memTemp[0];
             log[27] = memTemp[1];
+            break;
+        // REL
+        case 2:
+            (data & 0x80) ? (mem -= (((uint8_t)255 - data) + 1)) : (mem += data);
+            word2hex(mem, memTemp);
+            log[20] = '$';
+            log[21] = memTemp[0];
+            log[22] = memTemp[1];
+            log[23] = memTemp[2];
+            log[24] = memTemp[3];
             break;
         default:
             break;
@@ -201,14 +203,14 @@ char* Logger::GetLog(){
 
 void byte2hex(uint8_t input, char *output)
 {
-    char HexLookUp[] = "0123456789abcdef";
+    char HexLookUp[] = "0123456789ABCDEF";
     *output++ = HexLookUp[input >> 4];
     *output = HexLookUp[input & 0x0F];
 }
 
 void word2hex(uint16_t input, char *output)
 {
-    char HexLookUp[] = "0123456789abcdef";
+    char HexLookUp[] = "0123456789ABCDEF";
     *output++ = HexLookUp[(input >> 12) & 0x0F];
     *output++ = HexLookUp[(input >> 8) & 0x0F];
     *output++ = HexLookUp[(input >> 4) & 0x0F];

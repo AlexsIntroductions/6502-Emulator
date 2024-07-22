@@ -866,10 +866,6 @@ void nes_cpu::IMP()
         cout << "ADDRESSING MODE: IMPLIED" << endl;
     #endif
 
-    #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(0, 0, 3);
-    #endif
-
     return;
 }
 
@@ -881,10 +877,6 @@ uint8_t nes_cpu::ACC()
         char buf[2];
         bytes2hex((unsigned char*)&a, buf, 1);
         cout << "ADDRESSING MODE: ACCUMULATOR | VALUE: " << buf[0] << buf[1] << endl;
-    #endif
-
-    #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(0, 0, 3);
     #endif
 
     return a;
@@ -903,7 +895,7 @@ uint8_t nes_cpu::IMM()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp, 0, 0);
+        cpuLogger.SetAddressingMode_8(temp, (uint16_t)0, (uint8_t)0);
     #endif
 
     return temp;
@@ -998,7 +990,7 @@ uint8_t nes_cpu::REL()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp, 0, 0);
+        cpuLogger.SetAddressingMode_8(temp, pc, 2);
     #endif
 
     return temp;
@@ -1800,7 +1792,7 @@ void nes_cpu::LDA(uint8_t val)
     
     // Set Accumulator to Memory Value
     a = val;
-
+    
     // Check Zero Flag
     (a == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
