@@ -12,7 +12,7 @@ nes_cpu::nes_cpu()
     x = 0;
     y = 0;
     status = 0x24;
-    sp = 0xFF;
+    sp = 0xFD;
     pc = 0;
     mem = nullptr;
     cout << "In CPU" << endl;
@@ -795,6 +795,7 @@ void nes_cpu::evaluate()
 void nes_cpu::set_mem(nes_mem *_mem)
 {
     mem = _mem;
+    // mem->print_mem();
 }
 
 void nes_cpu::set_pc(uint16_t address){
@@ -1772,8 +1773,10 @@ void nes_cpu::JSR(uint16_t address)
     
     // Pushes (address - 1) of return point on to the stack
     pc -= 1;
-    mem->push(sp--, (uint8_t)((pc >> 8) & 0xFF));
-    mem->push(sp--, (uint8_t)(pc & 0xFF));
+    uint8_t HI = (uint8_t)((pc >> 8) & 0xFF);
+    uint8_t LO = (uint8_t)(pc & 0xFF);
+    mem->push(sp--, HI);
+    mem->push(sp--, LO);
 
     // Sets PC to Target Memory Address
     pc = address;
@@ -2153,13 +2156,14 @@ void nes_cpu::RTS()
     
     // Pull Low Byte of PC from Stack
     sp += 1;
-    pc |= mem->pop(sp);
+    uint16_t temp = mem->pop(sp);
 
     // Pull High Byte of PC from Stack
     sp += 1;
-    pc |= (uint16_t)(mem->pop(sp) << 8);
+    temp |= (uint16_t)(mem->pop(sp) << 8);
 
     // Increment PC by 1
+    pc = temp;
     pc += 1;
 }
 

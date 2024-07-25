@@ -31,6 +31,7 @@ public:
     //Debug Functions
     void print_mem();
     void print_zpg();
+    void print_stack();
     
 private:
     void bytes2hex(unsigned char *src, char *out, int len);

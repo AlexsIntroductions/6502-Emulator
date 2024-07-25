@@ -1,100 +1,64 @@
-C000  4C F5 C5  JMP $C5F5                       A:00 X:00 Y:00 P:24 SP:FF                          
-C5F5  A2 00     LDX #$00                        A:00 X:00 Y:00 P:24 SP:FF                          
-C5F7  86 00     STX $00 = 00                    A:00 X:00 Y:00 P:26 SP:FF                          
-C5F9  86 10     STX $10 = 00                    A:00 X:00 Y:00 P:26 SP:FF                          
-C5FB  86 11     STX $11 = 00                    A:00 X:00 Y:00 P:26 SP:FF                          
-C5FD  20 2D C7  JSR $C72D                       A:00 X:00 Y:00 P:26 SP:FF                          
-C72D  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C72E  38        SEC                             A:00 X:00 Y:00 P:26 SP:FD                          
-C72F  B0 04     BCS $C735                       A:00 X:00 Y:00 P:27 SP:FD                          
-C735  EA        NOP                             A:00 X:00 Y:00 P:27 SP:FD                          
-C736  18        CLC                             A:00 X:00 Y:00 P:27 SP:FD                          
-C737  B0 03     BCS $C73C                       A:00 X:00 Y:00 P:26 SP:FD                          
-C739  4C 40 C7  JMP $C740                       A:00 X:00 Y:00 P:26 SP:FD                          
-C740  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C741  38        SEC                             A:00 X:00 Y:00 P:26 SP:FD                          
-C742  90 03     BCC $C747                       A:00 X:00 Y:00 P:27 SP:FD                          
-C744  4C 4B C7  JMP $C74B                       A:00 X:00 Y:00 P:27 SP:FD                          
-C74B  EA        NOP                             A:00 X:00 Y:00 P:27 SP:FD                          
-C74C  18        CLC                             A:00 X:00 Y:00 P:27 SP:FD                          
-C74D  90 04     BCC $C753                       A:00 X:00 Y:00 P:26 SP:FD                          
-C753  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C754  A9 00     LDA #$00                        A:00 X:00 Y:00 P:26 SP:FD                          
-C756  F0 04     BEQ $C75C                       A:00 X:00 Y:00 P:26 SP:FD                          
-C75C  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C75D  A9 40     LDA #$40                        A:00 X:00 Y:00 P:26 SP:FD                          
-C75F  F0 03     BEQ $C764                       A:40 X:00 Y:00 P:24 SP:FD                          
-C761  4C 68 C7  JMP $C768                       A:40 X:00 Y:00 P:24 SP:FD                          
-C768  EA        NOP                             A:40 X:00 Y:00 P:24 SP:FD                          
-C769  A9 40     LDA #$40                        A:40 X:00 Y:00 P:24 SP:FD                          
-C76B  D0 04     BNE $C771                       A:40 X:00 Y:00 P:24 SP:FD                          
-C771  EA        NOP                             A:40 X:00 Y:00 P:24 SP:FD                          
-C772  A9 00     LDA #$00                        A:40 X:00 Y:00 P:24 SP:FD                          
-C774  D0 03     BNE $C779                       A:00 X:00 Y:00 P:26 SP:FD                          
-C776  4C 7D C7  JMP $C77D                       A:00 X:00 Y:00 P:26 SP:FD                          
-C77D  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C77E  A9 FF     LDA #$FF                        A:00 X:00 Y:00 P:26 SP:FD                          
-C780  85 01     STA $01 = 00                    A:FF X:00 Y:00 P:A4 SP:FD                          
-C782  24 01     BIT $01 = FF                    A:FF X:00 Y:00 P:A4 SP:FD                          
-C784  70 04     BVS $C78A                       A:FF X:00 Y:00 P:E4 SP:FD                          
-C78A  EA        NOP                             A:FF X:00 Y:00 P:E4 SP:FD                          
-C78B  24 01     BIT $01 = FF                    A:FF X:00 Y:00 P:E4 SP:FD                          
-C78D  50 03     BVC $C792                       A:FF X:00 Y:00 P:E4 SP:FD                          
-C78F  4C 96 C7  JMP $C796                       A:FF X:00 Y:00 P:E4 SP:FD                          
-C796  EA        NOP                             A:FF X:00 Y:00 P:E4 SP:FD                          
-C797  A9 00     LDA #$00                        A:FF X:00 Y:00 P:E4 SP:FD                          
-C799  85 01     STA $01 = FF                    A:00 X:00 Y:00 P:66 SP:FD                          
-C79B  24 01     BIT $01 = 00                    A:00 X:00 Y:00 P:66 SP:FD                          
-C79D  50 04     BVC $C7A3                       A:00 X:00 Y:00 P:26 SP:FD                          
-C7A3  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C7A4  24 01     BIT $01 = 00                    A:00 X:00 Y:00 P:26 SP:FD                          
-C7A6  70 03     BVS $C7AB                       A:00 X:00 Y:00 P:26 SP:FD                          
-C7A8  4C AF C7  JMP $C7AF                       A:00 X:00 Y:00 P:26 SP:FD                          
-C7AF  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C7B0  A9 00     LDA #$00                        A:00 X:00 Y:00 P:26 SP:FD                          
-C7B2  10 04     BPL $C7B8                       A:00 X:00 Y:00 P:26 SP:FD                          
-C7B8  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FD                          
-C7B9  A9 80     LDA #$80                        A:00 X:00 Y:00 P:26 SP:FD                          
-C7BB  10 03     BPL $C7C0                       A:80 X:00 Y:00 P:A4 SP:FD                          
-C7BD  4C D9 C7  JMP $C7D9                       A:80 X:00 Y:00 P:A4 SP:FD                          
-C7D9  EA        NOP                             A:80 X:00 Y:00 P:A4 SP:FD                          
-C7DA  60        RTS                             A:80 X:00 Y:00 P:A4 SP:FD                          
-0000  FF        ???                             A:80 X:00 Y:00 P:A4 SP:FF                          
-0001  00        BRK                             A:80 X:00 Y:00 P:A4 SP:FF                          
-C5F4  40        RTI                             A:80 X:00 Y:00 P:A4 SP:FC                          
-F5F5  47        ???                             A:80 X:00 Y:00 P:B4 SP:FF                          
-F5F6  06 20     ASL $20 = 00                    A:80 X:00 Y:00 P:B4 SP:FF                          
-F5F8  E9 FA     SBC #$FA                        A:80 X:00 Y:00 P:36 SP:FF                          
-F5FA  6F        ???                             A:85 X:00 Y:00 P:B5 SP:FF                          
-F5FB  47        ???                             A:85 X:00 Y:00 P:B5 SP:FF                          
-F5FC  06 EA     ASL $EA = 00                    A:85 X:00 Y:00 P:B5 SP:FF                          
-F5FE  EA        NOP                             A:85 X:00 Y:00 P:36 SP:FF                          
-F5FF  EA        NOP                             A:85 X:00 Y:00 P:36 SP:FF                          
-F600  EA        NOP                             A:85 X:00 Y:00 P:36 SP:FF                          
-F601  20 EF FA  JSR $FAEF                       A:85 X:00 Y:00 P:36 SP:FF                          
-FAEF  70 2A     BVS $FB1B                       A:85 X:00 Y:00 P:36 SP:FD                          
-FAF1  90 28     BCC $FB1B                       A:85 X:00 Y:00 P:36 SP:FD                          
-FB1B  85 00     STA $00 = 03                    A:85 X:00 Y:00 P:36 SP:FD                          
-FB1D  24 01     BIT $01 = 00                    A:85 X:00 Y:00 P:36 SP:FD                          
-FB1F  18        CLC                             A:85 X:00 Y:00 P:36 SP:FD                          
-FB20  A9 B3     LDA #$B3                        A:85 X:00 Y:00 P:36 SP:FD                          
-FB22  60        RTS                             A:B3 X:00 Y:00 P:B4 SP:FD                          
-FFA8  00        BRK                             A:B3 X:00 Y:00 P:B4 SP:FF                          
-C5F4  40        RTI                             A:B3 X:00 Y:00 P:B4 SP:FC                          
-F5F5  47        ???                             A:B3 X:00 Y:00 P:B4 SP:FF                          
-F5F6  06 20     ASL $20 = 00                    A:B3 X:00 Y:00 P:B4 SP:FF                          
-F5F8  E9 FA     SBC #$FA                        A:B3 X:00 Y:00 P:36 SP:FF                          
-F5FA  6F        ???                             A:B8 X:00 Y:00 P:B5 SP:FF                          
-F5FB  47        ???                             A:B8 X:00 Y:00 P:B5 SP:FF                          
-F5FC  06 EA     ASL $EA = 00                    A:B8 X:00 Y:00 P:B5 SP:FF                          
-F5FE  EA        NOP                             A:B8 X:00 Y:00 P:36 SP:FF                          
-F5FF  EA        NOP                             A:B8 X:00 Y:00 P:36 SP:FF                          
-F600  EA        NOP                             A:B8 X:00 Y:00 P:36 SP:FF                          
-F601  20 EF FA  JSR $FAEF                       A:B8 X:00 Y:00 P:36 SP:FF                          
-FAEF  70 2A     BVS $FB1B                       A:B8 X:00 Y:00 P:36 SP:FD                          
-FAF1  90 28     BCC $FB1B                       A:B8 X:00 Y:00 P:36 SP:FD                          
-FB1B  85 00     STA $00 = 03                    A:B8 X:00 Y:00 P:36 SP:FD                          
-FB1D  24 01     BIT $01 = 00                    A:B8 X:00 Y:00 P:36 SP:FD                          
-FB1F  18        CLC                             A:B8 X:00 Y:00 P:36 SP:FD                          
-FB20  A9 B3     LDA #$B3                        A:B8 X:00 Y:00 P:36 SP:FD                          
-FB22  60        RTS                             A:B3 X:00 Y:00 P:B4 SP:FD                          
+C000  4C F5 C5  JMP $C5F5                       A:00 X:00 Y:00 P:24 SP:FD                          
+C5F5  A2 00     LDX #$00                        A:00 X:00 Y:00 P:24 SP:FD                          
+C5F7  86 00     STX $00 = 00                    A:00 X:00 Y:00 P:26 SP:FD                          
+C5F9  86 10     STX $10 = 00                    A:00 X:00 Y:00 P:26 SP:FD                          
+C5FB  86 11     STX $11 = 00                    A:00 X:00 Y:00 P:26 SP:FD                          
+C5FD  20 2D C7  JSR $C72D                       A:00 X:00 Y:00 P:26 SP:FD                          
+C72D  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C72E  38        SEC                             A:00 X:00 Y:00 P:26 SP:FB                          
+C72F  B0 04     BCS $C735                       A:00 X:00 Y:00 P:27 SP:FB                          
+C735  EA        NOP                             A:00 X:00 Y:00 P:27 SP:FB                          
+C736  18        CLC                             A:00 X:00 Y:00 P:27 SP:FB                          
+C737  B0 03     BCS $C73C                       A:00 X:00 Y:00 P:26 SP:FB                          
+C739  4C 40 C7  JMP $C740                       A:00 X:00 Y:00 P:26 SP:FB                          
+C740  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C741  38        SEC                             A:00 X:00 Y:00 P:26 SP:FB                          
+C742  90 03     BCC $C747                       A:00 X:00 Y:00 P:27 SP:FB                          
+C744  4C 4B C7  JMP $C74B                       A:00 X:00 Y:00 P:27 SP:FB                          
+C74B  EA        NOP                             A:00 X:00 Y:00 P:27 SP:FB                          
+C74C  18        CLC                             A:00 X:00 Y:00 P:27 SP:FB                          
+C74D  90 04     BCC $C753                       A:00 X:00 Y:00 P:26 SP:FB                          
+C753  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C754  A9 00     LDA #$00                        A:00 X:00 Y:00 P:26 SP:FB                          
+C756  F0 04     BEQ $C75C                       A:00 X:00 Y:00 P:26 SP:FB                          
+C75C  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C75D  A9 40     LDA #$40                        A:00 X:00 Y:00 P:26 SP:FB                          
+C75F  F0 03     BEQ $C764                       A:40 X:00 Y:00 P:24 SP:FB                          
+C761  4C 68 C7  JMP $C768                       A:40 X:00 Y:00 P:24 SP:FB                          
+C768  EA        NOP                             A:40 X:00 Y:00 P:24 SP:FB                          
+C769  A9 40     LDA #$40                        A:40 X:00 Y:00 P:24 SP:FB                          
+C76B  D0 04     BNE $C771                       A:40 X:00 Y:00 P:24 SP:FB                          
+C771  EA        NOP                             A:40 X:00 Y:00 P:24 SP:FB                          
+C772  A9 00     LDA #$00                        A:40 X:00 Y:00 P:24 SP:FB                          
+C774  D0 03     BNE $C779                       A:00 X:00 Y:00 P:26 SP:FB                          
+C776  4C 7D C7  JMP $C77D                       A:00 X:00 Y:00 P:26 SP:FB                          
+C77D  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C77E  A9 FF     LDA #$FF                        A:00 X:00 Y:00 P:26 SP:FB                          
+C780  85 01     STA $01 = 00                    A:FF X:00 Y:00 P:A4 SP:FB                          
+C782  24 01     BIT $01 = FF                    A:FF X:00 Y:00 P:A4 SP:FB                          
+C784  70 04     BVS $C78A                       A:FF X:00 Y:00 P:E4 SP:FB                          
+C78A  EA        NOP                             A:FF X:00 Y:00 P:E4 SP:FB                          
+C78B  24 01     BIT $01 = FF                    A:FF X:00 Y:00 P:E4 SP:FB                          
+C78D  50 03     BVC $C792                       A:FF X:00 Y:00 P:E4 SP:FB                          
+C78F  4C 96 C7  JMP $C796                       A:FF X:00 Y:00 P:E4 SP:FB                          
+C796  EA        NOP                             A:FF X:00 Y:00 P:E4 SP:FB                          
+C797  A9 00     LDA #$00                        A:FF X:00 Y:00 P:E4 SP:FB                          
+C799  85 01     STA $01 = FF                    A:00 X:00 Y:00 P:66 SP:FB                          
+C79B  24 01     BIT $01 = 00                    A:00 X:00 Y:00 P:66 SP:FB                          
+C79D  50 04     BVC $C7A3                       A:00 X:00 Y:00 P:26 SP:FB                          
+C7A3  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C7A4  24 01     BIT $01 = 00                    A:00 X:00 Y:00 P:26 SP:FB                          
+C7A6  70 03     BVS $C7AB                       A:00 X:00 Y:00 P:26 SP:FB                          
+C7A8  4C AF C7  JMP $C7AF                       A:00 X:00 Y:00 P:26 SP:FB                          
+C7AF  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C7B0  A9 00     LDA #$00                        A:00 X:00 Y:00 P:26 SP:FB                          
+C7B2  10 04     BPL $C7B8                       A:00 X:00 Y:00 P:26 SP:FB                          
+C7B8  EA        NOP                             A:00 X:00 Y:00 P:26 SP:FB                          
+C7B9  A9 80     LDA #$80                        A:00 X:00 Y:00 P:26 SP:FB                          
+C7BB  10 03     BPL $C7C0                       A:80 X:00 Y:00 P:A4 SP:FB                          
+C7BD  4C D9 C7  JMP $C7D9                       A:80 X:00 Y:00 P:A4 SP:FB                          
+C7D9  EA        NOP                             A:80 X:00 Y:00 P:A4 SP:FB                          
+C7DA  60        RTS                             A:80 X:00 Y:00 P:A4 SP:FB                          
+C600  20 DB C7  JSR $C7DB                       A:80 X:00 Y:00 P:A4 SP:FD                          
+C7DB  EA        NOP                             A:80 X:00 Y:00 P:A4 SP:FB                          
+C7DC  A9 FF     LDA #$FF                        A:80 X:00 Y:00 P:A4 SP:FB                          

@@ -247,17 +247,17 @@ void nes_mem::write_16(uint16_t addr, uint16_t val)
 
 uint8_t nes_mem::peek(uint8_t sp, uint8_t n)
 {
-    return mem[(0x0100 & sp) - n - 1];
+    return mem[(0x0100 | sp) - n - 1];
 }
 
 uint8_t nes_mem::pop(uint8_t sp)
 {
-    return mem[0x0100 & sp];
+    return mem[0x0100 | sp];
 }
 
 void nes_mem::push(uint8_t sp, uint8_t val)
 {
-    mem[0x0100 & sp] = val;
+    mem[(0x100 | sp)] = val;
 }
 
 //--------------------Debug Functions--------------------//
@@ -290,7 +290,7 @@ void nes_mem::print_mem()
 {
     char tempBuffer[0x1FFFF];
     bytes2hex(mem, tempBuffer, 0xFFFF + 1);
-    for (int i = 0; i <= sizeof(tempBuffer) / sizeof(char); i += 2)
+    for (int i = 0; i < sizeof(tempBuffer) / sizeof(char); i += 2)
     {
         // Every 0x100 bytes print a line
         //if (i % 0x100 == 0)
@@ -318,6 +318,30 @@ void nes_mem::print_zpg(){
         {
             cout << endl;
             cout << std::hex << (i / 2) << " : ";
+        }
+        else if (i % 8 == 0)
+        {
+            cout << " ";
+        }
+        cout << tempBuffer[i] << tempBuffer[i + 1] << " ";
+    }
+    cout << endl << endl;
+}
+
+void nes_mem::print_stack(){
+    cout << "STACK : " << endl;
+    char tempBuffer[0x200];
+    char temp[0x100];
+    for(int i = 0; i < 0x100; i++){
+        temp[i] = mem[0x100 & (uint8_t)i];
+    }
+    bytes2hex(temp, tempBuffer, 0x100);
+    for (int i = 0; i <= sizeof(tempBuffer) / sizeof(char) - 1; i += 2)
+    {
+        if ((i / 2) % 0x3C == 0)
+        {
+            cout << endl;
+            cout << std::hex << (0x100 | (i / 2)) << " : ";
         }
         else if (i % 8 == 0)
         {
