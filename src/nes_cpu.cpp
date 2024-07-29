@@ -922,7 +922,7 @@ uint8_t nes_cpu::ZPG()
         cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 1);
     #endif
 
-    // return value at this address in the zero page
+    // return address in the zero page
     return temp;
 }
 
@@ -1164,7 +1164,7 @@ void nes_cpu::ADC(uint8_t val)
     #endif
 
     // Add the accumulator, mem value, and carry into temp
-    uint16_t temp = a + val + (status & C_FLAG);
+    uint16_t temp = a + val + (uint8_t)(status & C_FLAG);
 
     // Check Carry Flag
     (temp >> 8) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
@@ -1172,11 +1172,12 @@ void nes_cpu::ADC(uint8_t val)
     // Check Negative Flag
     (temp & 0x0080) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 
-    // Check Overflow Flag
-    (((uint8_t)(temp & 0x0080)) != (a & 0x80)) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
+    // Check Overflow Flag | Formula for Calculating the Overflow Flag Taken from https://www.righto.com/2012/12/the-6502-overflow-flag-explained.html
+    uint8_t c6 = (((a & 0b01111111) + (val & 0b01111111) + (status & C_FLAG)) & 0x80);
+    ( (~(a & 0x80) & ~(val & 0x80) & c6) | ((a & 0x80) & (val & 0x80) & ~c6)) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
 
     // Check Zero Flag
-    (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+    ((uint8_t)(temp & 0x00FF) == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
     // Set Accumulator to new value
     a = (uint8_t)(temp & 0x00FF);
@@ -1335,10 +1336,10 @@ void nes_cpu::BIT(uint8_t val)
     (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
     // Check Negative Flag
-    (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+    (val & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 
     // Check Overflow Flag
-    (temp & 0x40) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
+    (val & 0x40) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
 }
 
 // BMI - Branch if Minus
@@ -1959,8 +1960,7 @@ void nes_cpu::PHP()
         cpuLogger.SetInstructionName("PHP");
     #endif
     
-    mem->push(sp, status);
-    sp -= 1;
+    mem->push(sp--, status);
 }
 
 // PLA - Pull Accumulator
@@ -1984,7 +1984,7 @@ void nes_cpu::PLA()
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 }
 
-// PLP - Pull Processor Status
+// PLP - Pull Processor Status (Break Flag and Bit 5 Ignored)
 void nes_cpu::PLP()
 {
     #ifdef CPU_DEBUG
@@ -1997,6 +1997,8 @@ void nes_cpu::PLP()
     
     sp += 1;
     status = mem->pop(sp);
+    status &= B_FLAG_INV;
+    status |= 0b00100000;
 }
 
 // ROL - Rotate Left
@@ -2177,24 +2179,27 @@ void nes_cpu::SBC(uint8_t val)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("SBC");
     #endif
-    
-    // Subtract val and Not of Carry from Accumulator
-    uint16_t temp = a - val - ((uint8_t)1 - (status & C_FLAG));
 
-    // Check Overflow Flag
-    ((int16_t)temp > 127 || (int16_t)temp < -128) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
+    ADC(~val);    
+    // // Subtract val and Not of Carry from Accumulator
+    // uint16_t temp = a - val - ((uint8_t)1 - (status & C_FLAG));
 
-    // Check Carry Flag
-    (temp >= 0) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+    // // Check Overflow Flag | Formula for Calculating the Overflow Flag Taken from https://www.righto.com/2012/12/the-6502-overflow-flag-explained.html
+    // uint8_t c6 = (((a & 0b01111111) + (val & 0b01111111) + (status & C_FLAG)) & 0x80);
+    // ( (~(a & 0x80) & ~(val & 0x80) & c6) | ((a & 0x80) & (val & 0x80) & ~c6)) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
 
-    // Check Zero Flag
-    (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
-    // Check Negative Flag
-    (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+    // // Check Carry Flag
+    // (temp >= 0) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
 
-    // Set Accumulator to new value
-    a = (uint8_t)(temp & 0xFF);
+    // // Check Zero Flag
+    // (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
+
+    // // Check Negative Flag
+    // (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
+
+    // // Set Accumulator to new value
+    // a = (uint8_t)(temp & 0xFF);
 }
 
 // SEC - Set Carry Flag

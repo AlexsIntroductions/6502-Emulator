@@ -146,7 +146,7 @@ void Logger::SetAddressingMode_8(uint8_t data, uint16_t mem, uint8_t mode){
         // ZPX
         // ZPY
         case 1:
-            byte2hex(mem, memTemp);
+            byte2hex((uint8_t)mem & 0xFF, memTemp);
             log[20] = '$';
             log[21] = dataTemp[0];
             log[22] = dataTemp[1];
