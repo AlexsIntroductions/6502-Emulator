@@ -65,10 +65,9 @@ class nes_cpu
   int cycles = 0;
 
   nes_mem *mem;
-  
-  Logger cpuLogger;
 
 public:
+  Logger cpuLogger;
   // Init Functions
   nes_cpu();
   ~nes_cpu();
@@ -101,6 +100,7 @@ private:
   uint8_t REL();
   // Absolute
   uint16_t ABS();
+  uint16_t JMP_ABS();
   // Absolute X
   uint16_t ABX();
   // Absolute Y

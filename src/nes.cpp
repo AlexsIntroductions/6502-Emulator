@@ -94,7 +94,7 @@ void nes::loadNesTest()
     for(int i = 0; i < 8991; i++){
         cpu->evaluate();
     }
-
+    cpu->cpuLogger.CompareTestLogs();
 }
 
 void nes::eject()

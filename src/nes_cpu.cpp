@@ -54,6 +54,9 @@ void nes_cpu::evaluate()
 
     #ifdef CPU_LOG
         cpuLogger.SetOpcode(opcode);
+        // if(pc - 1 == 0xDBB5){
+        //     mem->print_mem();
+        // }
     #endif
 
     #ifdef CPU_DEBUG
@@ -402,7 +405,7 @@ void nes_cpu::evaluate()
         // ---------------JMP - Jump
     case 0x4C:
         // Absolute
-        JMP(ABS());
+        JMP(JMP_ABS());
         break;
     case 0x6C:
         // Indirect
@@ -411,7 +414,7 @@ void nes_cpu::evaluate()
         // ---------------JSR - Jump to Subroutine
     case 0x20:
         // Absolute
-        JSR(ABS());
+        JSR(JMP_ABS());
         break;
         // ---------------LDA - Load Accumulator
     case 0xA9:
@@ -769,14 +772,17 @@ void nes_cpu::evaluate()
         TYA();
         break;
     default:
+
+        #ifdef CPU_DEBUG
         cout << endl
              << "ERROR IN EVALUATE: INSTRUCTION NOT CODED FOR" << endl
              << endl;
+        #endif
 
         #ifdef CPU_LOG
             cpuLogger.SetInstructionName("???");
         #endif
-        
+        pc++;
         break;
     }
 
@@ -896,7 +902,7 @@ uint8_t nes_cpu::IMM()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp, (uint16_t)0, (uint8_t)0);
+        cpuLogger.SetAddressingMode_8(temp, 0, 0, 0);
     #endif
 
     return temp;
@@ -919,7 +925,7 @@ uint8_t nes_cpu::ZPG()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 1);
+        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 0, 1);
     #endif
 
     // return address in the zero page
@@ -944,7 +950,7 @@ uint8_t nes_cpu::ZPX()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 1);
+        cpuLogger.SetAddressingMode_8(temp - this->x, mem->read_8(temp), temp, 4);
     #endif
 
     // Make sure address lies between 0x00 and 0xFF
@@ -970,7 +976,7 @@ uint8_t nes_cpu::ZPY()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 1);
+        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), temp - this->y, 5);
     #endif
 
     // Make sure address lies between 0x00 and 0xFF
@@ -991,7 +997,7 @@ uint8_t nes_cpu::REL()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_8(temp, pc, 2);
+        cpuLogger.SetAddressingMode_8(temp, pc, 0, 2);
     #endif
 
     return temp;
@@ -1014,7 +1020,32 @@ uint16_t nes_cpu::ABS()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_16(toReturn);
+        cpuLogger.SetAddressingMode_16(toReturn, mem->read_8(toReturn), 0, 1);
+    #endif
+
+    // Increment pc for each byte read (2)
+    pc += 2;
+
+    return toReturn;
+}
+
+// Reads a full 16 bit address of target location
+uint16_t nes_cpu::JMP_ABS()
+{
+    // Get the address from the instruction
+    uint16_t toReturn = mem->read_16(pc);
+
+    #ifdef CPU_DEBUG
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ABSOLUTE | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_16(toReturn, 0, 0, 0);
     #endif
 
     // Increment pc for each byte read (2)
@@ -1028,7 +1059,8 @@ uint16_t nes_cpu::ABS()
 uint16_t nes_cpu::ABX()
 {
     // Get the address from the instruction and add value in x register
-    uint16_t toReturn = (mem->read_16(pc) + this->x);
+    uint16_t temp = mem->read_16(pc);
+    uint16_t toReturn = (temp + this->x);
 
     #ifdef CPU_DEBUG
         char buf[4];
@@ -1040,7 +1072,7 @@ uint16_t nes_cpu::ABX()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_16(toReturn);
+        cpuLogger.SetAddressingMode_16(toReturn, temp, mem->read_8(toReturn), 6);
     #endif
 
     // Increment pc for each byte read (2)
@@ -1054,7 +1086,8 @@ uint16_t nes_cpu::ABX()
 uint16_t nes_cpu::ABY()
 {
     // Get the address from the instruction and add value in y register
-    uint16_t toReturn = (mem->read_16(pc) + this->y);
+    uint16_t temp = mem->read_16(pc);
+    uint16_t toReturn = (temp + this->y);
 
     #ifdef CPU_DEBUG
         char buf[4];
@@ -1066,7 +1099,7 @@ uint16_t nes_cpu::ABY()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_16(toReturn);
+        cpuLogger.SetAddressingMode_16(toReturn, temp, mem->read_8(toReturn), 5);
     #endif
 
     // Increment pc for each byte read (2)
@@ -1080,7 +1113,8 @@ uint16_t nes_cpu::ABY()
 uint16_t nes_cpu::IND()
 {
     // Get the address from the instruction
-    uint16_t toReturn = mem->read_16(mem->read_16(pc));
+    uint16_t temp = mem->read_16(pc);
+    uint16_t toReturn = mem->read_16_wrap(temp);
 
     #ifdef CPU_DEBUG
         char buf[4];
@@ -1089,7 +1123,7 @@ uint16_t nes_cpu::IND()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_16(toReturn);
+        cpuLogger.SetAddressingMode_16(toReturn, temp, 0, 4);
     #endif
 
     pc += 2;
@@ -1102,8 +1136,8 @@ uint16_t nes_cpu::IND()
 uint16_t nes_cpu::IID()
 {
     // Get the address for zero page from the instruction and add value in x register
-    uint8_t temp = mem->read_8(pc++) + this->x;
-    uint16_t toReturn = mem->read_16(temp & 0xFF);
+    uint8_t zpAdd = mem->read_8(pc++);
+    uint16_t toReturn = mem->readZPG_16((uint8_t)(zpAdd + this->x) & 0xFF);
 
     #ifdef CPU_DEBUG
         char buf[4];
@@ -1115,7 +1149,8 @@ uint16_t nes_cpu::IID()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_16(toReturn);
+        uint8_t temp = mem->read_8(toReturn);
+        cpuLogger.SetAddressingMode_16(toReturn, (uint16_t)((temp << 8) | zpAdd), (uint16_t)zpAdd + this->x, 2);
     #endif
 
     // return the address located in the zero page
@@ -1128,7 +1163,7 @@ uint16_t nes_cpu::IDI()
 {
     // Get the zero page address from the instruction
     uint8_t temp = mem->read_8(pc++);
-    uint16_t toReturn = mem->read_16(temp) + this->y;
+    uint16_t toReturn = mem->readZPG_16(temp) + this->y;
 
     #ifdef CPU_DEBUG
         char buf[4];
@@ -1140,7 +1175,7 @@ uint16_t nes_cpu::IDI()
     #endif
 
     #ifdef CPU_LOG
-        cpuLogger.SetAddressingMode_16(toReturn);
+        cpuLogger.SetAddressingMode_16(toReturn, (uint16_t)((temp << 8) | mem->read_8(toReturn)), toReturn - this->y, 3);
     #endif
 
     // Get the target address from zero page and add value in y register
@@ -1241,6 +1276,7 @@ void nes_cpu::ASL_ACC()
 
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("ASL");
+        cpuLogger.SetAddressingMode_8(0,0,0,3);
     #endif
 
     uint8_t val = a;
@@ -1882,6 +1918,7 @@ void nes_cpu::LSR_ACC()
 
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("LSR");
+        cpuLogger.SetAddressingMode_8(0,0,0,3);
     #endif
     
     uint8_t val = a;
@@ -1960,7 +1997,7 @@ void nes_cpu::PHP()
         cpuLogger.SetInstructionName("PHP");
     #endif
     
-    mem->push(sp--, status);
+    mem->push(sp--, status | B_FLAG);
 }
 
 // PLA - Pull Accumulator
@@ -2040,6 +2077,7 @@ void nes_cpu::ROL_ACC()
 
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("ROL");
+        cpuLogger.SetAddressingMode_8(0,0,0,3);
     #endif
     
     // Move Accumulator Value one to Left
@@ -2100,6 +2138,7 @@ void nes_cpu::ROR_ACC()
 
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("ROR");
+        cpuLogger.SetAddressingMode_8(0,0,0,3);
     #endif
     
     // Move Memory Value one to Right
@@ -2135,6 +2174,7 @@ void nes_cpu::RTI()
     // Pull Status from Stack
     sp += 1;
     status = mem->pop(sp);
+    status |= 0b00100000;
 
     // Pull Low Byte of PC from Stack
     sp += 1;
@@ -2176,30 +2216,29 @@ void nes_cpu::SBC(uint8_t val)
         cout << "SBC:" << endl;
     #endif
 
+    //ADC(~val);    
+
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("SBC");
     #endif
+    // Subtract val and Not of Carry from Accumulator
+    int8_t temp = a - val - ((uint8_t)1 - (status & C_FLAG));
 
-    ADC(~val);    
-    // // Subtract val and Not of Carry from Accumulator
-    // uint16_t temp = a - val - ((uint8_t)1 - (status & C_FLAG));
+    // Check Carry Flag
+    (temp >= 0) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
 
-    // // Check Overflow Flag | Formula for Calculating the Overflow Flag Taken from https://www.righto.com/2012/12/the-6502-overflow-flag-explained.html
-    // uint8_t c6 = (((a & 0b01111111) + (val & 0b01111111) + (status & C_FLAG)) & 0x80);
-    // ( (~(a & 0x80) & ~(val & 0x80) & c6) | ((a & 0x80) & (val & 0x80) & ~c6)) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
+    // Check Overflow Flag | Formula for Calculating the Overflow Flag Taken from https://www.righto.com/2012/12/the-6502-overflow-flag-explained.html
+    //uint8_t c6 = (((a & 0b01111111) + (val & 0b01111111) + (status & C_FLAG)) & 0x80);
+    ((a^val) & ((uint8_t)(temp & 0x00FF)^a) & 0x80) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
 
+    // Check Zero Flag
+    ((uint8_t)(temp & 0x00FF) == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
 
-    // // Check Carry Flag
-    // (temp >= 0) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
+    // Check Negative Flag
+    ((uint8_t)(temp & 0x0080)) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 
-    // // Check Zero Flag
-    // (temp == 0) ? (status |= Z_FLAG) : (status &= Z_FLAG_INV);
-
-    // // Check Negative Flag
-    // (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // // Set Accumulator to new value
-    // a = (uint8_t)(temp & 0xFF);
+    // Set Accumulator to new value
+    a = (uint8_t)(temp & 0xFF);
 }
 
 // SEC - Set Carry Flag
