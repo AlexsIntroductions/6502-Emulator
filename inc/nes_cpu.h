@@ -39,7 +39,8 @@ PROGRAM ROM         :   [0x8000 … 0xFFFF]
 
 class nes_cpu
 {
-
+  typedef uint16_t (nes_cpu::*AddressingMode)();
+  typedef void (nes_cpu::*Instruction)(uint16_t);
   //----------General Registers----------//
   // Accumulator
   uint8_t a;
@@ -81,137 +82,147 @@ public:
   void print_CPU_state();
 
 private:
+
+
   // Addressing Mode Functions
   // return the byte of data that is to be acted on
 
   // Implicit
-  void IMP();
+  uint16_t IMP();
   // Accumulator
-  uint8_t ACC();
+  uint16_t ACC();
   // Immediate
-  uint8_t IMM();
+  uint16_t IMM();
   // Zero Page
-  uint8_t ZPG();
+  uint16_t ZPG();
+  uint16_t ZPG_MEM();
   // Zero Page X
-  uint8_t ZPX();
+  uint16_t ZPX();
+  uint16_t ZPX_MEM();
   // Zero Page Y
-  uint8_t ZPY();
+  uint16_t ZPY();
+  uint16_t ZPY_MEM();
   // Relative
-  uint8_t REL();
+  uint16_t REL();
   // Absolute
   uint16_t ABS();
+  uint16_t ABS_MEM();
   uint16_t JMP_ABS();
   // Absolute X
   uint16_t ABX();
+  uint16_t ABX_MEM();
   // Absolute Y
   uint16_t ABY();
+  uint16_t ABY_MEM();
   // Indirect
   uint16_t IND();
   // Indexed Indirect
   uint16_t IID();
+  uint16_t IID_MEM();
   // Indirect Indexed
   uint16_t IDI();
+  uint16_t IDI_MEM();
 
   void bytes2hex(unsigned char *src, char *out, int len);
 
   // Instruction functions
-  void ADC(uint8_t val);
+  void ADC(uint16_t val);
 
-  void AND(uint8_t val);
+  void AND(uint16_t val);
 
   void ASL(uint16_t val);
-  void ASL_ACC();
+  void ASL_ACC(uint16_t val);
 
-  void BCC(uint8_t offset);
+  void BCC(uint16_t offset);
 
-  void BCS(uint8_t offset);
+  void BCS(uint16_t offset);
 
-  void BEQ(uint8_t offset);
+  void BEQ(uint16_t offset);
 
-  void BIT(uint8_t val);
+  void BIT(uint16_t val);
 
-  void BMI(uint8_t offset);
+  void BMI(uint16_t offset);
 
-  void BNE(uint8_t offset);
+  void BNE(uint16_t offset);
 
-  void BPL(uint8_t offset);
+  void BPL(uint16_t offset);
 
-  void BRK();
+  void BRK(uint16_t val);
 
-  void BVC(uint8_t offset);
+  void BVC(uint16_t offset);
 
-  void BVS(uint8_t offset);
+  void BVS(uint16_t offset);
 
-  void CLC();
+  void CLC(uint16_t val);
 
-  void CLD();
+  void CLD(uint16_t val);
 
-  void CLI();
+  void CLI(uint16_t val);
 
-  void CLV();
+  void CLV(uint16_t val);
 
-  void CMP(uint8_t val);
+  void CMP(uint16_t val);
 
-  void CPX(uint8_t val);
+  void CPX(uint16_t val);
 
-  void CPY(uint8_t val);
+  void CPY(uint16_t val);
 
   void DEC(uint16_t address);
 
-  void DEX();
+  void DEX(uint16_t val);
 
-  void DEY();
+  void DEY(uint16_t val);
 
-  void EOR(uint8_t val);
+  void EOR(uint16_t val);
 
   void INC(uint16_t address);
 
-  void INX();
+  void INX(uint16_t val);
 
-  void INY();
+  void INY(uint16_t val);
 
   void JMP(uint16_t address);
 
   void JSR(uint16_t address);
 
-  void LDA(uint8_t val);
+  void LDA(uint16_t val);
 
-  void LDX(uint8_t val);
+  void LDX(uint16_t val);
 
-  void LDY(uint8_t val);
+  void LDY(uint16_t val);
 
   void LSR(uint16_t address);
-  void LSR_ACC();
+  void LSR_ACC(uint16_t address);
 
-  void NOP();
+  void NOP(uint16_t val);
 
-  void ORA(uint8_t val);
+  void ORA(uint16_t val);
 
-  void PHA();
+  void PHA(uint16_t val);
 
-  void PHP();
+  void PHP(uint16_t val);
 
-  void PLA();
+  void PLA(uint16_t val);
 
-  void PLP();
+  void PLP(uint16_t val);
 
   void ROL(uint16_t address);
-  void ROL_ACC();
+  void ROL_ACC(uint16_t address);
 
   void ROR(uint16_t address);
-  void ROR_ACC();
+  void ROR_ACC(uint16_t address);
 
-  void RTI();
+  void RTI(uint16_t val);
 
-  void RTS();
+  void RTS(uint16_t val);
 
-  void SBC(uint8_t val);
+  void SBC(uint16_t val);
 
-  void SEC();
+  void SEC(uint16_t val);
 
-  void SED();
+  void SED(uint16_t val);
 
-  void SEI();
+  void SEI(uint16_t val);
 
   void STA(uint16_t address);
 
@@ -219,15 +230,24 @@ private:
 
   void STY(uint16_t address);
 
-  void TAX();
+  void TAX(uint16_t val);
 
-  void TAY();
+  void TAY(uint16_t val);
 
-  void TSX();
+  void TSX(uint16_t val);
 
-  void TXA();
+  void TXA(uint16_t val);
 
-  void TXS();
+  void TXS(uint16_t val);
 
-  void TYA();
+  void TYA(uint16_t val);
+protected:
+  // First Index: Hi Nibble, Second Index: Lo Nibble
+  pair<Instruction, AddressingMode> opcodeEval[16][16] = {
+    {{BRK,IMP}, {ORA, IID_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {ORA, ZPG_MEM}, {ASL, ZPG}, {NOP, IMP}, {PHP, IMP}, {ORA, IMM}, {ASL_ACC, ACC}, {NOP, IMP}, {NOP, IMP}, {ORA, ABS_MEM}, {ASL, ABS}, {NOP, IMP}},
+    {{BPL, REL}, {ORA, IDI_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {ORA, ZPX_MEM}, {ASL, ZPX}, {NOP, IMP}, {CLC, IMP}, {ORA, ABY_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {ORA, ABX_MEM}, {ASL, ABX}, {NOP, IMP}},
+    {{JSR, JMP_ABS}, {AND, IID_MEM}, {NOP, IMP}, {NOP, IMP}, {BIT, ZPG_MEM}, {AND, ZPG_MEM}, {ROL, ZPG}, {NOP, IMP}, {PLP, IMP}, {AND, IMM}, {ROL_ACC, ACC}, {NOP, IMP}, {BIT, ABS_MEM}, {AND, ABS_MEM}, {ROL, ABS}, {NOP, IMP}},
+    {{BMI, REL}, {AND, IDI_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {AND, ZPX_MEM}, {ROL, ZPX}, {NOP, IMP}, {SEC, IMP}, {AND, ABY_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {AND, ABX_MEM}, {ROL, ABX}, {NOP, IMP}},
+    {}
+  };
 };

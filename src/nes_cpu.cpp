@@ -93,31 +93,31 @@ void nes_cpu::evaluate()
         break;
     case 0x65:
         // Zero Page
-        ADC(mem->read_8(ZPG()));
+        ADC(ZPG_MEM());
         break;
     case 0x75:
         // Zero Page X
-        ADC(mem->read_8(ZPX()));
+        ADC(ZPX_MEM());
         break;
     case 0x6D:
         // Absolute
-        ADC(mem->read_8(ABS()));
+        ADC(ABS_MEM());
         break;
     case 0x7D:
         // Absolute X
-        ADC(mem->read_8(ABX()));
+        ADC(ABX_MEM());
         break;
     case 0x79:
         // Abolute Y
-        ADC(mem->read_8(ABY()));
+        ADC(ABY_MEM());
         break;
     case 0x61:
         // Indirect X
-        ADC(mem->read_8(IID()));
+        ADC(IID_MEM());
         break;
     case 0x71:
         // Indirect Y
-        ADC(mem->read_8(IDI()));
+        ADC(IDI_MEM());
         break;
         // ---------------AND - Logical AND
     case 0x29:
@@ -126,36 +126,36 @@ void nes_cpu::evaluate()
         break;
     case 0x25:
         // Zero Page
-        AND(mem->read_8(ZPG()));
+        AND(ZPG_MEM());
         break;
     case 0x35:
         // Zero Page X
-        AND(mem->read_8(ZPX()));
+        AND(ZPX_MEM());
         break;
     case 0x2D:
         // Absolute
-        AND(mem->read_8(ABS()));
+        AND(ABS_MEM());
         break;
     case 0x3D:
         // Absolute X
-        AND(mem->read_8(ABX()));
+        AND(ABX_MEM());
         break;
     case 0x39:
         // Absolute Y
-        AND(mem->read_8(ABY()));
+        AND(ABY_MEM());
         break;
     case 0x21:
         // Indirect X
-        AND(mem->read_8(IID()));
+        AND(IID_MEM());
         break;
     case 0x31:
         // Indirect Y
-        AND(mem->read_8(IDI()));
+        AND(IDI_MEM());
         break;
         // ---------------ASL - Arithmetic Shift Left
     case 0x0A:
         // Accumulator
-        ASL_ACC();
+        ASL_ACC(ACC());
         break;
     case 0x06:
         // Zero Page
@@ -191,11 +191,11 @@ void nes_cpu::evaluate()
         // ---------------BIT - Bit Test
     case 0x24:
         // Zero Page
-        BIT(mem->read_8(ZPG()));
+        BIT(ZPG_MEM());
         break;
     case 0x2C:
         // Absolute
-        BIT(mem->read_8(ABS()));
+        BIT(ABS_MEM());
         break;
         // ---------------BMI - Branch if Minus
     case 0x30:
@@ -215,8 +215,7 @@ void nes_cpu::evaluate()
         // ---------------BRK - Force Interrupt
     case 0x00:
         // Implied
-        IMP();
-        BRK();
+        BRK(IMP());
         break;
         // ---------------BVC - Branch if Overflow Set
     case 0x50:
@@ -231,26 +230,22 @@ void nes_cpu::evaluate()
         // ---------------CLC - Clear Carry Flag
     case 0x18:
         // Implied
-        IMP();
-        CLC();
+        CLC(IMP());
         break;
         // ---------------CLD - Clear Decimal Mode
     case 0xD8:
         // Implied
-        IMP();
-        CLD();
+        CLD(IMP());
         break;
         // ---------------CLI - Clear Interrupt Disable
     case 0x58:
         // Implied
-        IMP();
-        CLI();
+        CLI(IMP());
         break;
         // ---------------CLV - Clear Overflow Flag
     case 0xB8:
         // Implied
-        IMP();
-        CLV();
+        CLV(IMP());
         break;
         // ---------------CMP - Compare
     case 0xC9:
@@ -259,31 +254,31 @@ void nes_cpu::evaluate()
         break;
     case 0xC5:
         // Zero Page
-        CMP(mem->read_8(ZPG()));
+        CMP(ZPG_MEM());
         break;
     case 0xD5:
         // Zero Page X
-        CMP(mem->read_8(ZPX()));
+        CMP(ZPX_MEM());
         break;
     case 0xCD:
         // Absolute
-        CMP(mem->read_8(ABS()));
+        CMP(ABS_MEM());
         break;
     case 0xDD:
         // Absolute X
-        CMP(mem->read_8(ABX()));
+        CMP(ABX_MEM());
         break;
     case 0xD9:
         // Absolute Y
-        CMP(mem->read_8(ABY()));
+        CMP(ABY_MEM());
         break;
     case 0xC1:
         // Indirect X
-        CMP(mem->read_8(IID()));
+        CMP(IID_MEM());
         break;
     case 0xD1:
         // Indirect Y
-        CMP(mem->read_8(IDI()));
+        CMP(IDI_MEM());
         break;
         // ---------------CPX - Compare X Register
     case 0xE0:
@@ -292,11 +287,11 @@ void nes_cpu::evaluate()
         break;
     case 0xE4:
         // Zero Page
-        CPX(mem->read_8(ZPG()));
+        CPX(ZPG_MEM());
         break;
     case 0xEC:
         // Absolute
-        CPX(mem->read_8(ABS()));
+        CPX(ABS_MEM());
         break;
         // ---------------CPY - Compare Y Register
     case 0xC0:
@@ -305,11 +300,11 @@ void nes_cpu::evaluate()
         break;
     case 0xC4:
         // Zero Page
-        CPY(mem->read_8(ZPG()));
+        CPY(ZPG_MEM());
         break;
     case 0xCC:
         // Absolute
-        CPY(mem->read_8(ABS()));
+        CPY(ABS_MEM());
         break;
         // ---------------DEC - Decrement Memory
     case 0xC6:
@@ -331,14 +326,12 @@ void nes_cpu::evaluate()
         // ---------------DEX - Decrement X Register
     case 0xCA:
         // Implied
-        IMP();
-        DEX();
+        DEX(IMP());
         break;
         // ---------------DEY - Decrement Y Register
     case 0x88:
         // Implied
-        IMP();
-        DEY();
+        DEY(IMP());
         break;
         // ---------------EOR - Exclusive OR
     case 0x49:
@@ -347,31 +340,31 @@ void nes_cpu::evaluate()
         break;
     case 0x45:
         // Zero Page
-        EOR(mem->read_8(ZPG()));
+        EOR(ZPG_MEM());
         break;
     case 0x55:
         // Zero Page X
-        EOR(mem->read_8(ZPX()));
+        EOR(ZPX_MEM());
         break;
     case 0x4D:
         // Absolute
-        EOR(mem->read_8(ABS()));
+        EOR(ABS_MEM());
         break;
     case 0x5D:
         // Absolute X
-        EOR(mem->read_8(ABX()));
+        EOR(ABX_MEM());
         break;
     case 0x59:
         // Absolue Y
-        EOR(mem->read_8(ABY()));
+        EOR(ABY_MEM());
         break;
     case 0x41:
         // Indirect X
-        EOR(mem->read_8(IID()));
+        EOR(IID_MEM());
         break;
     case 0x51:
         // Indirect Y
-        EOR(mem->read_8(IDI()));
+        EOR(IDI_MEM());
         break;
         // ---------------INC - Increment Memory
     case 0xE6:
@@ -393,14 +386,12 @@ void nes_cpu::evaluate()
         // ---------------INX - Increment X Register
     case 0xE8:
         // Implied
-        IMP();
-        INX();
+        INX(IMP());
         break;
         // ---------------INY - Increment Y Register
     case 0xC8:
         // Implied
-        IMP();
-        INY();
+        INY(IMP());
         break;
         // ---------------JMP - Jump
     case 0x4C:
@@ -423,31 +414,31 @@ void nes_cpu::evaluate()
         break;
     case 0xA5:
         // Zero Page
-        LDA(mem->read_8(ZPG()));
+        LDA(ZPG_MEM());
         break;
     case 0xB5:
         // Zero Page X
-        LDA(mem->read_8(ZPX()));
+        LDA(ZPX_MEM());
         break;
     case 0xAD:
         // Absolute
-        LDA(mem->read_8(ABS()));
+        LDA(ABS_MEM());
         break;
     case 0xBD:
         // Absolute X
-        LDA(mem->read_8(ABX()));
+        LDA(ABX_MEM());
         break;
     case 0xB9:
         // Absolute Y
-        LDA(mem->read_8(ABY()));
+        LDA(ABY_MEM());
         break;
     case 0xA1:
         // Indirect X
-        LDA(mem->read_8(IID()));
+        LDA(IID_MEM());
         break;
     case 0xB1:
         // Indirect Y
-        LDA(mem->read_8(IDI()));
+        LDA(IDI_MEM());
         break;
         // ---------------LDX - Load X Register
     case 0xA2:
@@ -456,19 +447,19 @@ void nes_cpu::evaluate()
         break;
     case 0xA6:
         // Zero Page
-        LDX(mem->read_8(ZPG()));
+        LDX(ZPG_MEM());
         break;
     case 0xB6:
         // Zero Page Y
-        LDX(mem->read_8(ZPY()));
+        LDX(ZPY_MEM());
         break;
     case 0xAE:
         // Absolute
-        LDX(mem->read_8(ABS()));
+        LDX(ABS_MEM());
         break;
     case 0xBE:
         // Absolute Y
-        LDX(mem->read_8(ABY()));
+        LDX(ABY_MEM());
         break;
         // ---------------LDY - Load Y Register
     case 0xA0:
@@ -477,24 +468,24 @@ void nes_cpu::evaluate()
         break;
     case 0xA4:
         // Zero Page
-        LDY(mem->read_8(ZPG()));
+        LDY(ZPG_MEM());
         break;
     case 0xB4:
         // Zero Page X
-        LDY(mem->read_8(ZPX()));
+        LDY(ZPX_MEM());
         break;
     case 0xAC:
         // Absolute
-        LDY(mem->read_8(ABS()));
+        LDY(ABS_MEM());
         break;
     case 0xBC:
         // Absolute X
-        LDY(mem->read_8(ABX()));
+        LDY(ABX_MEM());
         break;
         // ---------------LSR - Logical Shift Right
     case 0x4A:
         // Accumulator
-        LSR_ACC();
+        LSR_ACC(ACC());
         break;
     case 0x46:
         // Zero Page
@@ -515,8 +506,7 @@ void nes_cpu::evaluate()
         // ---------------NOP - No Operation
     case 0xEA:
         // Implied
-        IMP();
-        NOP();
+        NOP(IMP());
         break;
         // ---------------ORA - Logical Inclusive OR
     case 0x09:
@@ -525,60 +515,56 @@ void nes_cpu::evaluate()
         break;
     case 0x05:
         // Zero Page
-        ORA(mem->read_8(ZPG()));
+        ORA(ZPG_MEM());
         break;
     case 0x15:
         // Zero Page X
-        ORA(mem->read_8(ZPX()));
+        ORA(ZPX_MEM());
         break;
     case 0x0D:
         // Absolute
-        ORA(mem->read_8(ABS()));
+        ORA(ABS_MEM());
         break;
     case 0x1D:
         // Absolute X
-        ORA(mem->read_8(ABX()));
+        ORA(ABX_MEM());
         break;
     case 0x19:
         // Absolute Y
-        ORA(mem->read_8(ABY()));
+        ORA(ABY_MEM());
         break;
     case 0x01:
         // Indirect X
-        ORA(mem->read_8(IID()));
+        ORA(IID_MEM());
         break;
     case 0x11:
         // Indirect Y
-        ORA(mem->read_8(IDI()));
+        ORA(IDI_MEM());
         break;
         // ---------------PHA - Push Accumulator
     case 0x48:
         // Implied
-        IMP();
-        PHA();
+        PHA(IMP());
         break;
         // ---------------PHP - Push Processor Status
     case 0x08:
         // Implied
-        IMP();
-        PHP();
+        PHP(IMP());
         break;
         // ---------------PLA - Pull Accumulator
     case 0x68:
         // Implied
-        IMP();
-        PLA();
+        PLA(IMP());
         break;
         // ---------------PLP - Pull Processor Status
     case 0x28:
         // Implied
-        IMP();
-        PLP();
+        PLP(IMP());
         break;
         // ---------------ROL - Rotate Left
     case 0x2A:
         // Accumulator
-        ROL_ACC();
+        ROL_ACC(ACC());
         break;
     case 0x26:
         // Zero Page
@@ -599,7 +585,7 @@ void nes_cpu::evaluate()
         // ---------------ROR - Rotate Right
     case 0x6A:
         // Accumulator
-        ROR_ACC();
+        ROR_ACC(ACC());
         break;
     case 0x66:
         // Zero Page
@@ -620,14 +606,12 @@ void nes_cpu::evaluate()
         // ---------------RTI - Return from Interrupt
     case 0x40:
         // Implied
-        IMP();
-        RTI();
+        RTI(IMP());
         break;
         // ---------------RTS - Return from Subroutine
     case 0x60:
         // Implied
-        IMP();
-        RTS();
+        RTS(IMP());
         break;
         // ---------------SBC - Subtract with Carry
     case 0xE9:
@@ -636,49 +620,46 @@ void nes_cpu::evaluate()
         break;
     case 0xE5:
         // Zero Page
-        SBC(mem->read_8(ZPG()));
+        SBC(ZPG_MEM());
         break;
     case 0xF5:
         // Zero Page X
-        SBC(mem->read_8(ZPX()));
+        SBC(ZPX_MEM());
         break;
     case 0xED:
         // Absolute
-        SBC(mem->read_8(ABS()));
+        SBC(ABS_MEM());
         break;
     case 0xFD:
         // Absolute X
-        SBC(mem->read_8(ABX()));
+        SBC(ABX_MEM());
         break;
     case 0xF9:
         // Absolute Y
-        SBC(mem->read_8(ABY()));
+        SBC(ABY_MEM());
         break;
     case 0xE1:
         // Indirect X
-        SBC(mem->read_8(IID()));
+        SBC(IID_MEM());
         break;
     case 0xF1:
         // Indirect Y
-        SBC(mem->read_8(IDI()));
+        SBC(IDI_MEM());
         break;
         // ---------------SEC - Set Carry Flag
     case 0x38:
         // Implied
-        IMP();
-        SEC();
+        SEC(IMP());
         break;
         // ---------------SED - Set Decimal Flag
     case 0xF8:
         // Implied
-        IMP();
-        SED();
+        SED(IMP());
         break;
         // ---------------SEI - Set Interrupt Disable
     case 0x78:
         // Implied
-        IMP();
-        SEI();
+        SEI(IMP());
         break;
         // ---------------STA - Store Accumulator
     case 0x85:
@@ -738,38 +719,32 @@ void nes_cpu::evaluate()
         // ---------------TAX - Transfer Accumulator to X
     case 0xAA:
         // Implied
-        IMP();
-        TAX();
+        TAX(IMP());
         break;
         // ---------------TAY - Transfer Accumulator to Y
     case 0xA8:
         // Implied
-        IMP();
-        TAY();
+        TAY(IMP());
         break;
         // ---------------TSX - Transfer Stack Pointer to X
     case 0xBA:
         // Implied
-        IMP();
-        TSX();
+        TSX(IMP());
         break;
         // ---------------TXA - Transfer X to Accumulator
     case 0x8A:
         // Implied
-        IMP();
-        TXA();
+        TXA(IMP());
         break;
         // ---------------TXS - Transfer X to Stack Pointer
     case 0x9A:
         // Implied
-        IMP();
-        TXS();
+        TXS(IMP());
         break;
         // ---------------TYA - Transfer Y to Accumulator
     case 0x98:
         // Implied
-        IMP();
-        TYA();
+        TYA(IMP());
         break;
     default:
 
@@ -867,18 +842,18 @@ operated on.
 
 // Implied
 // Source and destination are implied thus do not need any further operand
-void nes_cpu::IMP()
+uint16_t nes_cpu::IMP()
 {
     #ifdef CPU_DEBUG
         cout << "ADDRESSING MODE: IMPLIED" << endl;
     #endif
 
-    return;
+    return 0;
 }
 
 // Accumulator
 // Operate directly on the accumulator
-uint8_t nes_cpu::ACC()
+uint16_t nes_cpu::ACC()
 {
     #ifdef CPU_DEBUG
         char buf[2];
@@ -891,7 +866,7 @@ uint8_t nes_cpu::ACC()
 
 // Immediate
 // Directly specify an 8 bit constant within the instruction
-uint8_t nes_cpu::IMM()
+uint16_t nes_cpu::IMM()
 {
     uint8_t temp = mem->read_8(pc++);
 
@@ -910,7 +885,7 @@ uint8_t nes_cpu::IMM()
 
 // Zero Page
 // Access only the first 256 bytes of memory (0x0000 -> 0x00FF)
-uint8_t nes_cpu::ZPG()
+uint16_t nes_cpu::ZPG()
 {
     // Get zero page address from instruction
     uint8_t temp = mem->read_8(pc++);
@@ -931,10 +906,31 @@ uint8_t nes_cpu::ZPG()
     // return address in the zero page
     return temp;
 }
+uint16_t nes_cpu::ZPG_MEM()
+{
+    // Get zero page address from instruction
+    uint8_t temp = mem->read_8(pc++);
+    
+    #ifdef CPU_DEBUG
+        uint8_t tempVal = mem->read_8(temp);
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ZERO PAGE | ADDRESS " << buf[0] << buf[1] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), 0, 1);
+    #endif
+
+    // return address in the zero page
+    return mem->read_8(temp);
+}
 
 // Zero Page X
 // Get the zero page address and add the value in the x register to it
-uint8_t nes_cpu::ZPX()
+uint16_t nes_cpu::ZPX()
 {
     // Get zero page address from instruction
     // Add value in x register
@@ -957,10 +953,33 @@ uint8_t nes_cpu::ZPX()
     // return value at this address in the zero page
     return temp & 0xFF;
 }
+uint16_t nes_cpu::ZPX_MEM()
+{
+    // Get zero page address from instruction
+    // Add value in x register
+    uint8_t temp = mem->read_8(pc++) + this->x;
+
+    #ifdef CPU_DEBUG
+        int8_t tempVal = mem->read_8(temp);
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ZERO PAGE X | ADDRESS " << buf[0] << buf[1] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_8(temp - this->x, mem->read_8(temp), temp, 4);
+    #endif
+
+    // Make sure address lies between 0x00 and 0xFF
+    // return value at this address in the zero page
+    return mem->read_8(temp & 0xFF);
+}
 
 // Zero Page Y
 // Get the zero page address and add the value in the y register to it
-uint8_t nes_cpu::ZPY()
+uint16_t nes_cpu::ZPY()
 {
     // Get zero page address from instruction
     // Add value in y register
@@ -983,10 +1002,33 @@ uint8_t nes_cpu::ZPY()
     // return value at this address in the zero page
     return temp & 0xFF;
 }
+uint16_t nes_cpu::ZPY_MEM()
+{
+    // Get zero page address from instruction
+    // Add value in y register
+    uint8_t temp = mem->read_8(pc++) + this->y;
+
+    #ifdef CPU_DEBUG
+        uint8_t tempVal = mem->read_8(temp);
+        char buf[2];
+        bytes2hex((unsigned char*)&temp, buf, 1);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ZERO PAGE Y | ADDRESS " << buf[0] << buf[1] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_8(temp, mem->read_8(temp), temp - this->y, 5);
+    #endif
+
+    // Make sure address lies between 0x00 and 0xFF
+    // return value at this address in the zero page
+    return mem->read_8(temp & 0xFF);
+}
 
 // Relative
 // Contains signed 8 bit offset relative to current address in program counter
-uint8_t nes_cpu::REL()
+uint16_t nes_cpu::REL()
 {
     uint8_t temp = mem->read_8(pc++);
     // return the offset from memory
@@ -1027,6 +1069,29 @@ uint16_t nes_cpu::ABS()
     pc += 2;
 
     return toReturn;
+}
+uint16_t nes_cpu::ABS_MEM()
+{
+    // Get the address from the instruction
+    uint16_t toReturn = mem->read_16(pc);
+
+    #ifdef CPU_DEBUG
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ABSOLUTE | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_16(toReturn, mem->read_8(toReturn), 0, 1);
+    #endif
+
+    // Increment pc for each byte read (2)
+    pc += 2;
+
+    return mem->read_8(toReturn);
 }
 
 // Reads a full 16 bit address of target location
@@ -1080,6 +1145,30 @@ uint16_t nes_cpu::ABX()
 
     return toReturn & 0xFFFF;
 }
+uint16_t nes_cpu::ABX_MEM()
+{
+    // Get the address from the instruction and add value in x register
+    uint16_t temp = mem->read_16(pc);
+    uint16_t toReturn = (temp + this->x);
+
+    #ifdef CPU_DEBUG
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ABSOLUTE X | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_16(toReturn, temp, mem->read_8(toReturn), 6);
+    #endif
+
+    // Increment pc for each byte read (2)
+    pc += 2;
+
+    return mem->read_8(toReturn & 0xFFFF);
+}
 
 // Absolute Y
 // Reads a 16 bit address with added offset from y register
@@ -1106,6 +1195,30 @@ uint16_t nes_cpu::ABY()
     pc += 2;
 
     return toReturn & 0xFFFF;
+}
+uint16_t nes_cpu::ABY_MEM()
+{
+    // Get the address from the instruction and add value in y register
+    uint16_t temp = mem->read_16(pc);
+    uint16_t toReturn = (temp + this->y);
+
+    #ifdef CPU_DEBUG
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: ABSOLUTE Y | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_16(toReturn, temp, mem->read_8(toReturn), 5);
+    #endif
+
+    // Increment pc for each byte read (2)
+    pc += 2;
+
+    return mem->read_8(toReturn & 0xFFFF);
 }
 
 // Indirect
@@ -1156,6 +1269,29 @@ uint16_t nes_cpu::IID()
     // return the address located in the zero page
     return toReturn;
 }
+uint16_t nes_cpu::IID_MEM()
+{
+    // Get the address for zero page from the instruction and add value in x register
+    uint8_t zpAdd = mem->read_8(pc++);
+    uint16_t toReturn = mem->readZPG_16((uint8_t)(zpAdd + this->x) & 0xFF);
+
+    #ifdef CPU_DEBUG
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: INDIRECT X | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        uint8_t temp = mem->read_8(toReturn);
+        cpuLogger.SetAddressingMode_16(toReturn, (uint16_t)((temp << 8) | zpAdd), (uint16_t)zpAdd + this->x, 2);
+    #endif
+
+    // return the address located in the zero page
+    return mem->read_8(toReturn);
+}
 
 // Indirect Indexed (Indirect Y)
 // Retreives 16 bit address located on zero page at address located in instruction plus y register value
@@ -1181,11 +1317,33 @@ uint16_t nes_cpu::IDI()
     // Get the target address from zero page and add value in y register
     return toReturn & 0xFFFF;
 }
+uint16_t nes_cpu::IDI_MEM()
+{
+    // Get the zero page address from the instruction
+    uint8_t temp = mem->read_8(pc++);
+    uint16_t toReturn = mem->readZPG_16(temp) + this->y;
+
+    #ifdef CPU_DEBUG
+        char buf[4];
+        bytes2hex((unsigned char*)&toReturn, buf, 2);
+        uint8_t tempVal = mem->read_8(toReturn);
+        char buf2[2];
+        bytes2hex((unsigned char*)&tempVal, buf2, 1);
+        cout << "ADDRESSING MODE: INDIRECT Y | ADDRESS " << buf[0] << buf[1] << buf[2] << buf[3] << " | VALUE: " << buf2[0] << buf2[1] << endl;
+    #endif
+
+    #ifdef CPU_LOG
+        cpuLogger.SetAddressingMode_16(toReturn, (uint16_t)((temp << 8) | mem->read_8(toReturn)), toReturn - this->y, 3);
+    #endif
+
+    // Get the target address from zero page and add value in y register
+    return mem->read_8(toReturn & 0xFFFF);
+}
 
 //--------------------INSTRUCTION FUNCTIONS--------------------//
 
 // ADC - Add with Carry
-void nes_cpu::ADC(uint8_t val)
+void nes_cpu::ADC(uint16_t val)
 {
     // NOTE: Decimal Mode Not Implemented, NES Doesn't use Decimal Mode
     // Implement in future for accurate 6502 emulator
@@ -1219,7 +1377,7 @@ void nes_cpu::ADC(uint8_t val)
 }
 
 // AND - Logical AND
-void nes_cpu::AND(uint8_t val)
+void nes_cpu::AND(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "AND:" << endl;
@@ -1268,7 +1426,7 @@ void nes_cpu::ASL(uint16_t address)
     mem->write_8(address, val);
 }
 
-void nes_cpu::ASL_ACC()
+void nes_cpu::ASL_ACC(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "ASL:" << endl;
@@ -1298,7 +1456,7 @@ void nes_cpu::ASL_ACC()
 }
 
 // BCC - Branch if Carry Clear
-void nes_cpu::BCC(uint8_t offset)
+void nes_cpu::BCC(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BCC:" << endl;
@@ -1317,7 +1475,7 @@ void nes_cpu::BCC(uint8_t offset)
 }
 
 // BCS - Branch if Carry Set
-void nes_cpu::BCS(uint8_t offset)
+void nes_cpu::BCS(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BCS:" << endl;
@@ -1336,7 +1494,7 @@ void nes_cpu::BCS(uint8_t offset)
 }
 
 // BEQ - Branch if Equal
-void nes_cpu::BEQ(uint8_t offset)
+void nes_cpu::BEQ(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BEQ:" << endl;
@@ -1355,7 +1513,7 @@ void nes_cpu::BEQ(uint8_t offset)
 }
 
 // BIT - Bit Test
-void nes_cpu::BIT(uint8_t val)
+void nes_cpu::BIT(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "BIT:" << endl;
@@ -1379,7 +1537,7 @@ void nes_cpu::BIT(uint8_t val)
 }
 
 // BMI - Branch if Minus
-void nes_cpu::BMI(uint8_t offset)
+void nes_cpu::BMI(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BMI:" << endl;
@@ -1398,7 +1556,7 @@ void nes_cpu::BMI(uint8_t offset)
 }
 
 // BNE - Branch if Not Equal
-void nes_cpu::BNE(uint8_t offset)
+void nes_cpu::BNE(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BNE:" << endl;
@@ -1417,7 +1575,7 @@ void nes_cpu::BNE(uint8_t offset)
 }
 
 // BPL - Branch if Positive
-void nes_cpu::BPL(uint8_t offset)
+void nes_cpu::BPL(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BPL:" << endl;
@@ -1436,7 +1594,7 @@ void nes_cpu::BPL(uint8_t offset)
 }
 
 // BRK - Force Interrupt
-void nes_cpu::BRK()
+void nes_cpu::BRK(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "BRK:" << endl;
@@ -1461,7 +1619,7 @@ void nes_cpu::BRK()
 }
 
 // BVC - Branch if Overflow Clear
-void nes_cpu::BVC(uint8_t offset)
+void nes_cpu::BVC(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BVC:" << endl;
@@ -1480,7 +1638,7 @@ void nes_cpu::BVC(uint8_t offset)
 }
 
 // BVS - Branch if Overflow Set
-void nes_cpu::BVS(uint8_t offset)
+void nes_cpu::BVS(uint16_t offset)
 {
     #ifdef CPU_DEBUG
         cout << "BVS:" << endl;
@@ -1499,7 +1657,7 @@ void nes_cpu::BVS(uint8_t offset)
 }
 
 // CLC - Clear Carry Flag
-void nes_cpu::CLC()
+void nes_cpu::CLC(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CLC:" << endl;
@@ -1513,7 +1671,7 @@ void nes_cpu::CLC()
 }
 
 // CLD - Clear Decimal Mode
-void nes_cpu::CLD()
+void nes_cpu::CLD(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CLD:" << endl;
@@ -1527,7 +1685,7 @@ void nes_cpu::CLD()
 }
 
 // CLI - Clear Interrupt Disable
-void nes_cpu::CLI()
+void nes_cpu::CLI(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CLI:" << endl;
@@ -1541,7 +1699,7 @@ void nes_cpu::CLI()
 }
 
 // CLV - Clear Overflow Flag
-void nes_cpu::CLV()
+void nes_cpu::CLV(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CLV:" << endl;
@@ -1555,7 +1713,7 @@ void nes_cpu::CLV()
 }
 
 // CMP - Compare
-void nes_cpu::CMP(uint8_t val)
+void nes_cpu::CMP(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CMP:" << endl;
@@ -1579,7 +1737,7 @@ void nes_cpu::CMP(uint8_t val)
 }
 
 // CPX - Compare X Register
-void nes_cpu::CPX(uint8_t val)
+void nes_cpu::CPX(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CPX:" << endl;
@@ -1603,7 +1761,7 @@ void nes_cpu::CPX(uint8_t val)
 }
 
 // CPY - Compare Y Register
-void nes_cpu::CPY(uint8_t val)
+void nes_cpu::CPY(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "CPY:" << endl;
@@ -1652,7 +1810,7 @@ void nes_cpu::DEC(uint16_t address)
 }
 
 // DEX - Decrement X Register
-void nes_cpu::DEX()
+void nes_cpu::DEX(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "DEX:" << endl;
@@ -1673,7 +1831,7 @@ void nes_cpu::DEX()
 }
 
 // DEY - Decrement Y Register
-void nes_cpu::DEY()
+void nes_cpu::DEY(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "DEY:" << endl;
@@ -1694,7 +1852,7 @@ void nes_cpu::DEY()
 }
 
 // EOR - Exclusive OR
-void nes_cpu::EOR(uint8_t val)
+void nes_cpu::EOR(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "EOR:" << endl;
@@ -1741,7 +1899,7 @@ void nes_cpu::INC(uint16_t address)
 }
 
 // INX - Increment X Register
-void nes_cpu::INX()
+void nes_cpu::INX(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "INX:" << endl;
@@ -1762,7 +1920,7 @@ void nes_cpu::INX()
 }
 
 // INY - Increment Y Register
-void nes_cpu::INY()
+void nes_cpu::INY(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "INY:" << endl;
@@ -1820,7 +1978,7 @@ void nes_cpu::JSR(uint16_t address)
 }
 
 // LDA - Load Accumulator
-void nes_cpu::LDA(uint8_t val)
+void nes_cpu::LDA(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "LDA:" << endl;
@@ -1841,7 +1999,7 @@ void nes_cpu::LDA(uint8_t val)
 }
 
 // LDX - Load X Register
-void nes_cpu::LDX(uint8_t val)
+void nes_cpu::LDX(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "LDX:" << endl;
@@ -1862,7 +2020,7 @@ void nes_cpu::LDX(uint8_t val)
 }
 
 // LDY - Load Y Register
-void nes_cpu::LDY(uint8_t val)
+void nes_cpu::LDY(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "LDY:" << endl;
@@ -1910,7 +2068,7 @@ void nes_cpu::LSR(uint16_t address)
 
     mem->write_8(address, val);
 }
-void nes_cpu::LSR_ACC()
+void nes_cpu::LSR_ACC(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "LSR:" << endl;
@@ -1940,7 +2098,7 @@ void nes_cpu::LSR_ACC()
 }
 
 // NOP - No Operation
-void nes_cpu::NOP() {
+void nes_cpu::NOP(uint16_t val) {
     #ifdef CPU_DEBUG
         cout << "NOP:" << endl;
     #endif
@@ -1951,7 +2109,7 @@ void nes_cpu::NOP() {
 }
 
 // ORA - Logical Inclusive OR
-void nes_cpu::ORA(uint8_t val)
+void nes_cpu::ORA(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "ORA:" << endl;
@@ -1972,7 +2130,7 @@ void nes_cpu::ORA(uint8_t val)
 }
 
 // PHA - Push Accumulator
-void nes_cpu::PHA()
+void nes_cpu::PHA(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "PHA:" << endl;
@@ -1987,7 +2145,7 @@ void nes_cpu::PHA()
 }
 
 // PHP - Push Processor Status
-void nes_cpu::PHP()
+void nes_cpu::PHP(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "PHP:" << endl;
@@ -2001,7 +2159,7 @@ void nes_cpu::PHP()
 }
 
 // PLA - Pull Accumulator
-void nes_cpu::PLA()
+void nes_cpu::PLA(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "PLA:" << endl;
@@ -2022,7 +2180,7 @@ void nes_cpu::PLA()
 }
 
 // PLP - Pull Processor Status (Break Flag and Bit 5 Ignored)
-void nes_cpu::PLP()
+void nes_cpu::PLP(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "PLP:" << endl;
@@ -2069,7 +2227,7 @@ void nes_cpu::ROL(uint16_t address)
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 }
-void nes_cpu::ROL_ACC()
+void nes_cpu::ROL_ACC(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "ROL:" << endl;
@@ -2130,7 +2288,7 @@ void nes_cpu::ROR(uint16_t address)
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 }
-void nes_cpu::ROR_ACC()
+void nes_cpu::ROR_ACC(uint16_t address)
 {
     #ifdef CPU_DEBUG
         cout << "ROR:" << endl;
@@ -2161,7 +2319,7 @@ void nes_cpu::ROR_ACC()
 }
 
 // RTI - Return from Interrupt
-void nes_cpu::RTI()
+void nes_cpu::RTI(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "RTI:" << endl;
@@ -2186,7 +2344,7 @@ void nes_cpu::RTI()
 }
 
 // RTS - Return from Subroutine
-void nes_cpu::RTS()
+void nes_cpu::RTS(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "RTS:" << endl;
@@ -2210,25 +2368,23 @@ void nes_cpu::RTS()
 }
 
 // SBC - Subtract with Carry
-void nes_cpu::SBC(uint8_t val)
+void nes_cpu::SBC(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "SBC:" << endl;
     #endif
 
-    //ADC(~val);    
 
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("SBC");
     #endif
     // Subtract val and Not of Carry from Accumulator
-    int8_t temp = a - val - ((uint8_t)1 - (status & C_FLAG));
+    int8_t temp = a - (uint8_t)val - ((uint8_t)1 - (status & C_FLAG));
 
     // Check Carry Flag
     (temp >= 0) ? (status |= C_FLAG) : (status &= C_FLAG_INV);
 
     // Check Overflow Flag | Formula for Calculating the Overflow Flag Taken from https://www.righto.com/2012/12/the-6502-overflow-flag-explained.html
-    //uint8_t c6 = (((a & 0b01111111) + (val & 0b01111111) + (status & C_FLAG)) & 0x80);
     ((a^val) & ((uint8_t)(temp & 0x00FF)^a) & 0x80) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
 
     // Check Zero Flag
@@ -2242,7 +2398,7 @@ void nes_cpu::SBC(uint8_t val)
 }
 
 // SEC - Set Carry Flag
-void nes_cpu::SEC()
+void nes_cpu::SEC(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "SEC:" << endl;
@@ -2256,7 +2412,7 @@ void nes_cpu::SEC()
 }
 
 // SED - Set Decimal Flag
-void nes_cpu::SED()
+void nes_cpu::SED(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "SED:" << endl;
@@ -2270,7 +2426,7 @@ void nes_cpu::SED()
 }
 
 // SEI - Set Interrupt Disable
-void nes_cpu::SEI()
+void nes_cpu::SEI(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "SEI:" << endl;
@@ -2326,7 +2482,7 @@ void nes_cpu::STY(uint16_t address)
 }
 
 // TAX - Transfer Accumulator to X
-void nes_cpu::TAX()
+void nes_cpu::TAX(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "TAX:" << endl;
@@ -2346,7 +2502,7 @@ void nes_cpu::TAX()
 }
 
 // TAY - Transfer Accumulator to Y
-void nes_cpu::TAY()
+void nes_cpu::TAY(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "TAY:" << endl;
@@ -2366,7 +2522,7 @@ void nes_cpu::TAY()
 }
 
 // TSX - Transfer Stack Pointer to X
-void nes_cpu::TSX()
+void nes_cpu::TSX(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "TSX:" << endl;
@@ -2386,7 +2542,7 @@ void nes_cpu::TSX()
 }
 
 // TXA - Transfer X to Accumulator
-void nes_cpu::TXA()
+void nes_cpu::TXA(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "TXA:" << endl;
@@ -2406,7 +2562,7 @@ void nes_cpu::TXA()
 }
 
 // TXS - Transfer X to Stack Pointer
-void nes_cpu::TXS()
+void nes_cpu::TXS(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "TXS:" << endl;
@@ -2420,7 +2576,7 @@ void nes_cpu::TXS()
 }
 
 // TYA - Transfer Y to Accumulator
-void nes_cpu::TYA()
+void nes_cpu::TYA(uint16_t val)
 {
     #ifdef CPU_DEBUG
         cout << "TYA:" << endl;
