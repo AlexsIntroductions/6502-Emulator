@@ -4,6 +4,14 @@ using namespace std;
 /**
  * NOTES:
  *  - Stack Pointer to 0xFF on start and reset
+ * 
+ * 
+        //Add Branch Taken Cycles
+        cycles += 1;
+        uint16_t oldPC = pc;
+        // Check if a page boundary was crossed
+        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
+        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
  */
 
 nes_cpu::nes_cpu()
@@ -49,9 +57,6 @@ void nes_cpu::evaluate()
     // Fetch Code Goes here
     // Get Current Instruction from Memory and Increment PC
     opcode = mem->read_8(pc++);
-
-    // Add Cycles
-    cycles += 1;
 
     #ifdef CPU_LOG
         cpuLogger.SetOpcode(opcode);
@@ -391,9 +396,6 @@ uint16_t nes_cpu::IMP()
     #endif
 
     return 0;
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // Accumulator
@@ -448,9 +450,6 @@ uint16_t nes_cpu::ZPG()
         cpuLogger.SetAddressingMode(temp, mem->read_8(temp), 0, 8);
     #endif
 
-    // Add Cycles
-    cycles += 1;
-
     // return address in the zero page
     return temp;
 }
@@ -480,9 +479,6 @@ uint16_t nes_cpu::ZPX()
     #ifdef CPU_LOG
         cpuLogger.SetAddressingMode(temp - this->x, mem->read_8(temp), temp, 11);
     #endif
-
-    // Add Cycles
-    cycles += 2;
 
     // Make sure address lies between 0x00 and 0xFF
     // return value at this address in the zero page
@@ -516,9 +512,6 @@ uint16_t nes_cpu::ZPY()
         cpuLogger.SetAddressingMode(temp, mem->read_8(temp), temp - this->y, 12);
     #endif
 
-    // Add Cycles
-    cycles += 2;
-
     // Make sure address lies between 0x00 and 0xFF
     // return value at this address in the zero page
     return temp & 0xFF;
@@ -545,8 +538,6 @@ uint16_t nes_cpu::REL()
     #ifdef CPU_LOG
         cpuLogger.SetAddressingMode(temp, pc, 0, 9);
     #endif
-
-
 
     return temp;
 }
@@ -579,9 +570,6 @@ uint16_t nes_cpu::ABS()
     // Increment pc for each byte read (2)
     pc += 2;
 
-    // Add Cycles
-    cycles += 2;
-
     return toReturn;
 }
 uint16_t nes_cpu::ABS_MEM()
@@ -609,16 +597,6 @@ uint16_t nes_cpu::ABX()
     #ifdef CPU_LOG
         cpuLogger.SetAddressingMode(toReturn, temp, mem->read_8(toReturn), 6);
     #endif
-
-    // Add Cycles
-    cycles += 3;
-    // Check for Opcode Specific Behavior
-    if(opcode == 0xFD || opcode == 0x1D || opcode == 0xBC || opcode == 0x5D || opcode == 0xDD || opcode == 0x3D || opcode == 0xBD || opcode == 0x7D){
-        // check if page boundary was crossed
-        if((temp & 0x00FF) + x > 0xFF){
-            cycles -= 1;
-        }
-    }
 
     // Increment pc for each byte read (2)
     pc += 2;
@@ -650,20 +628,6 @@ uint16_t nes_cpu::ABY()
     #ifdef CPU_LOG
         cpuLogger.SetAddressingMode(toReturn, temp, mem->read_8(toReturn), 5);
     #endif
-
-    // Increment pc for each byte read (2)
-    pc += 2;
-
-    // Add Cycles
-    cycles += 3;
-    // Check for specific opcode behavior
-    if(opcode == 0xF9 || opcode == 0x19 || opcode == 0xBE || opcode == 0xB9 || opcode == 0x59 || opcode == 0xD9 || opcode == 0x39 || opcode == 0x79){
-        // check if page boundary was crossed
-        if((temp & 0x00FF) + y > 0xFF){
-            cycles -= 1;
-        }
-    }
-
 
     return toReturn & 0xFFFF;
 }
@@ -825,9 +789,6 @@ void nes_cpu::ADC(uint16_t val)
 
     // Set Accumulator to new value
     a = (uint8_t)(temp & 0x00FF);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // AND - Logical AND
@@ -849,9 +810,6 @@ void nes_cpu::AND(uint16_t val)
 
     // Check Negative Flag
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // ASL - Arithmetic Shift Left
@@ -881,9 +839,6 @@ void nes_cpu::ASL(uint16_t address)
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 
     mem->write_8(address, val);
-    
-    // Add Cycles
-    cycles += 1;
 }
 void nes_cpu::ASL_ACC(uint16_t address)
 {
@@ -912,9 +867,6 @@ void nes_cpu::ASL_ACC(uint16_t address)
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 
     a = val;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // BCC - Branch if Carry Clear
@@ -928,22 +880,11 @@ void nes_cpu::BCC(uint16_t offset)
         cpuLogger.SetInstructionName("BCC");
     #endif
 
-    //Add Cycles
-    cycles += 1;
-
     // Check if Carry Bit is Clear
     if (!(status & C_FLAG))
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-        
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-        
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -957,23 +898,12 @@ void nes_cpu::BCS(uint16_t offset)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("BCS");
     #endif
-    
-    //Add Cycles
-    cycles += 1;
 
     // Check if Carry Bit is Set
     if (status & C_FLAG)
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -987,23 +917,12 @@ void nes_cpu::BEQ(uint16_t offset)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("BEQ");
     #endif
-    
-    //Add Cycles
-    cycles += 1;
 
     // Check if Zero Flag is Set
     if (status & Z_FLAG)
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -1029,9 +948,6 @@ void nes_cpu::BIT(uint16_t val)
 
     // Check Overflow Flag
     (val & 0x40) ? (status |= V_FLAG) : (status &= V_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // BMI - Branch if Minus
@@ -1044,23 +960,12 @@ void nes_cpu::BMI(uint16_t offset)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("BMI");
     #endif
-    
-    //Add Cycles
-    cycles += 1;
 
     // Check if Negative Flag is Set
     if (status & N_FLAG)
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -1074,23 +979,12 @@ void nes_cpu::BNE(uint16_t offset)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("BNE");
     #endif
-    
-    //Add Cycles
-    cycles += 1;
 
     // Check if Zero Flag is Clear
     if (!(status & Z_FLAG))
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -1104,23 +998,12 @@ void nes_cpu::BPL(uint16_t offset)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("BPL");
     #endif
-    
-    //Add Cycles
-    cycles += 1;
 
     // Check if Negative Flag is Clear
     if (!(status & N_FLAG))
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -1147,9 +1030,6 @@ void nes_cpu::BRK(uint16_t val)
 
     // Set PC to value in Interrupt Handler
     pc = mem->read_16(0xFFFE);
-
-    // Add Cycles
-    cycles += 6;
 }
 
 // BVC - Branch if Overflow Clear
@@ -1162,23 +1042,12 @@ void nes_cpu::BVC(uint16_t offset)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("BVC");
     #endif
-    
-    //Add Cycles
-    cycles += 1;
 
     // Check if Overflow Flag is Clear
     if (!(status & V_FLAG))
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -1192,23 +1061,12 @@ void nes_cpu::BVS(uint16_t offset)
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("BVS");
     #endif
-    
-    //Add Cycles
-    cycles += 1;
 
     // Check if Overflow Flag is Clear
     if (status & V_FLAG)
     {
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-        
         // If its a positive integer add to PC, If its a negative integer subtract to PC
         (offset & 0x80) ? (pc -= (((uint8_t)255 - offset) + 1)) : (pc += offset);
-
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
     }
 }
 
@@ -1224,9 +1082,6 @@ void nes_cpu::CLC(uint16_t val)
     #endif
 
     status &= C_FLAG_INV;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // CLD - Clear Decimal Mode
@@ -1241,9 +1096,6 @@ void nes_cpu::CLD(uint16_t val)
     #endif
     
     status &= D_FLAG_INV;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // CLI - Clear Interrupt Disable
@@ -1258,9 +1110,6 @@ void nes_cpu::CLI(uint16_t val)
     #endif
     
     status &= I_FLAG_INV;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // CLV - Clear Overflow Flag
@@ -1276,9 +1125,6 @@ void nes_cpu::CLV(uint16_t val)
     #endif
 
     status &= V_FLAG_INV;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // CMP - Compare
@@ -1303,9 +1149,6 @@ void nes_cpu::CMP(uint16_t val)
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // CPX - Compare X Register
@@ -1330,9 +1173,6 @@ void nes_cpu::CPX(uint16_t val)
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // CPY - Compare Y Register
@@ -1357,9 +1197,6 @@ void nes_cpu::CPY(uint16_t val)
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // DEC - Decrement Memory
@@ -1385,9 +1222,6 @@ void nes_cpu::DEC(uint16_t address)
     (val & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 
     mem->write_8(address, val);
-
-    // Add Cycles
-    cycles += 3;
 }
 
 // DEX - Decrement X Register
@@ -1409,9 +1243,6 @@ void nes_cpu::DEX(uint16_t val)
 
     // Check Negative Flag
     (x & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // DEY - Decrement Y Register
@@ -1433,9 +1264,6 @@ void nes_cpu::DEY(uint16_t val)
 
     // Check Negative Flag
     (y & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // EOR - Exclusive OR
@@ -1457,9 +1285,6 @@ void nes_cpu::EOR(uint16_t val)
 
     // Check Negative Flag
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // INC - Increment Memory
@@ -1486,9 +1311,6 @@ void nes_cpu::INC(uint16_t address)
     (val & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
 
     mem->write_8(address, val);
-
-    // Add Cycles
-    cycles += 3;
 }
 
 // INX - Increment X Register
@@ -1510,9 +1332,6 @@ void nes_cpu::INX(uint16_t val)
 
     // Check Negative Flag
     (x & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // INY - Increment Y Register
@@ -1534,9 +1353,6 @@ void nes_cpu::INY(uint16_t val)
 
     // Check Negative Flag
     (y & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // JMP - Jump
@@ -1552,11 +1368,6 @@ void nes_cpu::JMP(uint16_t address)
     
     // Set PC to address
     pc = address;
-
-    //abs 0x4C
-
-    // Add Cycles
-    cycles += 3;
 }
 
 // JSR - Jump to Subroutine
@@ -1579,9 +1390,6 @@ void nes_cpu::JSR(uint16_t address)
 
     // Sets PC to Target Memory Address
     pc = address;
-
-    // Add Cycles
-    cycles += 5;
 }
 
 // LDA - Load Accumulator
@@ -1603,9 +1411,6 @@ void nes_cpu::LDA(uint16_t val)
 
     // Check Negative Flag
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // LDX - Load X Register
@@ -1627,9 +1432,6 @@ void nes_cpu::LDX(uint16_t val)
 
     // Check Negative Flag
     (x & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // LDY - Load Y Register
@@ -1651,9 +1453,6 @@ void nes_cpu::LDY(uint16_t val)
 
     // Check Negative Flag
     (y & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // LSR - Logical Shift Right
@@ -1683,9 +1482,6 @@ void nes_cpu::LSR(uint16_t address)
     status &= N_FLAG_INV;
 
     mem->write_8(address, val);
-
-    // Add Cycles
-    cycles += 1;
 }
 void nes_cpu::LSR_ACC(uint16_t address)
 {
@@ -1714,9 +1510,6 @@ void nes_cpu::LSR_ACC(uint16_t address)
     status &= N_FLAG_INV;
 
     a = val;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // NOP - No Operation
@@ -1728,9 +1521,6 @@ void nes_cpu::NOP(uint16_t val) {
     #ifdef CPU_LOG
         cpuLogger.SetInstructionName("NOP");
     #endif
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // ORA - Logical Inclusive OR
@@ -1752,9 +1542,6 @@ void nes_cpu::ORA(uint16_t val)
 
     // Check Negative Flag
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // PHA - Push Accumulator
@@ -1770,9 +1557,6 @@ void nes_cpu::PHA(uint16_t val)
     
     mem->push(sp, a);
     sp -= 1;
-
-    // Add Cycles
-    cycles += 2;
 }
 
 // PHP - Push Processor Status
@@ -1787,9 +1571,6 @@ void nes_cpu::PHP(uint16_t val)
     #endif
     
     mem->push(sp--, status | B_FLAG);
-
-    // Add Cycles
-    cycles += 2;
 }
 
 // PLA - Pull Accumulator
@@ -1811,9 +1592,6 @@ void nes_cpu::PLA(uint16_t val)
 
     // Check Negative Flag
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 3;
 }
 
 // PLP - Pull Processor Status (Break Flag and Bit 5 Ignored)
@@ -1831,9 +1609,6 @@ void nes_cpu::PLP(uint16_t val)
     status = mem->pop(sp);
     status &= B_FLAG_INV;
     status |= 0b00100000;
-
-    // Add Cycles
-    cycles += 3;
 }
 
 // ROL - Rotate Left
@@ -1866,9 +1641,6 @@ void nes_cpu::ROL(uint16_t address)
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 3;
 }
 void nes_cpu::ROL_ACC(uint16_t address)
 {
@@ -1898,9 +1670,6 @@ void nes_cpu::ROL_ACC(uint16_t address)
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 3;
 }
 
 // ROR - Rotate Right
@@ -1933,9 +1702,6 @@ void nes_cpu::ROR(uint16_t address)
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 3;
 }
 void nes_cpu::ROR_ACC(uint16_t address)
 {
@@ -1965,9 +1731,6 @@ void nes_cpu::ROR_ACC(uint16_t address)
 
     // Check Negative Flag
     (temp & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 3;
 }
 
 // RTI - Return from Interrupt
@@ -1993,9 +1756,6 @@ void nes_cpu::RTI(uint16_t val)
     // Pull High Byte of PC from Stack
     sp += 1;
     pc |= (uint16_t)(mem->pop(sp) << 8);
-
-    // Add Cycles
-    cycles += 5;
 }
 
 // RTS - Return from Subroutine
@@ -2020,9 +1780,6 @@ void nes_cpu::RTS(uint16_t val)
     // Increment PC by 1
     pc = temp;
     pc += 1;
-
-    // Add Cycles
-    cycles += 5;
 }
 
 // SBC - Subtract with Carry
@@ -2053,9 +1810,6 @@ void nes_cpu::SBC(uint16_t val)
 
     // Set Accumulator to new value
     a = (uint8_t)(temp & 0xFF);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // SEC - Set Carry Flag
@@ -2070,9 +1824,6 @@ void nes_cpu::SEC(uint16_t val)
     #endif
     
     status |= C_FLAG;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // SED - Set Decimal Flag
@@ -2087,9 +1838,6 @@ void nes_cpu::SED(uint16_t val)
     #endif
     
     status |= D_FLAG;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // SEI - Set Interrupt Disable
@@ -2104,9 +1852,6 @@ void nes_cpu::SEI(uint16_t val)
     #endif
     
     status |= I_FLAG;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // STA - Store Accumulator
@@ -2121,9 +1866,6 @@ void nes_cpu::STA(uint16_t address)
     #endif
     
     mem->write_8(address, a);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // STX - Store X
@@ -2138,9 +1880,6 @@ void nes_cpu::STX(uint16_t address)
     #endif
     
     mem->write_8(address, x);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // // STY - Store Y
@@ -2155,9 +1894,6 @@ void nes_cpu::STY(uint16_t address)
     #endif
     
     mem->write_8(address, y);
-
-    // Add Cycles
-    cycles += 1;
 }
 
 // TAX - Transfer Accumulator to X
@@ -2178,9 +1914,6 @@ void nes_cpu::TAX(uint16_t val)
 
     // Check Negative Flag
     (x & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // TAY - Transfer Accumulator to Y
@@ -2201,9 +1934,6 @@ void nes_cpu::TAY(uint16_t val)
 
     // Check Negative Flag
     (y & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // TSX - Transfer Stack Pointer to X
@@ -2224,9 +1954,6 @@ void nes_cpu::TSX(uint16_t val)
 
     // Check Negative Flag
     (x & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // TXA - Transfer X to Accumulator
@@ -2247,9 +1974,6 @@ void nes_cpu::TXA(uint16_t val)
 
     // Check Negative Flag
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // TXS - Transfer X to Stack Pointer
@@ -2264,9 +1988,6 @@ void nes_cpu::TXS(uint16_t val)
     #endif
     
     sp = x;
-    
-    // Add Cycles
-    cycles += 1;
 }
 
 // TYA - Transfer Y to Accumulator
@@ -2287,7 +2008,4 @@ void nes_cpu::TYA(uint16_t val)
 
     // Check Negative Flag
     (a & 0x80) ? (status |= N_FLAG) : (status &= N_FLAG_INV);
-
-    // Add Cycles
-    cycles += 1;
 }
