@@ -219,9 +219,8 @@ void Logger::CompareNesTestv2Logs()
         while(testLine.at(0) == ' '){
             getline(testLog, testLine);
         }
-        if (myLine != testLine)
+        if (!compareCStr(myLine.c_str(), testLine.c_str(), length))
         {
-            cout << "Unequal at Line: " << endl << myLine << endl << testLine << endl;
             testLog.close();
             myLog.close();
             return;
@@ -256,9 +255,12 @@ bool compareCStr(const char *str1, const char *str2, size_t endIndex)
 
     for (size_t i = 0; i < endIndex; i++)
     {
+        if(str1[i] == '\0'){
+            return true;
+        }
         if (str1[i] != str2[i])
         {
-            cout << "Unequal at Char: " << i << endl;
+            cout << "Unequal:" << endl;
             cout << str1[i] << " != " << str2[i] << endl;
             cout << str1 << endl;
             cout << str2 << endl;

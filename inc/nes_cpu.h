@@ -81,11 +81,12 @@ public:
   void set_mem(nes_mem *_mem);
   void set_pc(uint16_t address);
   
+private:
   // Helper Functions
   void SetLoggerMode(int mode);
   void print_CPU_state();
   void bytes2hex(unsigned char *src, char *out, int len);
-
+  
   // Addressing Mode Functions
   // Implicit
   uint16_t IMP();

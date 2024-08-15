@@ -393,12 +393,10 @@ uint16_t nes_mem::read_16_wrap(uint16_t addr)
         bytes2hex((unsigned char*)&temp, buf, 2);
         cout << "Memory 16 read: " << buf[0] << buf[1] << buf[2] << buf[3] << endl;
     #endif
-    cout << std::hex << (int)addr << endl;
     uint8_t temp = (uint8_t)(addr & 0x00FF);
     temp++;
     uint16_t i2 = (uint16_t)((addr & 0xFF00) | temp);
     uint16_t toReturn = (uint16_t)((mem[i2] << 8) | mem[addr]);
-    cout << std::hex << (int)toReturn << endl;
     return toReturn;
 }
 
