@@ -83,6 +83,7 @@ void nes::loadNesTest()
     mem->loadNesTest();
     cpu->set_mem(mem);
     cpu->set_pc(0xC000);
+    cpu->cpuLogger.SetMode(0);
 
     // evaluate each instruction one at a time untile program end reached
     // string temp = "c";
@@ -94,7 +95,7 @@ void nes::loadNesTest()
     for(int i = 0; i < 8991; i++){
         cpu->evaluate();
     }
-    cpu->cpuLogger.CompareTestLogs();
+    cpu->cpuLogger.CompareNesTestLogs();
 }
 
 void nes::eject()

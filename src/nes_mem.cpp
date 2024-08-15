@@ -188,6 +188,103 @@ void nes_mem::loadNesTest()
     #endif
 }
 
+void nes_mem::loadNesTestv2()
+{
+    // ROM reading code taken from: https://forums.nesdev.org/viewtopic.php?t=15104
+
+    ifstream rom;
+    int romSize;
+    rom.open("nestest-v2.nes", ios_base::in | ios::binary);
+    if (!rom.is_open())
+    {
+        cout << "Error Loading NESTESTv2" << endl;
+        return;
+    }
+
+    #ifdef MEM_DEBUG
+        cout << "READING ROM" << endl;
+    #endif
+
+    rom.seekg(0, rom.end);
+    romSize = rom.tellg();
+    rom.seekg(0, rom.beg);
+
+    #ifdef MEM_DEBUG
+        cout << "ROM SIZE: " << std::hex << romSize << endl;
+    #endif
+
+    char *buffer = new char[romSize];
+    rom.read(reinterpret_cast<char *>(buffer), romSize);
+
+    #ifdef MEM_DEBUG
+        cout << "ROM BUFFER CREATED" << endl;
+    #endif
+
+    for (uint16_t i = 0; i < 0x4000; i+=1)
+    {
+        uint8_t temp = (uint8_t)buffer[i + 0x10];
+        mem[(uint16_t)(0x8000 + i)] = temp;
+        mem[(uint16_t)(0xC000 + i)] = temp;
+    }
+
+    #ifdef MEM_DEBUG
+        cout << endl;
+        cout << "ROM Loaded, Current Memory State: " << endl << endl;
+        char output[0xFFFF * 2];
+        bytes2hex(this->mem, output, romSize);
+        print_mem();
+    #endif
+}
+
+void nes_mem::loadOfficialTest()
+{
+    // ROM reading code taken from: https://forums.nesdev.org/viewtopic.php?t=15104
+
+    ifstream rom;
+    int romSize;
+    rom.open("official.nes", ios_base::in | ios::binary);
+    if (!rom.is_open())
+    {
+        cout << "Error Loading official" << endl;
+        return;
+    }
+
+    #ifdef MEM_DEBUG
+        cout << "READING ROM" << endl;
+    #endif
+
+    rom.seekg(0, rom.end);
+    romSize = rom.tellg();
+    rom.seekg(0, rom.beg);
+    cout << romSize << endl;
+    #ifdef MEM_DEBUG
+        cout << "ROM SIZE: " << std::hex << romSize << endl;
+    #endif
+
+    char *buffer = new char[romSize];
+    rom.read(reinterpret_cast<char *>(buffer), romSize);
+
+    #ifdef MEM_DEBUG
+        cout << "ROM BUFFER CREATED" << endl;
+    #endif
+    cout << "here" << endl;
+
+    for (int i = 0; i < romSize; i++)
+    {
+        mem[(uint16_t)(i)] = (uint8_t)buffer[i];
+    }
+    cout << "here" << endl;
+    print_mem();
+
+    #ifdef MEM_DEBUG
+        cout << endl;
+        cout << "ROM Loaded, Current Memory State: " << endl << endl;
+        char output[0xFFFF * 2];
+        bytes2hex(this->mem, output, romSize);
+        print_mem();
+    #endif
+}
+
 //--------------------General Memory Access Functions--------------------//
 
 uint8_t nes_mem::read_8(uint16_t addr)
@@ -335,11 +432,11 @@ void nes_mem::print_mem()
 {
     char tempBuffer[0x1FFFF];
     bytes2hex(mem, tempBuffer, 0xFFFF + 1);
-    for (int i = 0; i < sizeof(tempBuffer) / sizeof(char); i += 2)
+    for (int i = 0; i < sizeof(tempBuffer) / sizeof(char) / 2; i += 2)
     {
         // Every 0x100 bytes print a line
-        if (i % 0x100 == 0)
-        //if ((i / 2) % 0x3C == 0)
+        //if (i % 0x100 == 0)
+        if ((i / 2) % 0x3C == 0)
         {
             cout << endl;
             cout << std::hex << (i / 2) << " : ";

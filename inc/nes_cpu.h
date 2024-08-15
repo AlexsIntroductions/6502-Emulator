@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdint>
 #include <string>
+#include <functional>
 #include "../inc/nes_mem.h"
 #include "../inc/log.h"
 
@@ -37,10 +38,9 @@ PROGRAM ROM         :   [0x8000 … 0xFFFF]
 
 */
 
+
 class nes_cpu
 {
-  typedef uint16_t (nes_cpu::*AddressingMode)();
-  typedef void (nes_cpu::*Instruction)(uint16_t);
   //----------General Registers----------//
   // Accumulator
   uint8_t a;
@@ -63,30 +63,30 @@ class nes_cpu
   //----------Address Bus?----------//
   uint16_t pc;
 
+  uint8_t opcode;
+
   int cycles = 0;
 
   nes_mem *mem;
 
 public:
   Logger cpuLogger;
+
   // Init Functions
   nes_cpu();
   ~nes_cpu();
-
+  
   // Component Functions
   void evaluate();
   void set_mem(nes_mem *_mem);
   void set_pc(uint16_t address);
-
+  
   // Helper Functions
+  void SetLoggerMode(int mode);
   void print_CPU_state();
-
-private:
-
+  void bytes2hex(unsigned char *src, char *out, int len);
 
   // Addressing Mode Functions
-  // return the byte of data that is to be acted on
-
   // Implicit
   uint16_t IMP();
   // Accumulator
@@ -107,7 +107,6 @@ private:
   // Absolute
   uint16_t ABS();
   uint16_t ABS_MEM();
-  uint16_t JMP_ABS();
   // Absolute X
   uint16_t ABX();
   uint16_t ABX_MEM();
@@ -123,14 +122,13 @@ private:
   uint16_t IDI();
   uint16_t IDI_MEM();
 
-  void bytes2hex(unsigned char *src, char *out, int len);
-
   // Instruction functions
   void ADC(uint16_t val);
 
   void AND(uint16_t val);
 
   void ASL(uint16_t val);
+
   void ASL_ACC(uint16_t val);
 
   void BCC(uint16_t offset);
@@ -192,6 +190,7 @@ private:
   void LDY(uint16_t val);
 
   void LSR(uint16_t address);
+
   void LSR_ACC(uint16_t address);
 
   void NOP(uint16_t val);
@@ -207,9 +206,11 @@ private:
   void PLP(uint16_t val);
 
   void ROL(uint16_t address);
+
   void ROL_ACC(uint16_t address);
 
   void ROR(uint16_t address);
+
   void ROR_ACC(uint16_t address);
 
   void RTI(uint16_t val);
@@ -241,13 +242,49 @@ private:
   void TXS(uint16_t val);
 
   void TYA(uint16_t val);
-protected:
-  // First Index: Hi Nibble, Second Index: Lo Nibble
-  pair<Instruction, AddressingMode> opcodeEval[16][16] = {
-    {{BRK,IMP}, {ORA, IID_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {ORA, ZPG_MEM}, {ASL, ZPG}, {NOP, IMP}, {PHP, IMP}, {ORA, IMM}, {ASL_ACC, ACC}, {NOP, IMP}, {NOP, IMP}, {ORA, ABS_MEM}, {ASL, ABS}, {NOP, IMP}},
-    {{BPL, REL}, {ORA, IDI_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {ORA, ZPX_MEM}, {ASL, ZPX}, {NOP, IMP}, {CLC, IMP}, {ORA, ABY_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {ORA, ABX_MEM}, {ASL, ABX}, {NOP, IMP}},
-    {{JSR, JMP_ABS}, {AND, IID_MEM}, {NOP, IMP}, {NOP, IMP}, {BIT, ZPG_MEM}, {AND, ZPG_MEM}, {ROL, ZPG}, {NOP, IMP}, {PLP, IMP}, {AND, IMM}, {ROL_ACC, ACC}, {NOP, IMP}, {BIT, ABS_MEM}, {AND, ABS_MEM}, {ROL, ABS}, {NOP, IMP}},
-    {{BMI, REL}, {AND, IDI_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {AND, ZPX_MEM}, {ROL, ZPX}, {NOP, IMP}, {SEC, IMP}, {AND, ABY_MEM}, {NOP, IMP}, {NOP, IMP}, {NOP, IMP}, {AND, ABX_MEM}, {ROL, ABX}, {NOP, IMP}},
-    {}
-  };
 };
+
+// Code I Might Figure Out Later:
+
+  // typedef void (*nes_cpu::Instruction)(uint16_t);
+  // Instruction instructionEval[16][16];
+
+  // typedef uint16_t (*nes_cpu::AddressingMode)();
+  // AddressingMode addressingEval[16][16];
+//       // First Index: Hi Nibble, Second Index: Lo Nibble
+//     std::function<void(nes_cpu*, uint16_t)> instTemp[16][16] = {
+//         {&nes_cpu::BRK, &nes_cpu::ORA, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::ORA, &nes_cpu::ASL, &nes_cpu::NOP, &nes_cpu::PHP, &nes_cpu::ORA, &nes_cpu::ASL_ACC, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::ORA, &nes_cpu::ASL, &nes_cpu::NOP},
+//         {&nes_cpu::BPL, &nes_cpu::ORA, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::ORA, &nes_cpu::ASL, &nes_cpu::NOP, &nes_cpu::CLC, &nes_cpu::ORA, &nes_cpu::NOP    , &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::ORA, &nes_cpu::ASL, &nes_cpu::NOP},
+//         {&nes_cpu::JSR, &nes_cpu::AND, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::BIT, &nes_cpu::AND, &nes_cpu::ROL, &nes_cpu::NOP, &nes_cpu::PLP, &nes_cpu::AND, &nes_cpu::ROL_ACC, &nes_cpu::NOP, &nes_cpu::BIT, &nes_cpu::AND, &nes_cpu::ROL, &nes_cpu::NOP},
+//         {&nes_cpu::BMI, &nes_cpu::AND, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::AND, &nes_cpu::ROL, &nes_cpu::NOP, &nes_cpu::SEC, &nes_cpu::AND, &nes_cpu::NOP    , &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::AND, &nes_cpu::ROL, &nes_cpu::NOP},
+//         {&nes_cpu::RTI, &nes_cpu::EOR, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::EOR, &nes_cpu::LSR, &nes_cpu::NOP, &nes_cpu::PHA, &nes_cpu::EOR, &nes_cpu::LSR_ACC, &nes_cpu::NOP, &nes_cpu::JMP, &nes_cpu::EOR, &nes_cpu::LSR, &nes_cpu::NOP},
+//         {&nes_cpu::BVC, &nes_cpu::EOR, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::EOR, &nes_cpu::LSR, &nes_cpu::NOP, &nes_cpu::CLI, &nes_cpu::EOR, &nes_cpu::NOP    , &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::EOR, &nes_cpu::LSR, &nes_cpu::NOP},
+//         {&nes_cpu::RTS, &nes_cpu::ADC, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::ADC, &nes_cpu::ROR, &nes_cpu::NOP, &nes_cpu::PLA, &nes_cpu::ADC, &nes_cpu::ROR_ACC, &nes_cpu::NOP, &nes_cpu::JMP, &nes_cpu::ADC, &nes_cpu::ROR, &nes_cpu::NOP},
+//         {&nes_cpu::BVS, &nes_cpu::ADC, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::ADC, &nes_cpu::ROR, &nes_cpu::NOP, &nes_cpu::SEI, &nes_cpu::ADC, &nes_cpu::NOP    , &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::ADC, &nes_cpu::ROR, &nes_cpu::NOP},
+//         {&nes_cpu::NOP, &nes_cpu::STA, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::STY, &nes_cpu::STA, &nes_cpu::STX, &nes_cpu::NOP, &nes_cpu::DEY, &nes_cpu::NOP, &nes_cpu::TXA    , &nes_cpu::NOP, &nes_cpu::STY, &nes_cpu::STA, &nes_cpu::STX, &nes_cpu::NOP},
+//         {&nes_cpu::BCC, &nes_cpu::STA, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::STY, &nes_cpu::STA, &nes_cpu::STX, &nes_cpu::NOP, &nes_cpu::TYA, &nes_cpu::STA, &nes_cpu::TXS    , &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::STA, &nes_cpu::NOP, &nes_cpu::NOP},
+//         {&nes_cpu::LDY, &nes_cpu::LDA, &nes_cpu::LDX, &nes_cpu::NOP, &nes_cpu::LDY, &nes_cpu::LDA, &nes_cpu::LDX, &nes_cpu::NOP, &nes_cpu::TAY, &nes_cpu::LDA, &nes_cpu::TAX    , &nes_cpu::NOP, &nes_cpu::LDY, &nes_cpu::LDA, &nes_cpu::LDX, &nes_cpu::NOP},
+//         {&nes_cpu::BCS, &nes_cpu::LDA, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::LDY, &nes_cpu::LDA, &nes_cpu::LDX, &nes_cpu::NOP, &nes_cpu::CLV, &nes_cpu::LDA, &nes_cpu::TSX    , &nes_cpu::NOP, &nes_cpu::LDY, &nes_cpu::LDA, &nes_cpu::LDX, &nes_cpu::NOP},
+//         {&nes_cpu::CPY, &nes_cpu::CMP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::CPY, &nes_cpu::CMP, &nes_cpu::DEC, &nes_cpu::NOP, &nes_cpu::INY, &nes_cpu::CMP, &nes_cpu::DEX    , &nes_cpu::NOP, &nes_cpu::CPY, &nes_cpu::CMP, &nes_cpu::DEC, &nes_cpu::NOP},
+//         {&nes_cpu::BNE, &nes_cpu::CMP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::CMP, &nes_cpu::DEC, &nes_cpu::NOP, &nes_cpu::CLD, &nes_cpu::CMP, &nes_cpu::NOP    , &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::CMP, &nes_cpu::DEC, &nes_cpu::NOP},
+//         {&nes_cpu::CPX, &nes_cpu::SBC, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::CPX, &nes_cpu::SBC, &nes_cpu::INC, &nes_cpu::NOP, &nes_cpu::INX, &nes_cpu::SBC, &nes_cpu::NOP    , &nes_cpu::NOP, &nes_cpu::CPX, &nes_cpu::SBC, &nes_cpu::INC, &nes_cpu::NOP},
+//         {&nes_cpu::BEQ, &nes_cpu::SBC, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::SBC, &nes_cpu::INC, &nes_cpu::NOP, &nes_cpu::SED, &nes_cpu::SBC, &nes_cpu::NOP    , &nes_cpu::NOP, &nes_cpu::NOP, &nes_cpu::SBC, &nes_cpu::INC, &nes_cpu::NOP}
+//     };
+//   std::function<uint16_t(nes_cpu*)> addTemp[16][16] = {
+//         {&nes_cpu::IMP,      &nes_cpu::IID_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPG_MEM, &nes_cpu::ZPG,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMM,     &nes_cpu::ACC, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABS_MEM, &nes_cpu::ABS,     &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPX_MEM, &nes_cpu::ZPX,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABX_MEM, &nes_cpu::ABX,     &nes_cpu::IMP},
+//         {&nes_cpu::JMP_ABS,  &nes_cpu::IID_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMM,     &nes_cpu::ACC, &nes_cpu::IMP, &nes_cpu::ABS_MEM, &nes_cpu::ABS_MEM, &nes_cpu::ABS,     &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPX_MEM, &nes_cpu::ZPX,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABX_MEM, &nes_cpu::ABX,     &nes_cpu::IMP},
+//         {&nes_cpu::IMP,      &nes_cpu::IID_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPG_MEM, &nes_cpu::ZPG,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMM,     &nes_cpu::ACC, &nes_cpu::IMP, &nes_cpu::JMP_ABS, &nes_cpu::ABS_MEM, &nes_cpu::ABS,     &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPX_MEM, &nes_cpu::ZPX,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABX_MEM, &nes_cpu::ABX,     &nes_cpu::IMP},
+//         {&nes_cpu::IMP,      &nes_cpu::IID_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPG_MEM, &nes_cpu::ZPG,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMM,     &nes_cpu::ACC, &nes_cpu::IMP, &nes_cpu::IND,     &nes_cpu::ABS_MEM, &nes_cpu::ABS,     &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPX_MEM, &nes_cpu::ZPX,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABY_MEM, &nes_cpu::ABX,     &nes_cpu::IMP},
+//         {&nes_cpu::IMP,      &nes_cpu::IID_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ZPG,     &nes_cpu::ZPG,     &nes_cpu::ZPG,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABS,     &nes_cpu::ABS,     &nes_cpu::ABS,     &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IID,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ZPX,     &nes_cpu::ZPX,     &nes_cpu::ZPY,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABX,     &nes_cpu::IMP,     &nes_cpu::IMP},
+//         {&nes_cpu::IMM,      &nes_cpu::IDI,     &nes_cpu::IMM, &nes_cpu::IMP, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMM,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABS_MEM, &nes_cpu::ABS_MEM, &nes_cpu::ABS_MEM, &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ZPX_MEM, &nes_cpu::ZPX_MEM, &nes_cpu::ZPY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABX_MEM, &nes_cpu::ABX_MEM, &nes_cpu::ABY_MEM, &nes_cpu::IMP},
+//         {&nes_cpu::IMM,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMM,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABS_MEM, &nes_cpu::ABS_MEM, &nes_cpu::ABX,     &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPX_MEM, &nes_cpu::ZPX,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABX_MEM, &nes_cpu::ABX,     &nes_cpu::IMP},
+//         {&nes_cpu::IMM,      &nes_cpu::IID_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG_MEM, &nes_cpu::ZPG,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMM,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABS_MEM, &nes_cpu::ABS_MEM, &nes_cpu::ABS,     &nes_cpu::IMP},
+//         {&nes_cpu::REL,      &nes_cpu::IDI_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ZPX_MEM, &nes_cpu::ZPX,     &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::ABY_MEM, &nes_cpu::IMP, &nes_cpu::IMP, &nes_cpu::IMP,     &nes_cpu::ABX_MEM, &nes_cpu::ABX,     &nes_cpu::IMP}
+//     };

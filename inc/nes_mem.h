@@ -15,6 +15,8 @@ public:
     void load(std::string filename);
     void load2address(std::string filename, uint16_t address);
     void loadNesTest();
+    void loadNesTestv2();
+    void loadOfficialTest();
 
     // General Memory Access Functions
     uint8_t read_8(uint16_t addr);
