@@ -4,14 +4,6 @@ using namespace std;
 /**
  * NOTES:
  *  - Stack Pointer to 0xFF on start and reset
- * 
- * 
-        //Add Branch Taken Cycles
-        cycles += 1;
-        uint16_t oldPC = pc;
-        // Check if a page boundary was crossed
-        if(oldPC > pc && oldPC - pc >= 0x100){ cycles += 1; }
-        else if(oldPC < pc && pc - oldPC >= 0x100){ cycles += 1; }
  */
 
 nes_cpu::nes_cpu()
